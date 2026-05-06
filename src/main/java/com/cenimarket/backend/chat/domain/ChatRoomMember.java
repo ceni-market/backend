@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 @Table(name = "chat_room_members")
 public class ChatRoomMember extends BaseEntity {
@@ -29,15 +29,12 @@ public class ChatRoomMember extends BaseEntity {
     private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_read_message_id")
-    private ChatMessage lastReadMessage;
+    @JoinColumn(name = "last_read_message_id", nullable = false)
+    private ChatMessage chatMessage;
 
     @Builder
-    public ChatRoomMember(Long id, LocalDateTime lastReadAt, User user, ChatRoom chatRoom, ChatMessage chatMessage) {
+    public ChatRoomMember(Long id, LocalDateTime lastReadAt) {
         this.id = id;
         this.lastReadAt = lastReadAt;
-        this.user = user;
-        this.chatRoom = chatRoom;
-        this.lastReadMessage = chatMessage;
     }
 }
