@@ -37,7 +37,7 @@ public class SignUpService {
         // 3. 비밀번호 암호화 및 엔티티 생성
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
-        // User 엔티티 생성 ->스태틱 팩토리 메서드. 의도의 명확성. 캡슐화. 유지보수 용이. 안정성
+        // User 엔티티 생성 (엔티티 내부에 빌더나 생성자가 정의되어 있어야 합니다)
         User user = User.createNewUser(
                 request.getName(),
                 request.getEmail(),
