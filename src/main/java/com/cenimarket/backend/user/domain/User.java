@@ -1,6 +1,6 @@
 package com.cenimarket.backend.user.domain;
 
-import com.cenimarket.backend.global.domain.BaseEntity;
+import com.cenimarket.backend.global.domain.SoftDeleteEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity { // BaseEntity 상속
+public class User extends SoftDeleteEntity { // BaseEntity 상속
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
