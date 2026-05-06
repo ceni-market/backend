@@ -11,12 +11,10 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "transactions")
-public class Transaction {
+public class Transaction extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
