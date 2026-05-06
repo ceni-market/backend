@@ -2,7 +2,7 @@ package com.cenimarket.backend.transaction.domain;
 
 import com.cenimarket.backend.chat.domain.ChatRoom;
 import com.cenimarket.backend.global.domain.BaseEntity;
-//import com.cenimarket.backend.listing.domain.Listing;
+import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "transactions")
 public class Transaction extends BaseEntity {
