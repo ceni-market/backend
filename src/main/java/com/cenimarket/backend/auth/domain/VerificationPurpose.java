@@ -13,8 +13,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum VerificationPurpose {
-    SIGN_UP("가입"),
-    PASSWORD_RESET("비밀번호변경");
+    SIGNUP("가입"),
+    PASSWORDRESET("비밀번호변경");
 
     private final String description;
 }
