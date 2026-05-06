@@ -1,6 +1,5 @@
 package com.cenimarket.backend.chat.domain;
 
-import com.cenimarket.backend.global.domain.BaseEntity;
 import com.cenimarket.backend.global.domain.SoftDeleteEntity;
 import com.cenimarket.backend.user.domain.User;
 //import com.cenimarket.backend.listing.domain.Listing;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "chat_rooms")
 public class ChatRoom extends SoftDeleteEntity {
@@ -35,7 +34,7 @@ public class ChatRoom extends SoftDeleteEntity {
     private Listing listing;*/
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_message_id", nullable = false)
+    @JoinColumn(name = "last_message_id")
     private ChatMessage lastMessage;
 
     @Builder
