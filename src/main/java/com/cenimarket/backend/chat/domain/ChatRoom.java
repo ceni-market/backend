@@ -1,8 +1,9 @@
 package com.cenimarket.backend.chat.domain;
 
 import com.cenimarket.backend.global.domain.BaseEntity;
+import com.cenimarket.backend.global.domain.SoftDeleteEntity;
 import com.cenimarket.backend.user.domain.User;
-import com.cenimarket.backend.listing.domain.Listing;
+//import com.cenimarket.backend.listing.domain.Listing;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,9 +30,9 @@ public class ChatRoom extends SoftDeleteEntity {
     @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+   /* @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id", nullable = false)
-    private Listing listing;
+    private Listing listing;*/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_message_id", nullable = false)
