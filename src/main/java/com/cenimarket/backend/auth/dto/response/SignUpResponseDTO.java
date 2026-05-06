@@ -1,5 +1,6 @@
 package com.cenimarket.backend.auth.dto.response;
 
+import com.cenimarket.backend.user.domain.User;
 import lombok.*;
 
 @Getter
@@ -10,6 +11,10 @@ import lombok.*;
 public class SignUpResponseDTO {
 
 	private Long userId;
-	private String email;
-	private String emailVerified;
+
+	public static SignUpResponseDTO from(User user) {
+		return SignUpResponseDTO.builder()
+				.userId(user.getId())
+				.build();
+	}
 }
