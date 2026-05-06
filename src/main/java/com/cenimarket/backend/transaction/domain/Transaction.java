@@ -1,7 +1,8 @@
 package com.cenimarket.backend.transaction.domain;
 
 import com.cenimarket.backend.chat.domain.ChatRoom;
-import com.cenimarket.backend.listing.domain.Listing;
+import com.cenimarket.backend.global.domain.BaseEntity;
+//import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "transactions")
-public class Transaction extends BaseEntity{
+public class Transaction extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,10 +49,10 @@ public class Transaction extends BaseEntity{
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    /*@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id")
     private Listing listing;
-
+*/
     @Builder
     public Transaction(Long id, Integer price, LocalDateTime completedAt, TransactionStatus status, TransactionType type) {
         this.id = id;

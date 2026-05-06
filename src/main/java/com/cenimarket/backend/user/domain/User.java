@@ -2,16 +2,16 @@ package com.cenimarket.backend.user.domain;
 
 import com.cenimarket.backend.global.domain.SoftDeleteEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User extends SoftDeleteEntity { // BaseEntity 상속
 
     @Id
@@ -28,6 +28,7 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
     @Column(name = "name", nullable = false, length = 50)
     private String name; // 이름 (VARCHAR(50))
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private UserStatus status = UserStatus.ACTIVE; // 회원 상태 (기본값 ACTIVE)
