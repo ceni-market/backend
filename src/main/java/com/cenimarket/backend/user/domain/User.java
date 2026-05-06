@@ -41,4 +41,14 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
 
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt; // 마지막 로그인일시
+
+    //회원가입을 위한 스태틱 팩토리 메서드
+    public static User createNewUser(String name, String email, String encodedPassword) {
+        return User.builder()
+                .name(name)
+                .email(email)
+                .passwordHash(encodedPassword)
+                .status(UserStatus.ACTIVE) // 기본값 명시적 설정
+                .build();
+    }
 }
