@@ -11,7 +11,7 @@ import lombok.*;
 public class SignUpRequestDTO {
 
 	@NotBlank
-	@Size(max = 50, message = "이름은 50자 이내로 입력해주세요.")
+	@Size(max = 10, message = "이름은 10자 이내로 입력해주세요.")
 	private String name;
 	private String email;
 	private String password;
