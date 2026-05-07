@@ -24,7 +24,7 @@ public class CategoryDataInitializer implements ApplicationRunner {
                 continue;
             }
 
-            categoryRepository.save(Category.from(defaultCategory));
+            categoryRepository.save(Category.create(defaultCategory.getDisplayName(), defaultCategory.getSortOrder()));
         }
     }
 }
