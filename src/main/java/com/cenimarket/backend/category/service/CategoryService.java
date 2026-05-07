@@ -22,11 +22,7 @@ public class CategoryService {
 
         // DTO의 정적 팩토리 메서드에 변환 책임을 위임한다.
         return categories.stream()
-                .map(category -> CategoryItemResponse.of(
-                        category.getId(),
-                        category.getName(),
-                        category.getSortOrder()
-                ))
+                .map(CategoryItemResponse::from)
                 .toList();
     }
 }
