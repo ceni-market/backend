@@ -5,6 +5,8 @@ import com.cenimarket.backend.auth.domain.VerificationPurpose;
 import com.cenimarket.backend.auth.dto.request.EmailVerificationRequestDTO;
 import com.cenimarket.backend.auth.dto.response.EmailVerificationResponseDTO;
 import com.cenimarket.backend.auth.repository.EmailVerificationRepository;
+import com.cenimarket.backend.global.error.BusinessException;
+import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,28 @@ public class EmailVerificationService {
         mailService.sendVerificationMail(request.getEmail(), verificationToken);
 
         return EmailVerificationResponseDTO.from(savedVerification);
+    }
+
+    @Transactional
+    public boolean confirmVerification(String email, String token) {
+        // 해당 이메일과 토큰을 가진 가장 최신의 인증 정보 조회
+        EmailVerification verification = emailVerificationR
+                .findTopByEmailAndTokenOrderByCreatedAtDesc(email, token)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 인증 요청입니다."));
+
+        // 이미 완료된 인증인 경우 처리
+        if (verification.getVerifiedAt() != null) {
+            return true; // 이미 성공한 것으로 간주
+        }
+
+        // 만료 시간 검증
+        if (verification.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR);
+        }
+
+        //3. 인증 완료 처리 현재 시간을 기록함
+        verification.setVerifiedAt(LocalDateTime.now());
+        return true;
     }
 
     private void checkResendRestriction(String email) {
