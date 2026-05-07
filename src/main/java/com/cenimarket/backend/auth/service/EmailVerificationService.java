@@ -53,7 +53,7 @@ public class EmailVerificationService {
         // 해당 이메일과 토큰을 가진 가장 최신의 인증 정보 조회
         EmailVerification verification = emailVerificationR
                 .findTopByEmailAndTokenOrderByCreatedAtDesc(email, token)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 인증 요청입니다."));
+                .orElseThrow(() ->  new BusinessException(ErrorCode.BUSINESS_ERROR));
 
         // 이미 완료된 인증인 경우 처리
         if (verification.getVerifiedAt() != null) {
@@ -75,7 +75,7 @@ public class EmailVerificationService {
                 .ifPresent(lastVerification -> {
                     // LocalDateTime.now()와 비교 시 시스템 시차 주의
                     if (lastVerification.getCreatedAt().isAfter(LocalDateTime.now().minusMinutes(1))) {
-                        throw new IllegalStateException("인증 메일은 1분 후에 다시 요청할 수 있습니다.");
+                        throw new BusinessException(ErrorCode.BUSINESS_ERROR);
                     }
                 });
     }
