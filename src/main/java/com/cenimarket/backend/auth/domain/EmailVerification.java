@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @Table(name = "email_verifications")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
