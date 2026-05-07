@@ -22,10 +22,10 @@ public class Category extends BaseEntity {
     @Column(name = "sort_order", nullable = false)
     private Integer sortOrder;
 
-    public static Category from(DefaultCategory defaultCategory) {
+    public static Category create(String name, Integer sortOrder) {
         Category category = new Category();
-        category.name = defaultCategory.getDisplayName();
-        category.sortOrder = defaultCategory.getSortOrder();
+        category.name = name;
+        category.sortOrder = sortOrder;
         return category;
     }
 }
