@@ -18,6 +18,6 @@ public class ListingCreateRequest {
     private String description;
     private Integer price;
     private ListingType type;
-    private List<String> images;
+    private List<String> imageUrls;
 
 }
