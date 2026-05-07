@@ -15,7 +15,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +26,7 @@ import java.util.List;
 @Entity
 @Table(name = "listings")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Listing extends SoftDeleteEntity {
 
     @Id
@@ -65,4 +69,40 @@ public class Listing extends SoftDeleteEntity {
 
     @Column(name = "like_count", nullable = false)
     private Integer likeCount;
+
+    @Builder
+    private Listing(User seller,
+                    Category category,
+                    String title,
+                    String description,
+                    Integer price,
+                    ListingType type)
+    {
+        this.seller = seller;
+        this.category = category;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.type = type;
+        this.viewCount = 0;
+        this.status = ListingStatus.ACTIVE;
+        this.likeCount = 0;
+    }
+
+    public static Listing create(User seller,
+                                 Category category,
+                                 String title,
+                                 String description,
+                                 Integer price,
+                                 ListingType type){
+        return Listing.builder()
+                .seller(seller)
+                .category(category)
+                .title(title)
+                .description(description)
+                .price(price)
+                .type(type)
+                .build();
+    }
+
 }
