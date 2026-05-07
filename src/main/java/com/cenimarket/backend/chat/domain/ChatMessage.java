@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "chat_messages")
 public class ChatMessage extends SoftDeleteEntity {
