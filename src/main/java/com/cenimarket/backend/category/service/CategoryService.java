@@ -21,9 +21,12 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAllByOrderBySortOrderAsc();
 
         // DTO의 정적 팩토리 메서드에 변환 책임을 위임한다.
-        return categories
-                .stream()
-                .map(CategoryItemResponse::from)
+        return categories.stream()
+                .map(category -> CategoryItemResponse.of(
+                        category.getId(),
+                        category.getName(),
+                        category.getSortOrder()
+                ))
                 .toList();
     }
 }
