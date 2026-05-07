@@ -3,7 +3,6 @@ package com.cenimarket.backend.category.domain;
 import com.cenimarket.backend.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,16 +22,10 @@ public class Category extends BaseEntity {
     @Column(name = "sort_order", nullable = false)
     private Integer sortOrder;
 
-    @Builder
-    private Category(String name, Integer sortOrder){
-        this.name = name;
-        this.sortOrder = sortOrder;
-    }
-
     public static Category create(String name, Integer sortOrder) {
-        return Category.builder()
-                .name(name)
-                .sortOrder(sortOrder)
-                .build();
+        Category category = new Category();
+        category.name = name;
+        category.sortOrder = sortOrder;
+        return category;
     }
 }
