@@ -1,6 +1,8 @@
 package com.cenimarket.backend.auth.service;
 
 
+import com.cenimarket.backend.auth.domain.EmailVerification;
+import com.cenimarket.backend.auth.repository.EmailVerificationRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.user.domain.User;
@@ -19,6 +21,7 @@ public class SignUpService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; //보안 알고리즘의 유연한 변경,관심사 분리,테스트 용이성
+    private final EmailVerificationRepository emailVerificationR;
 
     /**
      * 회원가입 비즈니스 로직
@@ -28,6 +31,14 @@ public class SignUpService {
 
         // 1. 이메일 중복 검증
         if (userRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR);
+        }
+
+        EmailVerification verification = emailVerificationR
+                .findTopByEmailOrderByCreatedAtDesc(request.getEmail())
+                .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_ERROR));
+
+        if (verification.getVerifiedAt() == null) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
         }
 
