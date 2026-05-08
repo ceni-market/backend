@@ -5,10 +5,15 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
 
 @Component
@@ -74,4 +79,32 @@ public class JwtTokenProvider {
         return this.refreshTokenExpiration;
     }
 
+    // 1. 토큰에서 이메일 꺼내기 (편지봉투 열어서 이름 읽기)
+    public String getEmail(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key).build()        // key로 잠금 해제
+                .parseClaimsJws(token)             // 토큰 해석
+                .getBody().getSubject();           // 내용물(Body) 중 주인(Subject) 반환
+    }
+
+    // 2. 토큰이 진짜인지 확인
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;  // 아무 문제 없으면 진짜!
+        } catch (Exception e) {
+            return false; // 에러 나면 가짜 혹은 만료!
+        }
+    }
+
+    // 3. 서버용 신분증 만들기 (Role 없이 이메일만 담기)
+    public Authentication getAuthentication(String token) {
+        String email = this.getEmail(token);
+
+        // 권한(Role) 없이 이메일 정보만 가진 유저 객체 생성
+        UserDetails user = new User(email, "", Collections.emptyList());
+
+        // 스프링 시큐리티 인증 객체 반환
+        return new UsernamePasswordAuthenticationToken(user, "", Collections.emptyList());
+    }
 }
