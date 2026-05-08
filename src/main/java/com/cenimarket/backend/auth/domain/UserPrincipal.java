@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -18,11 +19,30 @@ public class UserPrincipal implements UserDetails {
         this.user = user;
     }
 
-    // 이 메서드가 있어야 컨트롤러에서 .getEmail()을 쓸 수 있습니다!
+    // 이 메서드가 있어야 컨트롤러에서 .get***()을 쓸 수 있습니다!
+    public Long getId() {
+        return user.getId();
+    }
+
     public String getEmail() {
         return user.getEmail();
     }
 
+    public String getName() {
+        return user.getName();
+    }
+
+    public String getProfileImageUrl() {
+        return user.getProfileImageUrl();
+    }
+
+    public String getStatus() {
+        return user.getStatus(); // 예: ACTIVE, PENDING 등
+    }
+
+    public LocalDateTime getEmailVerifiedAt() {
+        return user.getEmailVerifiedAt();
+    }
     @Override
     public String getUsername() {
         return user.getEmail(); // 이메일을 로그인 ID로 사용
