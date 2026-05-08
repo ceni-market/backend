@@ -3,6 +3,7 @@ package com.cenimarket.backend.listing.service;
 import com.cenimarket.backend.category.domain.Category;
 import com.cenimarket.backend.category.repository.CategoryRepository;
 import com.cenimarket.backend.listing.domain.Listing;
+import com.cenimarket.backend.listing.domain.ListingImage;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
 import com.cenimarket.backend.listing.dto.response.ListingCreateResponse;
 import com.cenimarket.backend.listing.repository.ListingImageRepository;
@@ -25,6 +26,7 @@ public class ListingService {
     public ListingCreateResponse createListing(ListingCreateRequest request) {
         User seller = userRepository.findById(request.getSellerId()).orElseThrow();
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
+        // listing 엔티티생성
         Listing listing = Listing.create(
                 seller,
                 category,
@@ -34,6 +36,20 @@ public class ListingService {
                 request.getType()
                 );
         Listing savedListing = listingRepository.save(listing);
+
+        if(request.getImageUrls() != null) {
+            for(int i=0; i<request.getImageUrls().size(); i++){
+                String imageUrl = request.getImageUrls().get(i);
+                // ListingImage 엔티티생성
+                ListingImage listingImage = ListingImage.create(
+                        savedListing,
+                        imageUrl,
+                        i
+                );
+                listingImageRepository.save(listingImage);
+            }
+        }
+
         return new ListingCreateResponse(savedListing.getId());
     }
 }
