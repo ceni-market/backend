@@ -44,6 +44,8 @@ public class EmailVerificationService {
         // 1. 재발송 제한 확인
         checkResendRestriction(request.getEmail());
 
+
+
         // 2. 인증 토큰 생성
         String verificationToken = UUID.randomUUID().toString();
 

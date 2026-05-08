@@ -51,4 +51,7 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
                 .build();
     }
 
+    public void updatePassword(String encodedPassword) {
+        this.passwordHash = encodedPassword;
+    }
 }
