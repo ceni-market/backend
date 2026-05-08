@@ -5,9 +5,11 @@ import com.cenimarket.backend.category.repository.CategoryRepository;
 import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.domain.ListingImage;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
+import com.cenimarket.backend.listing.dto.request.ListingStatusUpdateRequest;
 import com.cenimarket.backend.listing.dto.request.ListingUpdateRequest;
 import com.cenimarket.backend.listing.dto.response.ListingCreateResponse;
 import com.cenimarket.backend.listing.dto.response.ListingDeleteResponse;
+import com.cenimarket.backend.listing.dto.response.ListingStatusUpdateResponse;
 import com.cenimarket.backend.listing.dto.response.ListingUpdateResponse;
 import com.cenimarket.backend.listing.repository.ListingImageRepository;
 import com.cenimarket.backend.listing.repository.ListingRepository;
@@ -25,7 +27,7 @@ public class ListingService {
     private final ListingImageRepository listingImageRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
-
+    //게시글 등록
     public ListingCreateResponse createListing(ListingCreateRequest request) {
         User seller = userRepository.findById(request.getSellerId()).orElseThrow();
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
@@ -55,7 +57,7 @@ public class ListingService {
 
         return new ListingCreateResponse(savedListing.getId());
     }
-
+    //게시글 수정
     public ListingUpdateResponse updateListing(Long listingId, ListingUpdateRequest request) {
         Listing listing = listingRepository.findById(listingId).orElseThrow();
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
@@ -70,10 +72,19 @@ public class ListingService {
 
         return new ListingUpdateResponse(listing.getId());
     }
+    //게시글 삭제
     public ListingDeleteResponse deleteListing(Long listingId) {
         Listing listing = listingRepository.findById(listingId).orElseThrow();
         listing.delete();
         return new ListingDeleteResponse(listing.getId());
+    }
+    //게시글 상태변경
+    public ListingStatusUpdateResponse updateListingStatus(
+            Long listingId,
+            ListingStatusUpdateRequest request) {
+        Listing listing = listingRepository.findById(listingId).orElseThrow();
+        listing.changeStatus(request.getStatus());
+        return new ListingStatusUpdateResponse(listing.getId(), listing.getStatus());
     }
 
 }
