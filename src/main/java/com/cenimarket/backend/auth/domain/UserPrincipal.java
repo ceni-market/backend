@@ -37,7 +37,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     public String getStatus() {
-        return user.getStatus(); // 예: ACTIVE, PENDING 등
+        return user.getStatus() != null ? user.getStatus().name() : null; // 예: ACTIVE, PENDING 등
     }
 
     public LocalDateTime getEmailVerifiedAt() {
