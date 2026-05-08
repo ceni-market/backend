@@ -4,6 +4,7 @@ import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
 import com.cenimarket.backend.listing.dto.response.ListingCreateResponse;
 import com.cenimarket.backend.listing.service.ListingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ public class ListingController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<ListingCreateResponse>> createListing(
+            @Valid
             @RequestBody
             ListingCreateRequest request
     ) {
