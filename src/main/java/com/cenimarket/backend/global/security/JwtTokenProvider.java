@@ -1,9 +1,11 @@
 package com.cenimarket.backend.global.security;
 
 
+import com.cenimarket.backend.auth.service.CustomUserDetailsService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +19,10 @@ import java.util.Collections;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
+
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -102,9 +107,9 @@ public class JwtTokenProvider {
         String email = this.getEmail(token);
 
         // 권한(Role) 없이 이메일 정보만 가진 유저 객체 생성
-        UserDetails user = new User(email, "", Collections.emptyList());
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
         // 스프링 시큐리티 인증 객체 반환
-        return new UsernamePasswordAuthenticationToken(user, "", Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 }
