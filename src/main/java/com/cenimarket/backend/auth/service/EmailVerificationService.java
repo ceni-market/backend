@@ -8,6 +8,7 @@ import com.cenimarket.backend.auth.repository.EmailVerificationRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.user.domain.User;
+import com.cenimarket.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +22,24 @@ public class EmailVerificationService {
 
     private final EmailVerificationRepository emailVerificationR;
     private final MailService mailService;
+    private final UserRepository userRepository;
 
     @Transactional
     public EmailVerificationResponseDTO sendVerificationEmail(EmailVerificationRequestDTO request) {
+
+        // 0.. DTO에서 목적(purpose) 확인 및 Enum 변환
+        VerificationPurpose purpose = VerificationPurpose.valueOf(request.getPurpose().toUpperCase());
+
+        if (purpose == VerificationPurpose.SIGNUP) {
+            // 회원가입인데 이미 가입된 메일이라면? -> 에러
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new BusinessException(ErrorCode.BUSINESS_ERROR);
+            }
+        }
+        else if (purpose == VerificationPurpose.PASSWORDRESET) {
+            // 비밀번호 변경인데 회원가입으로 와버림 -> 에러
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR);
+        }
 
         // 1. 재발송 제한 확인
         checkResendRestriction(request.getEmail());
@@ -36,14 +52,14 @@ public class EmailVerificationService {
         EmailVerification verification = EmailVerification.create(
                 request.getEmail(),
                 verificationToken,
-                VerificationPurpose.valueOf(request.getPurpose().toUpperCase())
+                purpose
         );
 
         // 4. DB 저장
         EmailVerification savedVerification = emailVerificationR.save(verification);
 
         // 5. 실제 메일 발송 (주석 해제 시 변수명 확인)
-        mailService.sendVerificationMail(request.getEmail(), verificationToken);
+        mailService.sendVerificationMail(request.getEmail(), verificationToken,purpose);
 
         return EmailVerificationResponseDTO.from(savedVerification);
     }

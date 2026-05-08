@@ -3,6 +3,7 @@ package com.cenimarket.backend.auth.controller;
 import com.cenimarket.backend.auth.dto.request.LoginRequestDTO;
 import com.cenimarket.backend.auth.dto.request.RefreshTokenRequestDTO;
 import com.cenimarket.backend.auth.dto.response.LoginResponseDTO;
+import com.cenimarket.backend.auth.dto.response.RefreshTokenResponseDTO;
 import com.cenimarket.backend.auth.service.LoginService;
 import com.cenimarket.backend.auth.service.RefreshTokenService;
 import jakarta.validation.Valid;
@@ -25,10 +26,10 @@ public class RefreshTokenController {
      * POST /api/auth/reissue
      */
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponseDTO> reissue(@RequestBody RefreshTokenRequestDTO request) {
+    public ResponseEntity<RefreshTokenResponseDTO> reissue(@RequestBody RefreshTokenRequestDTO request) {
 
         // 서비스 계층의 reissue 메서드를 호출하여 로직을 수행합니다.
-        LoginResponseDTO response = refreshTokenService.reissue(request.getRefreshToken());
+        RefreshTokenResponseDTO response = refreshTokenService.reissue(request.getRefreshToken());
 
         // 새로운 AccessToken과 RefreshToken이 담긴 DTO를 반환합니다.
         return ResponseEntity.ok(response);
