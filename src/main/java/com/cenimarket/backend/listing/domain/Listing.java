@@ -123,4 +123,8 @@ public class Listing extends SoftDeleteEntity {
         softDelete();
     }
 
+    public void changeStatus(ListingStatus status) {
+        this.status = status;
+    }
+
 }
