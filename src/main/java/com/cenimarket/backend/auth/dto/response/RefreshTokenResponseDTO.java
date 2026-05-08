@@ -15,8 +15,8 @@ public class RefreshTokenResponseDTO {
 	/**
 	 * 정적 팩토리 메서드
 	 */
-	public static LoginResponseDTO of(String accessToken, String refreshToken, Long expiresIn) {
-		return LoginResponseDTO.builder()
+	public static RefreshTokenResponseDTO of(String accessToken, String refreshToken, Long expiresIn) {
+		return RefreshTokenResponseDTO.builder()
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
 				.accessTokenExpiresIn(expiresIn)

@@ -32,7 +32,7 @@ public class RefreshTokenService {
      * [재발급] 컨트롤러에서 호출하는 비즈니스 로직
      */
     @Transactional
-    public LoginResponseDTO reissue(String oldRefreshToken) {
+    public RefreshTokenResponseDTO reissue(String oldRefreshToken) {
         // 1. 검증 및 유저 확보
         RefreshToken savedToken = findAndValidate(oldRefreshToken);
         User user = savedToken.getUser();
@@ -44,7 +44,7 @@ public class RefreshTokenService {
         // 3. DB 정보 갱신 (아래의 내부 메서드 활용)
         saveOrUpdate(user, newRt);
 
-        return LoginResponseDTO.of(newAt, newRt, jwtTokenProvider.getAccessTokenExpiration());
+        return RefreshTokenResponseDTO.of(newAt, newRt, jwtTokenProvider.getAccessTokenExpiration());
     }
 
 
