@@ -72,7 +72,7 @@ public class ListingService {
     }
     public ListingDeleteResponse deleteListing(Long listingId) {
         Listing listing = listingRepository.findById(listingId).orElseThrow();
-        listing.softDelete();
+        listing.delete();
         return new ListingDeleteResponse(listing.getId());
     }
 
