@@ -127,4 +127,14 @@ public class Listing extends SoftDeleteEntity {
         this.status = status;
     }
 
+    public void increaseLikeCount(){
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount(){
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
+
 }
