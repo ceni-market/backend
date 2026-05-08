@@ -36,8 +36,8 @@ public class EmailVerificationService {
                 throw new BusinessException(ErrorCode.BUSINESS_ERROR);
             }
         }
-        else if (purpose == VerificationPurpose.PASSWORDRESET) {
-            // 비밀번호 변경인데 회원가입으로 와버림 -> 에러
+        else {
+            // 비밀번호 변경인데 회원가입으로 와버리거나 puspose 없음 -> 에러
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
         }
 
