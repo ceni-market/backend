@@ -20,7 +20,7 @@ public class EmailVerificationConfirmResponseDTO {
 		return EmailVerificationConfirmResponseDTO.builder()
 				.email(email)
 				.success(true)
-				.redirectUrl("/signup")
+				.redirectUrl("/signup/last")
 				.build();
 	}
 
