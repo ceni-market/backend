@@ -2,15 +2,14 @@ package com.cenimarket.backend.listing.controller;
 
 import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
+import com.cenimarket.backend.listing.dto.request.ListingUpdateRequest;
 import com.cenimarket.backend.listing.dto.response.ListingCreateResponse;
+import com.cenimarket.backend.listing.dto.response.ListingUpdateResponse;
 import com.cenimarket.backend.listing.service.ListingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,4 +28,12 @@ public class ListingController {
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
+    @PutMapping("/{listingId}")
+    public ResponseEntity<ApiResponse<ListingUpdateResponse>> updateListing(
+            @PathVariable Long listingId,
+            @Valid @RequestBody ListingUpdateRequest request
+    ){
+        ListingUpdateResponse response = listingService.updateListing(listingId, request);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
 }
