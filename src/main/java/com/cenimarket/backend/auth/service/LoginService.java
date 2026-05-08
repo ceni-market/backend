@@ -10,6 +10,7 @@ import com.cenimarket.backend.auth.repository.EmailVerificationRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.user.domain.User;
+import com.cenimarket.backend.user.domain.UserStatus;
 import com.cenimarket.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화용
@@ -33,8 +34,9 @@ public class LoginService {
     @Transactional
     public LoginResponseDTO login(LoginRequestDTO request) {
 
-        // 1. 이메일 존재 여부 확인
-        User user = userRepository.findByEmail(request.getEmail())
+        // 1. 이메일 존재 여부 확인 (유저상태도 확인함)
+
+        User user = userRepository.findByEmailAndStatus(request.getEmail(), UserStatus.ACTIVE)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_ERROR));
 
         // 2. 비밀번호 일치 여부 확인
