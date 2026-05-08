@@ -54,4 +54,9 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
     public void updatePassword(String encodedPassword) {
         this.passwordHash = encodedPassword;
     }
+
+    public void updateProfileImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
 }
+
