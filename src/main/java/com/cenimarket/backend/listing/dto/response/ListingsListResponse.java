@@ -1,0 +1,36 @@
+package com.cenimarket.backend.listing.dto.response;
+
+import com.cenimarket.backend.category.domain.Category;
+import com.cenimarket.backend.listing.domain.Listing;
+import com.cenimarket.backend.listing.domain.ListingImage;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Getter
+@RequiredArgsConstructor
+@Builder
+public class ListingsListResponse {
+    private final Long id;
+    private final String title;
+    private final Integer price;
+    private final List<ListingImage> images;
+    private final Category category;
+    private final Integer likeCount;
+    private final LocalDateTime updatedAt;
+
+    public static ListingsListResponse from(Listing listing) {
+        return ListingsListResponse.builder()
+                .id(listing.getId())
+                .title(listing.getTitle())
+                .price(listing.getPrice())
+                .images(listing.getImages())
+                .category(listing.getCategory())
+                .likeCount(listing.getLikeCount())
+                .updatedAt(listing.getUpdatedAt())
+                .build();
+    }
+}
