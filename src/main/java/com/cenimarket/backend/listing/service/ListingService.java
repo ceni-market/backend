@@ -5,7 +5,9 @@ import com.cenimarket.backend.category.repository.CategoryRepository;
 import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.domain.ListingImage;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
+import com.cenimarket.backend.listing.dto.request.ListingUpdateRequest;
 import com.cenimarket.backend.listing.dto.response.ListingCreateResponse;
+import com.cenimarket.backend.listing.dto.response.ListingUpdateResponse;
 import com.cenimarket.backend.listing.repository.ListingImageRepository;
 import com.cenimarket.backend.listing.repository.ListingRepository;
 import com.cenimarket.backend.user.domain.User;
@@ -52,4 +54,21 @@ public class ListingService {
 
         return new ListingCreateResponse(savedListing.getId());
     }
+
+    public ListingUpdateResponse updateListing(Long listingId, ListingUpdateRequest request) {
+        Listing listing = listingRepository.findById(listingId).orElseThrow();
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
+
+        listing.update(
+                category,
+                request.getTitle(),
+                request.getDescription(),
+                request.getPrice(),
+                request.getType()
+        );
+
+        return new ListingUpdateResponse(listing.getId());
+    }
+
+
 }

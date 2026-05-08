@@ -105,4 +105,19 @@ public class Listing extends SoftDeleteEntity {
                 .build();
     }
 
+    public void update(
+            Category category,
+            String title,
+            String description,
+            Integer price,
+            ListingType type
+    ) {
+        this.category = category;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.type = type;
+    }
+
+
 }
