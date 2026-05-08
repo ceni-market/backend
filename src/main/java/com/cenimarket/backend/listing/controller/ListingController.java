@@ -4,6 +4,7 @@ import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
 import com.cenimarket.backend.listing.dto.request.ListingUpdateRequest;
 import com.cenimarket.backend.listing.dto.response.ListingCreateResponse;
+import com.cenimarket.backend.listing.dto.response.ListingDeleteResponse;
 import com.cenimarket.backend.listing.dto.response.ListingUpdateResponse;
 import com.cenimarket.backend.listing.service.ListingService;
 import jakarta.validation.Valid;
@@ -34,6 +35,14 @@ public class ListingController {
             @Valid @RequestBody ListingUpdateRequest request
     ){
         ListingUpdateResponse response = listingService.updateListing(listingId, request);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @DeleteMapping("/{listingId}")
+    public ResponseEntity<ApiResponse<ListingDeleteResponse>> deleteListing(
+            @PathVariable Long listingId
+    ){
+        ListingDeleteResponse response = listingService.deleteListing(listingId);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 }

@@ -7,6 +7,7 @@ import com.cenimarket.backend.listing.domain.ListingImage;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
 import com.cenimarket.backend.listing.dto.request.ListingUpdateRequest;
 import com.cenimarket.backend.listing.dto.response.ListingCreateResponse;
+import com.cenimarket.backend.listing.dto.response.ListingDeleteResponse;
 import com.cenimarket.backend.listing.dto.response.ListingUpdateResponse;
 import com.cenimarket.backend.listing.repository.ListingImageRepository;
 import com.cenimarket.backend.listing.repository.ListingRepository;
@@ -69,6 +70,10 @@ public class ListingService {
 
         return new ListingUpdateResponse(listing.getId());
     }
-
+    public ListingDeleteResponse deleteListing(Long listingId) {
+        Listing listing = listingRepository.findById(listingId).orElseThrow();
+        listing.softDelete();
+        return new ListingDeleteResponse(listing.getId());
+    }
 
 }
