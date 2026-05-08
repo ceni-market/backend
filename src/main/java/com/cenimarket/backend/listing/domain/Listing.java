@@ -118,6 +118,9 @@ public class Listing extends SoftDeleteEntity {
         this.price = price;
         this.type = type;
     }
-
+    public void delete(){
+        this.status = ListingStatus.DELETED;
+        softDelete();
+    }
 
 }
