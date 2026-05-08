@@ -30,8 +30,8 @@ public class SecurityConfig {
                 )
                 // 3. 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers("/api/auth/**").permitAll() // 로그인, 회원가입 관련은 인증 없이 허용
-                        .requestMatchers("/**").permitAll() // 일단 다되게 만듬
+                        .requestMatchers("/api/auth/**").permitAll() // 로그인, 회원가입 관련은 인증 없이 허용
+                        //.requestMatchers("/**").permitAll() // 일단 다되게 만듬
                         .anyRequest().authenticated()               // 그 외 모든 요청은 인증(토큰) 필요
                 )
                 // 4. JWT 필터 추가 (UsernamePasswordAuthenticationFilter보다 먼저 실행)
