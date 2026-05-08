@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class SignUpController {
     private final SignUpService signUpService;
 
-    /*회원가입 API*/
+    /*회원가입 API 최종적으로 완료*/
 
-    @PostMapping("/signup")
+    @PostMapping("/signup/last")
     public ResponseEntity<SignUpResponseDTO> signUp(@Valid @RequestBody SignUpRequestDTO requestDTO) {
         // 서비스 계층의 가입 로직 호출
         SignUpResponseDTO response = signUpService.signUp(requestDTO);
