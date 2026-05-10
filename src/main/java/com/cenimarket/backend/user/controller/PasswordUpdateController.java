@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/user/password") // 경로를 /api/password로 깔끔하게 설정
+@RequestMapping("/api/user/password")
 @RequiredArgsConstructor
 public class PasswordUpdateController {
 

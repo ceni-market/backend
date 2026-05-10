@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ceni Market - 거래 목록</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f9f9f9; }
+
+        /* 헤더 (홈 화면과 동일 유지) */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 2rem; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #4A90E2; cursor: pointer; }
+        .btn { padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .btn-login { color: #4A90E2; border: 1px solid #4A90E2; }
+        .btn-signup { background-color: #4A90E2; color: #fff; margin-left: 10px; }
+
+        /* 글쓰기 버튼 영역 */
+        .action-bar {
+            max-width: 1200px; margin: 20px auto; display: flex; justify-content: flex-end; padding: 0 20px;
+        }
+        .btn-write { background-color: #28a745; color: white; font-weight: bold; }
+        .btn-write:hover { background-color: #218838; }
+
+        /* 상품 그리드 (1행 5개) */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 1행에 5개 */
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: white; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* 마우스 호버 시 확대 효과 */
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%; aspect-ratio: 1 / 1; /* 정사각형 유지 */
+            background-color: #eee; object-fit: cover;
+        }
+
+        .product-info { padding: 12px; }
+        .product-name { font-size: 1rem; font-weight: 600; color: #333; margin-bottom: 5px; }
+        .product-price { color: #4A90E2; font-weight: bold; }
+
+        /* 페이지네이션 */
+        .pagination {
+            display: flex; justify-content: center; gap: 10px; margin: 40px 0;
+        }
+        .page-link {
+            padding: 8px 12px; border: 1px solid #ddd; color: #333;
+            text-decoration: none; border-radius: 4px;
+        }
+        .page-link.active { background-color: #4A90E2; color: white; border-color: #4A90E2; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="nav-left">
+        <a th:href="@{/index}" class="btn" style="background:#eee;">홈으로</a>
+    </div>
+    <div class="logo" onclick="location.href='/index'">Ceni Market</div>
+    <div class="nav-right">
+        <a th:href="@{/test/login}" class="btn btn-login">로그인</a>
+        <a th:href="@{/test/signup}" class="btn btn-signup">회원가입</a>
+    </div>
+</header>
+
+<div class="action-bar">
+    <a th:href="@{/test/listing/write}" class="btn btn-write">글쓰기</a>
+</div>
+
+<!--<main class="product-grid">-->
+<!--    <div class="product-card" th:each="num : ${#numbers.sequence(1, 20)}">-->
+<!--        <img src="https://via.placeholder.com/200" alt="상품 이미지" class="product-image">-->
+<!--        <div class="product-info">-->
+<!--            <div class="product-name">중고 상품 이름 [[${num}]]</div>-->
+<!--            <div class="product-price">25,000원</div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</main>-->
+
+<main class="product-grid">
+    <div th:if="${#lists.isEmpty(listings)}" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+        <p>등록된 거래글이 없습니다. 첫 번째 글을 작성해보세요!</p>
+    </div>
+
+    <div class="product-card" th:each="listing : ${listings}"
+         th:onclick="|location.href='/test/listing/' + ${listing.id}|">
+
+        <img th:src="${'/images/default-item.png'}" alt="상품 이미지" class="product-image"> <!--"${listing.imageUrl != null ? listing.imageUrl : '/images/default-item.png'}"-->
+
+        <div class="product-info">
+            <div class="product-name" th:text="${listing.title}">상품 제목</div>
+
+            <div class="product-price">
+                <span th:if="${listing.type.name() == 'GIVEAWAY'}" style="color: #28a745;">나눔 🎁</span>
+                <span th:unless="${listing.type.name() == 'GIVEAWAY'}"
+                      th:text="${#numbers.formatInteger(listing.price, 0, 'COMMA')} + '원'">10,000원</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="pagination">
+    <a href="#" class="page-link">&laquo;</a>
+    <a href="#" class="page-link active">1</a>
+    <a href="#" class="page-link">2</a>
+    <a href="#" class="page-link">3</a>
+    <a href="#" class="page-link">4</a>
+    <a href="#" class="page-link">5</a>
+    <a href="#" class="page-link">&raquo;</a>
+</div>
+
+<script>
+    console.log("Post List Page Loaded");
+</script>
+
+</body>
+</html>
