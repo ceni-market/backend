@@ -26,14 +26,14 @@
     </form>
 </div>
 
-<script>
+<script th:inline="javascript">
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        fetch('/api/auth/loginprocess', {
+        fetch('/test/loginprocess', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, password: password })
@@ -46,10 +46,10 @@
                 const userData = parseJwt(data.accessToken);
                 //서버가 준 토큰과 사용자 정보를 로컬 스토리지에 저장
                 localStorage.setItem('accessToken', data.accessToken);
-                localStorage.setItem('userEmailToken', userData.sub);
+                localStorage.setItem('userEmail', userData.sub);
 
                 alert('로그인 성공!');
-                location.href = '/chatroom';
+                location.href = '/index';
             })
             .catch(error => {
                 alert(error.message);
