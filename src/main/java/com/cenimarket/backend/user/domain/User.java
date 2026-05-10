@@ -58,5 +58,9 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
     public void updateProfileImage(String imageUrl) {
         this.profileImageUrl = imageUrl;
     }
+
+    public void withdraw() {
+        this.status = UserStatus.DELETED;
+    }
 }
 
