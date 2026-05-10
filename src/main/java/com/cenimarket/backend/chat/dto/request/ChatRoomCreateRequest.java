@@ -11,11 +11,17 @@ public class ChatRoomCreateRequest { //채팅방 생성, 조회(있는지 없는
     @NotNull
     private Long listingId;
     @NotNull
-    private ChatMessageListRequest firstMessage;
+    private Long sellerId;
+    @NotNull
+    private Long buyerId;
+//    @NotNull
+//    private ChatMessageListRequest firstMessage;
 
     @Builder
-    public ChatRoomCreateRequest(Long listingId, ChatMessageListRequest firstMessage) {
+    public ChatRoomCreateRequest(Long listingId, Long sellerId, Long buyerId, ChatMessageListRequest firstMessage) {
         this.listingId = listingId;
-        this.firstMessage = firstMessage;
+        this.sellerId = sellerId;
+        this.buyerId = buyerId;
+//        this.firstMessage = firstMessage;
     }
 }
