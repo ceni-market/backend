@@ -9,9 +9,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "transactions")
@@ -23,6 +21,7 @@ public class Transaction extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
+    @Column(nullable = false)
     private LocalDateTime completedAt;
 
     @Column(nullable = false)
@@ -34,31 +33,59 @@ public class Transaction extends BaseEntity {
     private TransactionType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
+    @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id")
+    @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "completed_by_id")
-    private User completedBy;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id", nullable = false, unique = true)
     private ChatRoom chatRoom;
 
-    /*@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "listing_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "listing_id", nullable = false, unique = true)
     private Listing listing;
-*/
+
     @Builder
-    public Transaction(Long id, Integer price, LocalDateTime completedAt, TransactionStatus status, TransactionType type) {
-        this.id = id;
+    public Transaction(Integer price,
+                       LocalDateTime completedAt,
+                       TransactionStatus status,
+                       TransactionType type,
+                       User seller,
+                       User buyer,
+                       ChatRoom chatRoom,
+                       Listing listing) {
         this.price = price;
         this.completedAt = completedAt;
         this.status = status;
         this.type = type;
+        this.seller = seller;
+        this.buyer = buyer;
+        this.chatRoom = chatRoom;
+        this.listing = listing;
     }
+
+    public static Transaction createCompleted(
+            Listing listing,
+            User seller,
+            User buyer,
+            ChatRoom chatRoom,
+            Integer price,
+            TransactionType transactionType,
+            LocalDateTime completedAt
+    ){
+        return Transaction.builder()
+                .listing(listing)
+                .seller(seller)
+                .buyer(buyer)
+                .chatRoom(chatRoom)
+                .price(price)
+                .type(transactionType)
+                .status(TransactionStatus.COMPLETED)
+                .completedAt(completedAt)
+                .build();
+    }
+
 }
