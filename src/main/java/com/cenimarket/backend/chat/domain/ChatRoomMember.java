@@ -29,12 +29,15 @@ public class ChatRoomMember extends BaseEntity {
     private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "last_read_message_id", nullable = false)
-    private ChatMessage chatMessage;
+    @JoinColumn(name = "last_read_message_id")
+    private ChatMessage lastReadMessage;
 
     @Builder
-    public ChatRoomMember(Long id, LocalDateTime lastReadAt) {
+    public ChatRoomMember(Long id, LocalDateTime lastReadAt, User user, ChatRoom chatRoom, ChatMessage chatMessage) {
         this.id = id;
         this.lastReadAt = lastReadAt;
+        this.user = user;
+        this.chatRoom = chatRoom;
+        this.lastReadMessage = chatMessage;
     }
 }
