@@ -20,7 +20,7 @@ public class ChatMessage extends SoftDeleteEntity {
     @Enumerated(EnumType.STRING)
     private MessageType messageType;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 500, columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,10 +32,12 @@ public class ChatMessage extends SoftDeleteEntity {
     private ChatRoom chatRoom;
 
     @Builder
-    public ChatMessage(Long id, MessageType messageType, String content){
+    public ChatMessage(Long id, MessageType messageType, String content, User user, ChatRoom chatRoom){
         this.id = id;
         this.messageType = messageType;
         this.content = content;
+        this.sender = user;
+        this.chatRoom = chatRoom;
     }
 }
 
