@@ -4,7 +4,7 @@ import com.cenimarket.backend.chat.domain.ChatMessage;
 import com.cenimarket.backend.chat.domain.ChatRoom;
 import com.cenimarket.backend.chat.domain.ChatRoomMember;
 import com.cenimarket.backend.chat.domain.MessageType;
-import com.cenimarket.backend.chat.dto.request.ChatMessageSendRequest;
+import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
 import com.cenimarket.backend.chat.repository.ChatMessageRepository;
@@ -18,6 +18,9 @@ import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -36,7 +39,7 @@ public class ChatService {
         this.listingRepository = listingRepository;
     }
 
-    public void saveMessage(Long roomId, ChatMessageSendRequest MessageSendRequest){
+    public void saveMessage(Long roomId, ChatMessageDto MessageSendRequest){
         //채팅방 객체 조회 (있는 경우만)
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
         //보낸사람 객체 조회
@@ -108,5 +111,23 @@ public class ChatService {
                 .build();
         System.out.println("Service - response 조립 완료.");
         return response;
+    }
+
+    public List<ChatMessageDto> getChatHistory(Long chatRoomId, String buyerEmail){
+        //현재 사용자가 해당 채팅방의 참가자인지 확인
+        System.out.println("바이어의 이메일은 " + buyerEmail);
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
+        User user = userRepository.findByEmail(buyerEmail).orElseThrow();
+        //이전 채팅 데이터를 DTO로 변환하여 반환
+        List<ChatMessage> messages = chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(chatRoomId);
+        List<ChatMessageDto> messageDtos = new ArrayList<>();
+        for(ChatMessage message : messages){
+            ChatMessageDto messageDto = ChatMessageDto.builder()
+                    .message(message.getContent())
+                    .senderEmail(message.getSender().getEmail())
+                    .build();
+            messageDtos.add(messageDto);
+        }
+        return messageDtos;
     }
 }

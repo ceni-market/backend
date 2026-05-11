@@ -1,17 +1,22 @@
 package com.cenimarket.backend.chat.controller;
 
+import com.cenimarket.backend.chat.domain.ChatMessage;
+import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
+import com.cenimarket.backend.chat.repository.ChatMessageRepository;
 import com.cenimarket.backend.chat.service.ChatService;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -20,7 +25,7 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
 
-    public ChatController(ChatService chatService, UserRepository userRepository) {
+    public ChatController(ChatService chatService, UserRepository userRepository, ChatMessageRepository chatMessageRepository) {
         this.chatService = chatService;
         this.userRepository = userRepository;
     }
@@ -66,7 +71,16 @@ public class ChatController {
     @GetMapping("/{chatRoomId}")
     public String goToChatRoom(@PathVariable Long chatRoomId, Model model) {
         model.addAttribute("chatRoomId", chatRoomId);
+//        model.addAttribute("buyerEmail", buyerEmail);
         return "chatpage";
+    }
+
+    @PostMapping("/history/{chatRoomId}")
+    @ResponseBody
+    public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId){
+        String buyerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<ChatMessageDto> chatHistory = chatService.getChatHistory(chatRoomId, buyerEmail);
+        return chatHistory;
     }
 
 }
