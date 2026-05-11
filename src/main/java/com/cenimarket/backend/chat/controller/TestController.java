@@ -29,6 +29,11 @@ public class TestController {
         return "index";
     }
 
+    @GetMapping("/chatroom")
+    public String chatting(){
+        return "chatpage";
+    }
+
     @GetMapping("/test/loginpage")
     public String loginPage(){
         return "loginpage";
@@ -67,5 +72,4 @@ public class TestController {
         testService.createListing(request);
         return "redirect:/test/listing";
     }
-
 }

@@ -14,13 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class WebSocketController {
     private final ChatService chatService;
-
-    @GetMapping("/chatroom")
-    public String startChat(Model model) {
-        model.addAttribute("roomId", 1); //일단 채팅방 1번 밖에 없어서 1로 출력하도록 값 고정되어있음.
-        return "chatpage";
-    }
-
     private final SimpMessageSendingOperations messageSendingOperations;
 
     public WebSocketController(ChatService chatService, SimpMessageSendingOperations messageSendingOperations) {
@@ -28,11 +21,13 @@ public class WebSocketController {
         this.messageSendingOperations = messageSendingOperations;
     }
 
+
     /* config(WebSocketConfig.java)에 설정한 바와 같이 /publish 주소로 오는 요청은 여기로 라우팅된다.
     @DestinationVariable은 @MessageMapping과 함께 사용된다.
     @MessageMapping으로 전달되는 데이터의 목적지 주소를 가져온다. */
     @MessageMapping("/{roomId}")
     public void sendMessage(@DestinationVariable Long roomId, ChatMessageSendRequest messageSendRequest) {
+        chatService.saveMessage(roomId, messageSendRequest);
         //@SendTo 어노테이션으로도 할 수 있으나, 어노테이션을 이용하면 코드의 유연성이 떨어지기 때문에 따로 구현.
         messageSendingOperations.convertAndSend("/topic/" + roomId, messageSendRequest);
     }

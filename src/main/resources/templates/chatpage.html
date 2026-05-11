@@ -18,7 +18,7 @@
     <div class="card">
         <div class="card-header bg-dark text-white">
             채팅방 ID: <span id="display-room-id" th:text="${roomId}"></span>
-<!--          <input type="hidden" id="senderId" th:value="${senderId}">-->
+            <!--          <input type="hidden" id="senderId" th:value="${senderId}">-->
         </div>
         <div class="card-body">
             <div id="chat-content">
@@ -35,7 +35,7 @@
 
 <script th:inline="javascript">
     let stompClient = null;
-    const roomId = [[${roomId}]]; //지금은 그냥 1 고정.
+    const roomId = [[${chatRoomId}]];
     let token = "";
     let senderEmail = "";
 
@@ -44,7 +44,7 @@
         const socket = new SockJS('/connect');
         stompClient = Stomp.over(socket);
         token = localStorage.getItem("accessToken");
-        senderEmail = localStorage.getItem("userEmailToken");
+        senderEmail = localStorage.getItem("userEmail");
 
         stompClient.connect({
             Authorization: `Bearer ${token}`
@@ -103,6 +103,13 @@
 
     // 페이지 로드 시 연결
     connect();
+
+    // 다른 페이지로 넘어갈 때 그 이벤트를 감지해서 disconnect
+    window.addEventListener('beforeunload', (event) => {
+        if(stompClient !== null && stompClient.connected){
+            stompClient.disconnect();
+        }
+    })
 </script>
 </body>
 </html>

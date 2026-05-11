@@ -30,15 +30,24 @@ public class SecurityConfig {
                 )
                 // 3. 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // 로그인, 회원가입 관련은 인증 없이 허용
-                        // 2. ⭐ Swagger 관련 모든 경로 허용 (토큰 없이 접근 가능)
+                        .requestMatchers(
+                                "/api/auth/**").permitAll() // 홈 화면, 로그인, 회원가입 관련은 인증 없이 허용
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
-                                "/webjars/**"
-                        ).permitAll()
-                        .requestMatchers("/chatroom").permitAll()
+                                "/webjars/**").permitAll() // 2. ⭐ Swagger 관련 모든 경로 허용 (토큰 없이 접근 가능)
+                        .requestMatchers(
+                                "/chat/**",
+                                "/chatroom",
+                                "/connect/**",
+                                "/publish/**",
+                                "/topic/**").permitAll() //채팅관련 url
+                        .requestMatchers(
+                                "/index.html",
+                                "/index/**",
+                                "/test/**",
+                                "/test/listing/**").permitAll()
                         //.requestMatchers("/**").permitAll() // 일단 다되게 만듬
                         .anyRequest().authenticated()               // 그 외 모든 요청은 인증(토큰) 필요
                 )

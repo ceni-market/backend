@@ -1,0 +1,681 @@
+[33mcommit 21d4beba5831cc6ce59f9ad990050b4f13fe910a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeat/chat[m[33m, [m[1;31morigin/feat/chat[m[33m)[m
+Author: AJH <AJH@>
+Date:   Fri May 8 17:21:12 2026 +0900
+
+    feat: 관심 추가,삭제 기능추가
+
+[33mcommit c8cee11c420f6926d1a20849b57572801afca674[m
+Author: dookh99 <dookh1999@gmail.com>
+Date:   Fri May 8 17:35:31 2026 +0900
+
+    Stomp 이용한 기본적인 WebSocket통신 구현. 메시지와 브라우저의 이메일 데이터에 따라 출력위치 조정. 테스트용 ThymeLeaf파일 추가.
+
+[33mcommit 1efefbe9ad4570e06e4aae49daa4e7e2e2394a6a[m
+Merge: 1e89d7b 3a3a15f
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 16:56:28 2026 +0900
+
+    Merge pull request #28 from ceni-market/feat/auth-email-verification
+    
+    feat: 로그인된 상태에서 비밀번호 변경 (완료되면 refreshtoken삭제됨)
+
+[33mcommit 3a3a15fa7b7d0b44defefbd5caeb7dc7801df74d[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Fri May 8 16:55:26 2026 +0900
+
+    feat: 로그인된 상태에서 비밀번호 변경 (완료되면 refreshtoken삭제됨)
+
+[33mcommit 1e89d7beefaf452c467fa9698891a5e861065778[m
+Merge: 728dd2e 9cc13af
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 16:06:06 2026 +0900
+
+    Merge pull request #27 from ceni-market/feat/auth-email-verification
+    
+    feat: 로구아웃
+
+[33mcommit 9cc13af0f8f79361f58c592f345d28ee9468dc43[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Fri May 8 16:05:12 2026 +0900
+
+    feat: 로구아웃
+
+[33mcommit 728dd2e40e8ff1b752c5ae76d544bfad8fcb93a4[m
+Merge: ad62d61 e8dba6c
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 15:43:04 2026 +0900
+
+    Merge pull request #26 from ceni-market/feat/auth-email-verification
+    
+    feat: 여러가지
+
+[33mcommit e8dba6c0856cc29a52bf5920d303c68bb2d4afb1[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Fri May 8 15:42:11 2026 +0900
+
+    feat: 여러가지
+
+[33mcommit ad62d613ab7921031e15d48e356898054414e103[m
+Merge: cda7b9f c2a4eb4
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 15:24:04 2026 +0900
+
+    Merge pull request #25 from ceni-market/feat/auth-email-verification
+    
+    feat: 여러가지
+
+[33mcommit c2a4eb4b50266407f91c41950e4c602d77a1c677[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Fri May 8 15:20:44 2026 +0900
+
+    feat: 여러가지
+
+[33mcommit cda7b9fd227a1f38f116ef56563ff0b764e628e3[m
+Merge: f82ab8d 3a315ca
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 14:27:38 2026 +0900
+
+    Merge pull request #24 from ceni-market/feat/listing
+    
+    feat/listing
+
+[33mcommit 3a315ca207edc61ae0c3aacbbfccb167c0878e35[m[33m ([m[1;31morigin/feat/listing[m[33m)[m
+Merge: fd7cf7c 9f29b13
+Author: AJH <AJH@>
+Date:   Fri May 8 14:24:32 2026 +0900
+
+    Merge remote-tracking branch 'origin/feat/listing' into feat/listing
+
+[33mcommit fd7cf7c9afb572ac689b1145e8480e3d991d94fa[m
+Author: AJH <AJH@>
+Date:   Fri May 8 14:24:07 2026 +0900
+
+    fix: 게시글 상대 변경기능추가
+
+[33mcommit a1f82b63be615b665246d8e0b550c2510529ad1a[m
+Author: AJH <AJH@>
+Date:   Fri May 8 12:40:37 2026 +0900
+
+    fix: 게시글 삭제 시 상태도 DELETED로 변경
+
+[33mcommit 9f29b132e5d2a088d52ba47eac896f4a1c0acc1f[m
+Author: AJH <AJH@>
+Date:   Fri May 8 14:24:07 2026 +0900
+
+    fix: 게시글 상대 변경기능추가
+
+[33mcommit f82ab8df4c2558a73b15d2c82bb99442b00fb5c1[m
+Merge: 3b3f00e 2ddfcac
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 12:44:19 2026 +0900
+
+    Merge pull request #23 from ceni-market/feat/auth-email-verification
+    
+    feat: 시큐리티, 토큰으로 개인정보 받기
+
+[33mcommit 2ddfcacd79830b23dea0d71f63e063642a936f05[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Fri May 8 12:43:06 2026 +0900
+
+    feat: 시큐리티, 토큰으로 개인정보 받기
+
+[33mcommit c2f4d629df67e84a5269477c68cd8701423490d8[m
+Author: AJH <AJH@>
+Date:   Fri May 8 12:40:37 2026 +0900
+
+    fix: 게시글 삭제 시 상태도 DELETED로 변경
+
+[33mcommit 3b3f00eda96e171e1e466fd1aece49b682a54198[m
+Merge: 388740b 89b20a6
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 12:15:59 2026 +0900
+
+    Merge pull request #22 from ceni-market/feat/listing
+    
+    feat : 게시글 삭제기능추가
+
+[33mcommit 89b20a645826555f8bc099980bf8885d1088b56d[m
+Author: AJH <AJH@>
+Date:   Fri May 8 12:14:48 2026 +0900
+
+    feat : 게시글 삭제기능추가
+
+[33mcommit 388740bde4db1e3753c709efffd7cd9aa755aa80[m
+Merge: 3fdd978 b999193
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 12:01:30 2026 +0900
+
+    Merge pull request #21 from ceni-market/feat/listing
+    
+    feat/listing
+
+[33mcommit b9991932f62277de4606dd51207af47138e5a246[m
+Author: AJH <AJH@>
+Date:   Fri May 8 12:00:51 2026 +0900
+
+    feat : 게시글 수정기능추가
+
+[33mcommit 3fdd9784e2c7d9fef7e13ba79505c37a7dc6bf6f[m
+Merge: 634454b 03b0a0e
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 11:23:43 2026 +0900
+
+    Merge pull request #20 from ceni-market/feat/auth-email-verification
+    
+    feat: 시큐리티, 토큰으로 개인정보 받기
+
+[33mcommit 03b0a0e3e4a12d02a5f697aeed03f1408f297bfb[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Fri May 8 11:21:11 2026 +0900
+
+    feat: 시큐리티, 토큰으로 개인정보 받기
+
+[33mcommit 634454bf434bf3999b4f1ade60cb89bbedae536e[m
+Merge: 72d2d76 ce9e419
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 10:46:15 2026 +0900
+
+    Merge pull request #19 from ceni-market/feat/listing
+    
+    feat/listing
+
+[33mcommit ce9e4198302ba37b522fe25a5772773d9c883cad[m
+Author: AJH <AJH@>
+Date:   Fri May 8 10:42:36 2026 +0900
+
+    feat : 게시글 dto검증추가
+
+[33mcommit 5c3d27f275192303ead4bf7cf196af388f0b0461[m
+Merge: 4df5d65 e9f480f
+Author: AJH <AJH@>
+Date:   Fri May 8 10:32:40 2026 +0900
+
+    Merge remote-tracking branch 'origin/feat/listing' into feat/listing
+    
+    # Conflicts:
+    #       src/main/java/com/cenimarket/backend/listing/service/ListingService.java
+
+[33mcommit 4df5d65f0d06a65846d7f1c1b6bad28a6f27b21a[m
+Author: AJH <AJH@>
+Date:   Fri May 8 10:32:12 2026 +0900
+
+    feat : 게시글 등록 작성완료
+
+[33mcommit 09b28a632bfb6ce5c13816331c76c3abaf222895[m
+Author: AJH <AJH@>
+Date:   Fri May 8 10:24:28 2026 +0900
+
+    feat : rebase이후 사라진 레포 복구
+
+[33mcommit 4a56ac0c8839507d81ad233cce8eab01b6ae2d09[m
+Author: AJH <AJH@>
+Date:   Thu May 7 17:35:13 2026 +0900
+
+    fix : 등록부터작성
+
+[33mcommit 96f948147af441237cee984c0f6facfe9b4ddfb5[m
+Author: AJH <AJH@>
+Date:   Thu May 7 15:19:39 2026 +0900
+
+    feat: 게시글 목록 조회 DTO 및 Repository 추가
+
+[33mcommit 2f6f27cbdffa956e931c42f52b6880f3e54219fe[m
+Author: AJH <AJH@>
+Date:   Thu May 7 13:08:53 2026 +0900
+
+    refactor : 빌드패턴으로 변경
+
+[33mcommit a832589a522b9213a0ef4b27282d3599767f28e7[m
+Author: AJH <AJH@>
+Date:   Thu May 7 11:04:48 2026 +0900
+
+    refactor : entity 생성 함수명 변경, enum 클래스 의존에서 주입으로 변경
+
+[33mcommit 6d09d6167f66ba831605e9c33bf961290650bdc4[m
+Author: AJH <AJH@>
+Date:   Thu May 7 20:02:31 2026 +0900
+
+    feat : 게시글 저장dto, 서비스로직 작성
+
+[33mcommit 9cb001ff4482cf6dffb45af38dcbe756f53f7080[m
+Author: AJH <AJH@>
+Date:   Thu May 7 20:02:11 2026 +0900
+
+    feat : 게시글 엔티티생성 로직
+
+[33mcommit 1949095a9282ee1361fd1bc607a3bbcde3667757[m
+Author: AJH <AJH@>
+Date:   Thu May 7 18:27:27 2026 +0900
+
+    feat : 게시글등록 repo 추가
+
+[33mcommit 2862c244acb87030512ecd92a0f7e811efda5a62[m
+Author: AJH <AJH@>
+Date:   Thu May 7 18:27:06 2026 +0900
+
+    feat : 게시글등록 dto 추가
+
+[33mcommit 994e081f4d6aabe669cb3bd57e1f8bdbed849241[m
+Author: AJH <AJH@>
+Date:   Thu May 7 17:35:13 2026 +0900
+
+    fix : 등록부터작성
+
+[33mcommit 5638e6765d7e3bea933b34cef7f2daa8a3143dfd[m
+Author: AJH <AJH@>
+Date:   Thu May 7 15:19:39 2026 +0900
+
+    feat: 게시글 목록 조회 DTO 및 Repository 추가
+
+[33mcommit 72d2d7679820457af7d96e2533557581a4da17f7[m
+Merge: ed9e78c 1be7fe9
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Fri May 8 10:18:09 2026 +0900
+
+    Merge pull request #18 from ceni-market/feat/auth-email-verification
+    
+    feat: 기타등등
+
+[33mcommit 1be7fe9d3e3512533acdddf5f400cf5a3377e071[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Fri May 8 10:16:07 2026 +0900
+
+    feat: 기타등등
+
+[33mcommit e9f480f589c8da57d934aa839d8a109ae5c24a66[m
+Merge: 069e17a bc67d79
+Author: AJH <AJH@>
+Date:   Thu May 7 20:03:14 2026 +0900
+
+    Merge remote-tracking branch 'origin/feat/listing' into feat/listing
+
+[33mcommit 069e17afe26e123d6661ba630970a89ad3ae89c4[m
+Author: AJH <AJH@>
+Date:   Thu May 7 20:02:31 2026 +0900
+
+    feat : 게시글 저장dto, 서비스로직 작성
+
+[33mcommit 167656784122f5586d759afc4190716d1bcac9a8[m
+Author: AJH <AJH@>
+Date:   Thu May 7 20:02:11 2026 +0900
+
+    feat : 게시글 엔티티생성 로직
+
+[33mcommit a90744a5985659925eb5e1dae11317e6c3ba798d[m
+Author: AJH <AJH@>
+Date:   Thu May 7 18:27:27 2026 +0900
+
+    feat : 게시글등록 repo 추가
+
+[33mcommit 5706785f4c4194d9fa90267ea725938de6bdcfc5[m
+Author: AJH <AJH@>
+Date:   Thu May 7 18:27:06 2026 +0900
+
+    feat : 게시글등록 dto 추가
+
+[33mcommit dc31e887a347480b1f5d0501d602e2a7077b37b6[m
+Author: AJH <AJH@>
+Date:   Thu May 7 17:35:13 2026 +0900
+
+    fix : 등록부터작성
+
+[33mcommit a03ed639aa2708fd01e1958a6b764d47440c8dde[m
+Author: AJH <AJH@>
+Date:   Thu May 7 15:19:39 2026 +0900
+
+    feat: 게시글 목록 조회 DTO 및 Repository 추가
+
+[33mcommit ed9e78c50410f00a64a004bb45db92c86262c9f9[m
+Merge: ee67dfb 4d1f0ec
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Thu May 7 17:43:15 2026 +0900
+
+    Merge pull request #17 from ceni-market/feat/auth-email-verification
+    
+    feat: 토큰
+
+[33mcommit bc67d794b5bc81715cd144323c9cc0228a0bafa2[m
+Author: AJH <AJH@>
+Date:   Thu May 7 17:35:13 2026 +0900
+
+    fix : 등록부터작성
+
+[33mcommit ee67dfbe13ccb6ff00de3a1cb6b31c8d444fc86a[m
+Merge: 6f6fbe6 2c95eca
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Thu May 7 16:38:51 2026 +0900
+
+    Merge pull request #15 from ceni-market/feat/category
+    
+    Feat/category
+
+[33mcommit 4d1f0ec5e53e97b92b79b8dae937365f21897697[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Thu May 7 16:11:28 2026 +0900
+
+    feat: 토큰
+
+[33mcommit fd4a33486161b835dd3044c53e9519b4d652d24d[m
+Author: AJH <AJH@>
+Date:   Thu May 7 15:19:39 2026 +0900
+
+    feat: 게시글 목록 조회 DTO 및 Repository 추가
+
+[33mcommit 0878a734aae4ef46e25279a8bc87b99620d353fe[m
+Author: AJH <AJH@>
+Date:   Thu May 7 13:09:48 2026 +0900
+
+    refactor : dto로 담아서 전달
+
+[33mcommit 6593313615413dd5b5cf87f8881eb72a7f163bfc[m
+Author: AJH <AJH@>
+Date:   Thu May 7 13:08:53 2026 +0900
+
+    refactor : 빌드패턴으로 변경
+
+[33mcommit 80465ef1fd55bd34dec7ba228f03548bdceec5aa[m
+Author: AJH <AJH@>
+Date:   Thu May 7 11:04:48 2026 +0900
+
+    refactor : entity 생성 함수명 변경, enum 클래스 의존에서 주입으로 변경
+
+[33mcommit 2c95eca75a98dde8e15c41938c58f18ed829ce5f[m[33m ([m[1;31morigin/feat/category[m[33m)[m
+Author: AJH <AJH@>
+Date:   Thu May 7 13:09:48 2026 +0900
+
+    refactor : dto로 담아서 전달
+
+[33mcommit d4aafcd65594bed77fee90def7cf467ae5f62b25[m
+Author: AJH <AJH@>
+Date:   Thu May 7 13:08:53 2026 +0900
+
+    refactor : 빌드패턴으로 변경
+
+[33mcommit 6f6fbe620c635904dd857480473149cad77be1e1[m
+Merge: b9e2200 d9e30a6
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Thu May 7 11:05:09 2026 +0900
+
+    Merge pull request #13 from ceni-market/feat/auth-email-verification
+    
+    feat: 회원가입 전체
+
+[33mcommit cbc5e0757053acd5d54e40f41d72faf2dcbcd40f[m
+Author: AJH <AJH@>
+Date:   Thu May 7 11:04:48 2026 +0900
+
+    refactor : entity 생성 함수명 변경, enum 클래스 의존에서 주입으로 변경
+
+[33mcommit d9e30a68695df9428d64efba5137f6ebc776de6b[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Thu May 7 11:04:31 2026 +0900
+
+    feat: 회원가입 전체
+
+[33mcommit 38ddd697cb10774e2b9e7da2791c56dbbb6e3e73[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Thu May 7 10:59:55 2026 +0900
+
+    feat: 회원가입 전체
+
+[33mcommit b9e22007451ddd5279cdc864ac623e0c5c17fa9f[m
+Merge: 0136847 4c4ec14
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Thu May 7 09:54:12 2026 +0900
+
+    Merge pull request #12 from ceni-market/feat/category
+    
+    feat/category
+
+[33mcommit 4c4ec14d3622d68c4133f6dc9a6c7079e25a45dc[m
+Author: AJH <AJH@>
+Date:   Thu May 7 09:45:04 2026 +0900
+
+    refactor : dto에 entity의존성 제거
+
+[33mcommit c69477dd4365c4456a9839e40e30fbefe4172ac5[m
+Merge: 116dc32 b5118ef
+Author: AJH <AJH@>
+Date:   Thu May 7 09:08:43 2026 +0900
+
+    Merge remote-tracking branch 'origin/feat/category' into feat/category
+
+[33mcommit 116dc327d61139f64fd72c2ed013ecf9c830532c[m
+Author: AJH <AJH@>
+Date:   Wed May 6 18:26:22 2026 +0900
+
+    feat : category 컨트롤러,서비스,dto작성
+
+[33mcommit 37086f0d8d2cab97b1386cbd35a06db22591f2de[m
+Author: AJH <AJH@>
+Date:   Wed May 6 18:25:12 2026 +0900
+
+    fix : category 엔티티 필요없는 항목 수정
+
+[33mcommit 01368474f555d40414c24cd3ec382b4285c31467[m
+Merge: 7c2f732 25dd8f8
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Thu May 7 09:07:10 2026 +0900
+
+    Merge pull request #11 from ceni-market/feat/chat
+    
+    Repository 추가. DTO 일부 추가. WebSocket 의존성 추가
+
+[33mcommit b5118efc55212bf347e02ec80cd04be763b016be[m
+Author: AJH <AJH@>
+Date:   Wed May 6 18:26:22 2026 +0900
+
+    feat : category 컨트롤러,서비스,dto작성
+
+[33mcommit 77039159453831ea853cdef0f3513b707d543d2e[m
+Author: AJH <AJH@>
+Date:   Wed May 6 18:25:12 2026 +0900
+
+    fix : category 엔티티 필요없는 항목 수정
+
+[33mcommit 25dd8f86f80810e73d4ce86419a73fe8f16b2027[m
+Author: dookh99 <dookh1999@gmail.com>
+Date:   Wed May 6 17:44:29 2026 +0900
+
+    Repository 추가. DTO 일부 추가. WebSocket 의존성 추가
+
+[33mcommit 7c2f732ffc0c705c1f184b0588c250cbe4219817[m[33m ([m[1;31morigin/chat[m[33m, [m[1;32mchat[m[33m)[m
+Merge: 4f9dab2 4d3008a
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 17:26:31 2026 +0900
+
+    Merge pull request #10 from ceni-market/feat/auth-email-verification
+    
+    feat: 이메일인증보내기 api
+
+[33mcommit 4d3008a6ff86e7513121fd89f99c9b39603a6a14[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Wed May 6 17:25:09 2026 +0900
+
+    feat: 이메일인증보내기 api
+
+[33mcommit 28bb12cf9a46a2ae704a6bc997fcf0877b400fac[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Wed May 6 17:17:50 2026 +0900
+
+    feat: 이메일인증보내기 api
+
+[33mcommit 4f9dab2a719a9b32ffd464b4982740cf9f7b2484[m
+Merge: 5c87ea7 ef0d1a1
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 14:49:54 2026 +0900
+
+    Merge pull request #9 from ceni-market/feat/auth-signup
+    
+    feat: signUp api
+
+[33mcommit ef0d1a13f8ada7a52fbc0a1c3fff9a6ff1458337[m[33m ([m[1;31morigin/feat/auth-signup[m[33m)[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Wed May 6 14:47:37 2026 +0900
+
+    feat: signUp api
+
+[33mcommit 5c87ea78588ab6ffd9e45e70315f92a0905f1423[m
+Merge: 6125a5e 131c943
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 14:43:22 2026 +0900
+
+    Merge pull request #8 from ceni-market/feat/category
+    
+    feat/category
+
+[33mcommit 131c943bc2f16649d5904c7b09d90eea45b745c5[m
+Merge: 9a4680b 78ceab6
+Author: AJH <AJH@>
+Date:   Wed May 6 14:36:43 2026 +0900
+
+    Merge remote-tracking branch 'origin/feat/category' into feat/category
+
+[33mcommit 9a4680b5788d7055fac439d018b3abe984743b1c[m
+Author: AJH <AJH@>
+Date:   Wed May 6 14:36:19 2026 +0900
+
+    feat : Listing,like 엔티티 작성
+
+[33mcommit 5a0092c1518aafaf26d50414ff0e3eba50145980[m
+Author: AJH <AJH@>
+Date:   Wed May 6 14:08:56 2026 +0900
+
+    feat : CategoryRepository 작성 및 dto 작성
+
+[33mcommit 6125a5e09480bf6ce31681ea882f10349605d3d7[m
+Merge: 488f64d 5c3ef3f
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 14:18:07 2026 +0900
+
+    Merge pull request #7 from ceni-market/feat/auth-signup
+    
+    feat: signUp api
+
+[33mcommit 78ceab631f3fb23fad30f011d339516418585183[m
+Merge: 6a48099 67bac37
+Author: AJH <AJH@>
+Date:   Wed May 6 14:14:08 2026 +0900
+
+    Merge remote-tracking branch 'origin/feat/category' into feat/category
+
+[33mcommit 5c3ef3f3aabe8db55b75bb56a86f93956ad1596f[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Wed May 6 14:11:35 2026 +0900
+
+    feat: signUp api
+
+[33mcommit 6a4809901dd9872c3774836104d6e57e1feb20ea[m
+Author: AJH <AJH@>
+Date:   Wed May 6 14:08:56 2026 +0900
+
+    feat : CategoryRepository 작성 및 dto 작성
+
+[33mcommit 67bac37e98b6fb5fa19c2860017be6cfab556fac[m
+Author: AJH <AJH@>
+Date:   Wed May 6 14:08:56 2026 +0900
+
+    feat : CategoryRepository 작성 및 dto 작성
+
+[33mcommit 488f64dcad3ce642ea33763a4ae46acc0f29a83e[m
+Merge: aa52a8f b13cb05
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 11:56:35 2026 +0900
+
+    Merge pull request #6 from ceni-market/feat/auth-signup
+    
+    feat: email_verification entity 생성
+
+[33mcommit b13cb05eb2510e009a10aacb33448ff54602359e[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Wed May 6 11:52:47 2026 +0900
+
+    feat: email_verification entity 생성
+
+[33mcommit aa52a8f6149ce8cd1103520c53a1a448736b9225[m
+Merge: 9274804 83d9ca2
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 11:47:31 2026 +0900
+
+    Merge pull request #5 from ceni-market/feat/category
+    
+    chore: JPA Auditing 설정 추가
+
+[33mcommit 83d9ca2d4d914fd8510699faba2f02a3df038500[m
+Author: AJH <AJH@>
+Date:   Wed May 6 11:46:48 2026 +0900
+
+    chore: JPA Auditing 설정 추가
+
+[33mcommit 9274804f0a64706fd142713bad522ca09f15cc96[m
+Merge: 701483e 9adb1c5
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 11:35:12 2026 +0900
+
+    Merge pull request #4 from ceni-market/feat/category
+    
+    feat: 카테고리 엔티티 추가
+
+[33mcommit 701483e7316feb1374675df23777c42b33d6f13b[m
+Merge: 4ff74e2 0e0ba35
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 11:33:15 2026 +0900
+
+    Merge pull request #3 from ceni-market/chat
+    
+    Chat, Transaction Entity 생성.
+
+[33mcommit 0e0ba35caf44aa9c433caff10e9415ec459272fd[m
+Author: 두강현 <dookh1999@gmail.com>
+Date:   Wed May 6 11:32:32 2026 +0900
+
+    Update ChatRoom.java
+    
+    SoftDeleteEntity 상속하도록 변경
+
+[33mcommit 335e0142b3cb6f4eb934b965527bae31b38c9bb8[m
+Author: 두강현 <dookh1999@kyonggi.ac.kr>
+Date:   Wed May 6 11:31:08 2026 +0900
+
+    Update Transaction.java
+    
+    Transaction 어노테이션 변경 및 BaseEntity 상속하도록 변경.
+
+[33mcommit 9adb1c5ccb6f856efebf8fed7fe48a9416fdb1f2[m
+Author: AJH <AJH@>
+Date:   Wed May 6 11:27:32 2026 +0900
+
+    feat: 카테고리 엔티티 추가
+
+[33mcommit 4ff74e2bbf1daef8b9eadcda3d473505ccc22bf4[m
+Merge: 7b6d762 9d6a982
+Author: DongGueLee <103251406+Gorani77@users.noreply.github.com>
+Date:   Wed May 6 11:25:19 2026 +0900
+
+    Merge pull request #2 from ceni-market/feat/auth-signup
+    
+    feat: 유저엔티티 생성
+
+[33mcommit 9d6a9826769ced49bbf1c34decad9798b45a01ec[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Wed May 6 11:22:39 2026 +0900
+
+    feat: 유저엔티티 변경
+
+[33mcommit a7903995a2e9e3c3d033b612563749de14be6553[m
+Author: suhwan <suhwan1117@gmail.com>
+Date:   Wed May 6 11:13:25 2026 +0900
+
+    feat: 유저엔티티 생성
+
+[33mcommit a0795072bb2c31e0d06e6ba6b8b9e5d266e28f96[m
+Author: Doo <dookh1999@gmail.com>
+Date:   Wed May 6 11:02:59 2026 +0900
+
+    Chat, Transaction Entity 만들었음. ꜀( ՞ . ̫ . ՞ ꜀ ) ꜆
+
+[33mcommit 7b6d76281e54e4a75c16ad06baf9365e5cbee129[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mdev[m[33m)[m
+Author: Gorani77 <sp2877@naver.com>
+Date:   Mon May 4 10:12:04 2026 +0900
+
+    first-setting
