@@ -17,9 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ListingCreateRequest {
     @NotNull
-    private Long sellerId;
-
-    @NotNull
     private Long categoryId;
 
     @NotBlank
