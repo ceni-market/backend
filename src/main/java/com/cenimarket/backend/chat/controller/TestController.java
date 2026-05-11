@@ -67,5 +67,4 @@ public class TestController {
         testService.createListing(request);
         return "redirect:/test/listing";
     }
-
 }
