@@ -1,5 +1,6 @@
 package com.cenimarket.backend.listing.controller;
 
+import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
 import com.cenimarket.backend.listing.dto.request.ListingStatusUpdateRequest;
@@ -12,6 +13,7 @@ import com.cenimarket.backend.listing.service.ListingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,11 +25,12 @@ public class ListingController {
     //게시글 생성
     @PostMapping
     public ResponseEntity<ApiResponse<ListingCreateResponse>> createListing(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid
             @RequestBody
             ListingCreateRequest request
     ) {
-        ListingCreateResponse response =listingService.createListing(request);
+        ListingCreateResponse response =listingService.createListing(userPrincipal.getId(),request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
     //게시글 수정

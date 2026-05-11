@@ -28,8 +28,8 @@ public class ListingService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     //게시글 등록
-    public ListingCreateResponse createListing(ListingCreateRequest request) {
-        User seller = userRepository.findById(request.getSellerId()).orElseThrow();
+    public ListingCreateResponse createListing(Long sellerId, ListingCreateRequest request) {
+        User seller = userRepository.findById(sellerId).orElseThrow();
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
         // listing 엔티티생성
         Listing listing = Listing.create(
