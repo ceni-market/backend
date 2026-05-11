@@ -107,7 +107,7 @@ public class ChatService {
                 .sellerId(chatRoom.getSeller().getId())
                 .buyerId(chatRoom.getBuyer().getId())
                 .build();
-        System.out.println("Service - response 조립 완료");
+        System.out.println("Service - response 조립 완료.");
         return response;
     }
 }
