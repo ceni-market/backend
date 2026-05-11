@@ -20,7 +20,7 @@ public class ListingDetailResponse {
     private final CategoryResponse category;
     private final Integer likeCount;
     private final LocalDateTime updatedAt;
-    private final User seller;
+    private final SellerResponse seller;
 
     public static ListingDetailResponse from(Listing listing) {
         return ListingDetailResponse.builder()
@@ -35,7 +35,7 @@ public class ListingDetailResponse {
                 .category(CategoryResponse.from(listing.getCategory()))
                 .likeCount(listing.getLikeCount())
                 .updatedAt(listing.getUpdatedAt())
-                .seller(listing.getSeller())
+                .seller(SellerResponse.from(listing.getSeller()))
                 .build();
     }
 }
