@@ -175,8 +175,7 @@
                 throw new Error('채팅방 생성 실패');
             })
             .then(result => {
-                console.log("ddd", result);
-                // 성공 시 생성된 채팅방으로 이동
+                // 성공 시 리턴된 채팅방으로 이동
                 location.href = '/chat/' + result.chatRoomId;
             })
             .catch(error => alert(error.message));

@@ -17,7 +17,7 @@
 <div class="container py-5">
     <div class="card">
         <div class="card-header bg-dark text-white">
-            채팅방 ID: <span id="display-room-id" th:text="${roomId}"></span>
+            채팅방 ID: <span id="display-room-id" th:text="${chatRoomId}"></span>
             <!--          <input type="hidden" id="senderId" th:value="${senderId}">-->
         </div>
         <div class="card-body">
@@ -50,6 +50,7 @@
             Authorization: `Bearer ${token}`
         }, function (frame) {
             console.log('Connected: ' + frame);
+            getMessageHistory(roomId, senderEmail);
 
             // 구독 설정: /topic/{roomId} 주소로 오는 메시지를 받음
             stompClient.subscribe('/topic/' + roomId, function (response) {
@@ -94,6 +95,29 @@
             chatContent.appendChild(otherMsgDiv);
         }
         chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    function getMessageHistory(roomId, buyerEmail) {
+
+        const data = {
+            roomId: roomId
+        };
+
+        fetch(`/chat/history/${roomId}`, {
+            method: 'POST', // POST 방식 사용
+            headers: {
+                'Content-Type': 'application/json', // JSON 데이터를 보낸다고 명시
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                buyerEmail: buyerEmail // Body에 데이터 포함
+            })
+        })
+            .then(response => response.json())
+            .then(messages => {
+                messages.forEach(message => showMessage(message, buyerEmail));
+            })
+            .catch(error => console.error("채팅 기록 로드 실패:", error));
     }
 
     // 엔터키 지원
