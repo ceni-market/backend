@@ -1,5 +1,6 @@
 package com.cenimarket.backend.listing.service;
 
+import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,4 +19,10 @@ public class ListingQueryService {
     public Page<ListingsListResponse> findAll(Pageable pageable) {
         return listingQueryRepository.findAll(pageable).map(ListingsListResponse::from);
     }
+
+    //게시글 상세 조회
+    public ListingDetailResponse findById(Long id) {
+        return ListingDetailResponse.from(listingQueryRepository.findListingById(id));
+    }
+
 }
