@@ -44,16 +44,23 @@ public class ChatController {
                 .buyerId(buyerId)
                 .build();
         System.out.println("완료");
-        System.out.println("chatService.createChatRoom 실행");
-        chatService.createChatRoom(request);
-        System.out.println("완료");
+        System.out.println("기존 채팅방이 있는지 검사 시작");
+        try{
+            ChatRoomCreateResponse chatRoom = chatService.getChatRoom(sellerId, buyerId);
+            return ResponseEntity.ok(chatRoom);
+        } catch (BusinessException e){
+            System.out.println("기존 채팅방 없음. 새로운 채팅방 생성.");
+            System.out.println("chatService.createChatRoom 실행");
+            chatService.createChatRoom(request);
+            System.out.println("완료");
 //        Long chatRoomId = chatService.getChatRoomId(sellerId, buyerId);
 //        return "chat/" + chatRoomId;
-        System.out.println("chatService.getChatRoom 실행");
-        ChatRoomCreateResponse response = chatService.getChatRoom(sellerId, buyerId);
-        System.out.println("완료");
-        System.out.println("리턴");
-        return ResponseEntity.ok(response);
+            System.out.println("chatService.getChatRoom 실행");
+            ChatRoomCreateResponse response = chatService.getChatRoom(sellerId, buyerId);
+            System.out.println("완료");
+            System.out.println("리턴");
+            return ResponseEntity.ok(response);
+        }
     }
 
     @GetMapping("/{chatRoomId}")
