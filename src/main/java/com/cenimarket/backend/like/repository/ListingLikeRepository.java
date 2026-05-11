@@ -10,4 +10,6 @@ public interface ListingLikeRepository extends JpaRepository<ListingLike, Long> 
     boolean existsByUser_IdAndListing_Id(Long userId, Long listingId);
     // 관심 취소할때 기존 관심 row 조회
     Optional<ListingLike> findByUser_IdAndListing_Id(Long userId, Long listingId);
+
+    Long countByUserId(Long userId);
 }
