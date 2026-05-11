@@ -3,6 +3,7 @@ package com.cenimarket.backend.global.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,6 +38,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**").permitAll() // 2. ⭐ Swagger 관련 모든 경로 허용 (토큰 없이 접근 가능)
+                        // 게시글 조회 API는 토큰 없이 허용
+                        .requestMatchers(HttpMethod.GET, "/api/listings").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
                         .requestMatchers(
                                 "/chat/**",
                                 "/chatroom",
