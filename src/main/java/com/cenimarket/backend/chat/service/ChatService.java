@@ -7,7 +7,6 @@ import com.cenimarket.backend.chat.domain.MessageType;
 import com.cenimarket.backend.chat.dto.request.ChatMessageSendRequest;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
-import com.cenimarket.backend.chat.dto.response.ChatRoomResponse;
 import com.cenimarket.backend.chat.repository.ChatMessageRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;

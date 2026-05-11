@@ -23,7 +23,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     open-in-view: false
     properties:
       hibernate:
@@ -35,8 +35,8 @@ server:
 
 logging:
   level:
-    org.hibernate.SQL: debug
-    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.SQL: info #debug
+    org.hibernate.orm.jdbc.bind: info #trace
 
 jwt:
   # 최소 32자 이상의 임의의 문자열을 입력하세요

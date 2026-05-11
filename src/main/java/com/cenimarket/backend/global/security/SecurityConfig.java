@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 "/webjars/**").permitAll() // 2. ⭐ Swagger 관련 모든 경로 허용 (토큰 없이 접근 가능)
                         .requestMatchers(
                                 "/chat/**",
+                                "/chatroom",
                                 "/connect/**",
                                 "/publish/**",
                                 "/topic/**").permitAll() //채팅관련 url
