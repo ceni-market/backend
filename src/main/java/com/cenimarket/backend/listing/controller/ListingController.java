@@ -36,27 +36,30 @@ public class ListingController {
     //게시글 수정
     @PutMapping("/{listingId}")
     public ResponseEntity<ApiResponse<ListingUpdateResponse>> updateListing(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long listingId,
             @Valid @RequestBody ListingUpdateRequest request
     ){
-        ListingUpdateResponse response = listingService.updateListing(listingId, request);
+        ListingUpdateResponse response = listingService.updateListing(userPrincipal.getId(), listingId, request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
     //게시글 삭제
     @DeleteMapping("/{listingId}")
     public ResponseEntity<ApiResponse<ListingDeleteResponse>> deleteListing(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long listingId
     ){
-        ListingDeleteResponse response = listingService.deleteListing(listingId);
+        ListingDeleteResponse response = listingService.deleteListing(userPrincipal.getId(), listingId);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
     //게시글 상태변경
     @PatchMapping("/{listingId}/status")
     public ResponseEntity<ApiResponse<ListingStatusUpdateResponse>> updateListingStatus(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long listingId,
             @Valid @RequestBody ListingStatusUpdateRequest request
     ){
-        ListingStatusUpdateResponse response = listingService.updateListingStatus(listingId, request);
+        ListingStatusUpdateResponse response = listingService.updateListingStatus(userPrincipal.getId(), listingId, request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 }
