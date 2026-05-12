@@ -2,6 +2,7 @@ package com.cenimarket.backend.mypage.service;
 
 import com.cenimarket.backend.like.repository.ListingLikeRepository;
 import com.cenimarket.backend.listing.domain.ListingStatus;
+import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
 import com.cenimarket.backend.mypage.dto.response.MyPageDashBoardResponse;
@@ -56,6 +57,11 @@ public class MyPageService {
                 .map(transaction -> TransactionListResponse.from(transaction, id));
     }
 
+    // 나눔 글 조회
+    public Page<ListingsListResponse> getGiveaways(Pageable pageable, Long id) {
+        return listingQueryRepository.findAllBySellerIdAndType(id, ListingType.GIVEAWAY, pageable)
+                .map(ListingsListResponse::from);
+    }
 
 
 }
