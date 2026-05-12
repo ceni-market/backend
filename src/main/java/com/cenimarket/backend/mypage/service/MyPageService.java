@@ -2,9 +2,12 @@ package com.cenimarket.backend.mypage.service;
 
 import com.cenimarket.backend.like.repository.ListingLikeRepository;
 import com.cenimarket.backend.listing.domain.ListingStatus;
+import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
 import com.cenimarket.backend.mypage.dto.response.MyPageDashBoardResponse;
+import com.cenimarket.backend.mypage.dto.response.TransactionListResponse;
+import com.cenimarket.backend.transaction.domain.TransactionRole;
 import com.cenimarket.backend.transaction.domain.TransactionType;
 import com.cenimarket.backend.transaction.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +41,31 @@ public class MyPageService {
                 .build();
     }
 
-    //내가 쓴 글 조회
+    // 내가 쓴 글 조회
     public Page<ListingsListResponse> getMyListings(Pageable pageable, Long id) {
         return listingQueryRepository.findAllBySellerId(id, pageable).map(ListingsListResponse::from);
     }
 
+    // 관심 상품 조회
+    public Page<ListingsListResponse> getMyLikes(Pageable pageable, Long id) {
+        return listingLikeRepository.findLikedListingsByUserId(id, pageable).map(ListingsListResponse::from);
+    }
 
+    // 최근 거래 내역 조회
+    public Page<TransactionListResponse> getTransactions(Long id, TransactionRole role, Pageable pageable) {
+        return transactionRepository.findMyTransactions(id, role ,pageable)
+                .map(transaction -> TransactionListResponse.from(transaction, id));
+    }
 
+    // 나눔 글 조회
+    public Page<ListingsListResponse> getGiveaways(Pageable pageable, Long id) {
+        return listingQueryRepository.findAllBySellerIdAndType(id, ListingType.GIVEAWAY, pageable)
+                .map(ListingsListResponse::from);
+    }
+
+    // 검색
+    public Page<ListingsListResponse> getSearch(Pageable pageable, String keyword) {
+        return listingQueryRepository.search(keyword, pageable)
+                .map(ListingsListResponse::from);
+    }
 }
