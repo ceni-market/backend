@@ -3,7 +3,8 @@ package com.cenimarket.backend.listing.controller;
 import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
-import com.cenimarket.backend.listing.dto.response.ListingsPageResponse;
+import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
+import com.cenimarket.backend.listing.dto.response.PageResponse;
 import com.cenimarket.backend.listing.service.ListingQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +23,10 @@ public class ListingQueryController {
 
     // 게시글 목록 조회
     @GetMapping("/api/listings")
-    public ResponseEntity<ApiResponse<ListingsPageResponse>> getListings
+    public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getListings
             (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
     Pageable pageable, @RequestParam(required = false) ListingType type) {
-        return ResponseEntity.ok(ApiResponse.ok(ListingsPageResponse.from(
+        return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
                 listingQueryService.findAll(pageable)
         )));
     }
