@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-
+    boolean existsByChatRoomId(Long chatRoomId);
+    boolean existsByListingId(Long listingId);
     long countByBuyerIdAndType(Long buyerId, TransactionType type);
 }
