@@ -13,6 +13,11 @@ spring:
           starttls:
             enable: true
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   security:
     oauth2:
       client:
@@ -54,7 +59,7 @@ jwt:
   # 최소 32자 이상의 임의의 문자열을 입력하세요
   secret: ${JWT_SECRET}
   # 30분 (밀리초 단위)
-  access-expiration: 1800000
+  access-expiration: 180000000
   # 7일
   refresh-expiration: 604800000
 
