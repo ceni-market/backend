@@ -78,9 +78,8 @@ public class ChatController {
     @PostMapping("/history/{chatRoomId}")
     @ResponseBody
     public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId){
-        String buyerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<ChatMessageDto> chatHistory = chatService.getChatHistory(chatRoomId, buyerEmail);
-        return chatHistory;
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return chatService.getChatHistory(chatRoomId, userEmail);
     }
 
 }
