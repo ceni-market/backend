@@ -38,11 +38,14 @@ public class MyPageService {
                 .build();
     }
 
-    //내가 쓴 글 조회
+    // 내가 쓴 글 조회
     public Page<ListingsListResponse> getMyListings(Pageable pageable, Long id) {
         return listingQueryRepository.findAllBySellerId(id, pageable).map(ListingsListResponse::from);
     }
 
-
+    // 관심 상품 조회
+    public Page<ListingsListResponse> getMyLikes(Pageable pageable, Long id) {
+        return listingLikeRepository.findLikedListingsByUserId(id, pageable).map(ListingsListResponse::from);
+    }
 
 }

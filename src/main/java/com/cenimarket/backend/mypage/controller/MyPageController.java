@@ -23,26 +23,39 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyPageController {
     private final MyPageService myPageService;
 
-    // 프로필 사진, 이름 반환
+    // 프로필 사진, 이름 정보 반환
     @GetMapping("/api/mypage/me")
     public ResponseEntity<ApiResponse<MyPageInfoResponse>>
     getInfo(@AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok(ApiResponse.ok(MyPageInfoResponse.from(user)));
     }
 
+    // 대시보드 정보 반환 - 판매상품, 관심상품, 나눔한 글, 나눔받은 글
     @GetMapping("/api/mypage/summary")
     public ResponseEntity<ApiResponse<MyPageDashBoardResponse>>
     getDashBoard(@AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok(ApiResponse.ok(myPageService.getDashBoard(user.getId())));
     }
 
+    // 내가 쓴 글 리스트 반환
     @GetMapping("/api/mypage/listings")
     public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getMyListings
-            (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
-             Pageable pageable, @RequestParam(required = false) ListingType type,
-             @AuthenticationPrincipal UserPrincipal user) {
+    (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+     Pageable pageable, @AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
                 myPageService.getMyListings(pageable, user.getId())
         )));
     }
+
+    // 관심상품 리스트 반환
+    @GetMapping("/api/mypage/likes")
+    public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getMyLikes
+    (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+     Pageable pageable, @AuthenticationPrincipal UserPrincipal user) {
+        return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
+                myPageService.getMyLikes(pageable, user.getId())
+        )));
+    }
+
+
 }
