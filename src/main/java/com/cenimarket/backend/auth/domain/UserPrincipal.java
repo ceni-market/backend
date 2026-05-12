@@ -5,18 +5,28 @@ import com.cenimarket.backend.user.domain.User; // 유저 엔티티 임포트
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 @Getter
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails, OAuth2User {
 
     private final User user; // 우리 프로젝트의 User 엔티티
+    private Map<String, Object> attributes; // 구글에서 받은 정보
 
+    // 1. 일반 로그인 시 사용하는 생성자
     public UserPrincipal(User user) {
         this.user = user;
+    }
+
+    // 2. 소셜 로그인 시 사용하는 생성자 (에러 해결 포인트!)
+    public UserPrincipal(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
     }
 
     // 이 메서드가 있어야 컨트롤러에서 .get***()을 쓸 수 있습니다!
@@ -51,6 +61,11 @@ public class UserPrincipal implements UserDetails {
     @Override
     public String getPassword() {
         return user.getPasswordHash();
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.cenimarket.backend.global.security;
 
+import com.cenimarket.backend.auth.oauth.OAuth2SuccessHandler;
+import com.cenimarket.backend.auth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider; // 1. 만든 판독기 주입
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler oauth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -53,17 +57,19 @@ public class SecurityConfig {
                                 "/test/**",
                                 "/test/listing/**").permitAll()
                         //.requestMatchers("/**").permitAll() // 일단 다되게 만듬
+                        .requestMatchers("/oauth2/**").permitAll()
                         .anyRequest().authenticated()               // 그 외 모든 요청은 인증(토큰) 필요
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                // 이제 선언된 필드를 사용하여 에러가 사라집니다.
+                                .userService(customOAuth2UserService)
+                        )
+                        .successHandler(oauth2SuccessHandler)
                 )
                 // 4. JWT 필터 추가 (UsernamePasswordAuthenticationFilter보다 먼저 실행)
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
                 .build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // BCrypt는 솔팅(Salting)과 키 스트레칭을 자동으로 처리하여 password_hash를 안전하게 생성.
-        return new BCryptPasswordEncoder();
     }
 }
