@@ -11,6 +11,16 @@ spring:
           starttls:
             enable: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}          # 발급받은 클라이언트 ID
+            client-secret: ${GOOGLE_CLIENT_SECRET}  # 발급받은 보안 비밀번호
+            scope:
+              - email
+              - profile
   application:
     name: ceni-market-backend
 

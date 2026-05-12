@@ -62,5 +62,13 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
     public void withdraw() {
         this.status = UserStatus.DELETED;
     }
+
+    public void setEmailVerifiedAt(LocalDateTime now) {
+        this.emailVerifiedAt=now;
+    }
+
+    public void setLastLoginAt(LocalDateTime now) {
+        this.lastLoginAt=now;
+    }
 }
 
