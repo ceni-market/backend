@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.cenimarket.backend.global.security.JwtTokenProvider;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -43,7 +46,9 @@ public class LoginService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
         }
-
+        
+        // 마지막 로그인 일시 업데이트
+        user.setLastLoginAt(LocalDateTime.now());
 
         // 3. 토큰 생성 (AccessToken, RefreshToken)
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());

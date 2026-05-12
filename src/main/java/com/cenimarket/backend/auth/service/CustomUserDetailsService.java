@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // 1. DB에서 이메일로 유저 찾기
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일을 가진 유저를 찾을 수 없습니다: " + email));
+                .orElseThrow(() ->  new BusinessException(ErrorCode.BUSINESS_ERROR));
 
         // 2. 찾은 유저 엔티티를 UserPrincipal로 감싸서 반환
         return new UserPrincipal(user);
