@@ -20,13 +20,21 @@ public interface ListingLikeRepository extends JpaRepository<ListingLike, Long> 
     // 내 관심 상품 수
     Long countByUserId(Long userId);
     // 내 관심 상품 리스트 반환
-    @Query("""
-        select ll.listing
+    @Query(
+            value = """
+        select l
         from ListingLike ll
         join ll.listing l
+        join fetch l.category
         where ll.user.id = :userId
         order by ll.id desc
-    """)
+    """,
+            countQuery = """
+        select count(ll)
+        from ListingLike ll
+        where ll.user.id = :userId
+    """
+    )
     Page<Listing> findLikedListingsByUserId(
             @Param("userId") Long userId,
             Pageable pageable

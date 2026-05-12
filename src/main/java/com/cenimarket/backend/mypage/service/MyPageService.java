@@ -5,6 +5,8 @@ import com.cenimarket.backend.listing.domain.ListingStatus;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
 import com.cenimarket.backend.mypage.dto.response.MyPageDashBoardResponse;
+import com.cenimarket.backend.mypage.dto.response.TransactionListResponse;
+import com.cenimarket.backend.transaction.domain.TransactionRole;
 import com.cenimarket.backend.transaction.domain.TransactionType;
 import com.cenimarket.backend.transaction.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +49,13 @@ public class MyPageService {
     public Page<ListingsListResponse> getMyLikes(Pageable pageable, Long id) {
         return listingLikeRepository.findLikedListingsByUserId(id, pageable).map(ListingsListResponse::from);
     }
+
+    // 최근 거래 내역 조회
+    public Page<TransactionListResponse> getTransactions(Long id, TransactionRole role, Pageable pageable) {
+        return transactionRepository.findMyTransactions(id, role ,pageable)
+                .map(transaction -> TransactionListResponse.from(transaction, id));
+    }
+
+
 
 }

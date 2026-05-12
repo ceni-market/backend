@@ -7,7 +7,9 @@ import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.dto.response.PageResponse;
 import com.cenimarket.backend.mypage.dto.response.MyPageDashBoardResponse;
 import com.cenimarket.backend.mypage.dto.response.MyPageInfoResponse;
+import com.cenimarket.backend.mypage.dto.response.TransactionListResponse;
 import com.cenimarket.backend.mypage.service.MyPageService;
+import com.cenimarket.backend.transaction.domain.TransactionRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -57,5 +59,16 @@ public class MyPageController {
         )));
     }
 
-
+    // 최근 거래 내역 조회
+    @GetMapping("/api/mypage/transactions")
+    public ResponseEntity<ApiResponse<PageResponse<TransactionListResponse>>> getTransactions(
+            @RequestParam(defaultValue = "ALL") TransactionRole role,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable,
+            @AuthenticationPrincipal UserPrincipal user
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                PageResponse.from(myPageService.getTransactions(user.getId(), role, pageable))
+        ));
+    }
 }
