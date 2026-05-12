@@ -28,12 +28,9 @@ services:
       - "8088:8088"
 
     env_file:
-      - .env
+      - .env.prod
 
-    environment:
-      DB_URL: jdbc:mysql://ceni-mysql:3306/ceni_market?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-
-      restart: always
+    restart: always
 
 volumes:
   mysql-data:
