@@ -123,18 +123,29 @@ public class Listing extends SoftDeleteEntity {
         softDelete();
     }
 
+    // 거래 상태 변화
     public void changeStatus(ListingStatus status) {
         this.status = status;
     }
-
+    // 관심수치 증가
     public void increaseLikeCount(){
         this.likeCount++;
     }
-
+    // 관심수치 감소
     public void decreaseLikeCount(){
         if (this.likeCount > 0) {
             this.likeCount--;
         }
+    }
+    // 거래완료
+    public void completeSale(LocalDateTime completedAt){
+        this.status = ListingStatus.SOLD;
+        this.completedAt = completedAt;
+    }
+    // 나눔완료
+    public void completeGiveaway(LocalDateTime completedAt) {
+        this.status = ListingStatus.GIVEN;
+        this.completedAt = completedAt;
     }
 
 }
