@@ -28,8 +28,9 @@ public class ListingService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     //게시글 등록
-    public ListingCreateResponse createListing(ListingCreateRequest request) {
-        User seller = userRepository.findById(request.getSellerId()).orElseThrow();
+    public ListingCreateResponse createListing(Long sellerId,
+                                               ListingCreateRequest request) {
+        User seller = userRepository.findById(sellerId).orElseThrow();
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
         // listing 엔티티생성
         Listing listing = Listing.create(
@@ -58,8 +59,14 @@ public class ListingService {
         return new ListingCreateResponse(savedListing.getId());
     }
     //게시글 수정
-    public ListingUpdateResponse updateListing(Long listingId, ListingUpdateRequest request) {
+    public ListingUpdateResponse updateListing(Long userId,
+                                               Long listingId,
+                                               ListingUpdateRequest request) {
         Listing listing = listingRepository.findById(listingId).orElseThrow();
+        if (!listing.getSeller().getId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.");
+        }
+
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
 
         listing.update(
@@ -73,16 +80,25 @@ public class ListingService {
         return new ListingUpdateResponse(listing.getId());
     }
     //게시글 삭제
-    public ListingDeleteResponse deleteListing(Long listingId) {
+    public ListingDeleteResponse deleteListing(Long userId,
+                                               Long listingId) {
         Listing listing = listingRepository.findById(listingId).orElseThrow();
+        if (!listing.getSeller().getId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시글만 삭제할 수 있습니다.");
+        }
+
         listing.delete();
         return new ListingDeleteResponse(listing.getId());
     }
     //게시글 상태변경
-    public ListingStatusUpdateResponse updateListingStatus(
-            Long listingId,
-            ListingStatusUpdateRequest request) {
+    public ListingStatusUpdateResponse updateListingStatus(Long userId,
+                                                           Long listingId,
+                                                           ListingStatusUpdateRequest request) {
         Listing listing = listingRepository.findById(listingId).orElseThrow();
+        if (!listing.getSeller().getId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시글만 상태 변경할 수 있습니다.");
+        }
+
         listing.changeStatus(request.getStatus());
         return new ListingStatusUpdateResponse(listing.getId(), listing.getStatus());
     }
