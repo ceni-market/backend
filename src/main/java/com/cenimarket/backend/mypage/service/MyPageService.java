@@ -2,11 +2,14 @@ package com.cenimarket.backend.mypage.service;
 
 import com.cenimarket.backend.like.repository.ListingLikeRepository;
 import com.cenimarket.backend.listing.domain.ListingStatus;
+import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
 import com.cenimarket.backend.mypage.dto.response.MyPageDashBoardResponse;
 import com.cenimarket.backend.transaction.domain.TransactionType;
 import com.cenimarket.backend.transaction.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,4 +37,12 @@ public class MyPageService {
                 .receivedDonationCount(receivedDonationCount)
                 .build();
     }
+
+    //내가 쓴 글 조회
+    public Page<ListingsListResponse> getMyListings(Pageable pageable, Long id) {
+        return listingQueryRepository.findAllBySellerId(id, pageable).map(ListingsListResponse::from);
+    }
+
+
+
 }
