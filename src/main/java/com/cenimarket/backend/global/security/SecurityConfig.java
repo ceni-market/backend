@@ -29,30 +29,37 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                // 2. 세션 정책 설정 (JWT를 쓰므로 세션을 서버에 생성하지 않음)
+
+                // 1. JWT를 사용하므로 다시 STATELESS로 변경합니다.
+                // 성공 핸들러에서 JWT를 발급하고 나면 세션은 필요 없습니다.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // 3. 권한 설정
+
                 .authorizeHttpRequests(auth -> auth
+                        // 인증 제외 경로 (한데 모아서 관리하는 것이 가독성에 좋습니다)
                         .requestMatchers(
-                                "/api/auth/**").permitAll() // 홈 화면, 로그인, 회원가입 관련은 인증 없이 허용
-                        .requestMatchers(
+                                "/api/auth/**",
+                                "/oauth2/**",
+                                "/login/oauth2/code/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
-                                "/webjars/**").permitAll() // 2. ⭐ Swagger 관련 모든 경로 허용 (토큰 없이 접근 가능)
-                        // 게시글 조회 API는 토큰 없이 허용
-                        .requestMatchers(HttpMethod.GET, "/api/listings").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
-                        .requestMatchers(
+                                "/webjars/**",
                                 "/chat/**",
                                 "/chatroom",
                                 "/connect/**",
                                 "/publish/**",
-                                "/topic/**").permitAll() //채팅관련 url
-                        .requestMatchers(
+                                "/topic/**",
                                 "/index.html",
+                                "/favicon.ico" // 아까 떴던 경고 방지
+                        ).permitAll()
+
+                        // HTTP 메서드별 권한 제어
+                        .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
+
+                        // 그 외 모든 요청은 인증 필요
+                        .anyRequest().authenticated()
                                 "/index/**",
                                 "/test/**",
                                 "/test/listing/**",
@@ -62,16 +69,17 @@ public class SecurityConfig {
                         .requestMatchers("/oauth2/**").permitAll()
                         .anyRequest().authenticated()               // 그 외 모든 요청은 인증(토큰) 필요
                 )
+
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                // 이제 선언된 필드를 사용하여 에러가 사라집니다.
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(oauth2SuccessHandler)
-                )
-                // 4. JWT 필터 추가 (UsernamePasswordAuthenticationFilter보다 먼저 실행)
-                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
+                )
+
+                // JWT 필터 위치 지정
+                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

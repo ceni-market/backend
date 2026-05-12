@@ -22,6 +22,12 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+        // 소셜 로그인 관련 경로는 토큰 검사를 하지 않고 통과시킨다.
+        if (path.startsWith("/login/oauth2/") || path.startsWith("/oauth2/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         // 1. 요청 헤더에서 토큰을 꺼내옴
         String jwt = resolveToken(request);
 
