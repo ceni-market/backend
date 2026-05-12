@@ -2,7 +2,6 @@ package com.cenimarket.backend.mypage.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.global.response.ApiResponse;
-import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.dto.response.PageResponse;
 import com.cenimarket.backend.mypage.dto.response.MyPageDashBoardResponse;
@@ -70,5 +69,15 @@ public class MyPageController {
         return ResponseEntity.ok(ApiResponse.ok(
                 PageResponse.from(myPageService.getTransactions(user.getId(), role, pageable))
         ));
+    }
+
+    // 나눔중인 글 반환
+    @GetMapping("/api/mypage/giveaways")
+    public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getGiveaways
+    (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+     Pageable pageable, @AuthenticationPrincipal UserPrincipal user) {
+        return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
+                myPageService.getGiveaways(pageable, user.getId())
+        )));
     }
 }
