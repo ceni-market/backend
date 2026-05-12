@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: "optional:file:.env[.properties]"
   mail:
     host: smtp.gmail.com
     port: 587
@@ -26,9 +28,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ceni_market?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-    username: jdbctest
-    password: jdbctest
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -50,7 +52,7 @@ logging:
 
 jwt:
   # 최소 32자 이상의 임의의 문자열을 입력하세요
-  secret: your-very-long-and-secure-random-secret-key-12345678
+  secret: ${JWT_SECRET}
   # 30분 (밀리초 단위)
   access-expiration: 1800000
   # 7일
