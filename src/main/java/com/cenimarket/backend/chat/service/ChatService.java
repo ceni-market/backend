@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cenimarket.backend.global.error.ErrorCode.BUSINESS_ERROR;
+
 @Service
 @Transactional
 public class ChatService {
@@ -113,12 +115,17 @@ public class ChatService {
         return response;
     }
 
-    public List<ChatMessageDto> getChatHistory(Long chatRoomId, String buyerEmail){
+    public List<ChatMessageDto> getChatHistory(Long chatRoomId, String currentUserEmail){
         //현재 사용자가 해당 채팅방의 참가자인지 확인
-        System.out.println("바이어의 이메일은 " + buyerEmail);
+        System.out.println("현재 로그인 된 유저의 이메일은 " + currentUserEmail);
+        User user = userRepository.findByEmail(currentUserEmail).orElseThrow();
+        Long userId = user.getId();
+        System.out.println("현재 로그인 된 유저의 ID는 " + userId);
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
-        User user = userRepository.findByEmail(buyerEmail).orElseThrow();
-        //이전 채팅 데이터를 DTO로 변환하여 반환
+        if( !chatRoom.getSeller().getId().equals(userId) && !chatRoom.getBuyer().getId().equals(userId) ){
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "접근 권한 없음.");
+        }
+        // 채팅방의 멤버이면, 이전 채팅 데이터를 DTO로 변환하여 반환
         List<ChatMessage> messages = chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(chatRoomId);
         List<ChatMessageDto> messageDtos = new ArrayList<>();
         for(ChatMessage message : messages){
