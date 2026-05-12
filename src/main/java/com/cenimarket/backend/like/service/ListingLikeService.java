@@ -1,5 +1,7 @@
 package com.cenimarket.backend.like.service;
 
+import com.cenimarket.backend.global.error.BusinessException;
+import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.like.domain.ListingLike;
 import com.cenimarket.backend.like.dto.ListingLikeResponse;
 import com.cenimarket.backend.like.repository.ListingLikeRepository;
@@ -23,6 +25,9 @@ public class ListingLikeService {
         User user = userRepository.findById(userId).orElseThrow();
         Listing listing = listingRepository.findById(listingId).orElseThrow();
 
+        if (listing.getSeller().getId().equals(userId)) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "본인 게시글에는 관심을 누를 수없습니다.");
+        }
         boolean alreadyLiked = listingLikeRepository.existsByUser_IdAndListing_Id(userId, listingId);
 
         if(!alreadyLiked){
