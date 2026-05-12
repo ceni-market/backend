@@ -29,9 +29,9 @@ public class ListingsListResponse {
                 .title(listing.getTitle())
                 .price(listing.getPrice())
                 .image(
-                        ListingImageResponse.from(
-                                listing.getImages().getFirst()
-                        )
+                        listing.getImages().isEmpty()
+                                ? null
+                                : ListingImageResponse.from(listing.getImages().getFirst())
                 )
                 .category(CategoryResponse.from(listing.getCategory()))
                 .likeCount(listing.getLikeCount())
