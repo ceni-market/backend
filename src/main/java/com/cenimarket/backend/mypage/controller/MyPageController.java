@@ -80,4 +80,14 @@ public class MyPageController {
                 myPageService.getGiveaways(pageable, user.getId())
         )));
     }
+
+    // 검색한 글
+    @GetMapping("/api/search")
+    public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getSearch
+    (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+     Pageable pageable, @RequestParam String keyword) {
+        return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
+                myPageService.getSearch(pageable, keyword)
+        )));
+    }
 }
