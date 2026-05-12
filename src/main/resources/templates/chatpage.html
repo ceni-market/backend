@@ -79,7 +79,8 @@
             const chatMessage = {
                 // ChatMessageSendRequest DTO 구조에 맞춰서 전송
                 senderEmail: senderEmail,
-                message: messageContent
+                message: messageContent,
+                contentType: "TEXT"
             };
             // 발행 설정: /publish/{roomId} 주소로 메시지 보냄
             // WebSocketConfig의 ApplicationDestinationPrefixes("/publish")와 결합됨
