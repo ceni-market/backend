@@ -29,56 +29,42 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-
-                // 1. JWT를 사용하므로 다시 STATELESS로 변경합니다.
-                // 성공 핸들러에서 JWT를 발급하고 나면 세션은 필요 없습니다.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .authorizeHttpRequests(auth -> auth
-                        // 인증 제외 경로 (한데 모아서 관리하는 것이 가독성에 좋습니다)
+                        // 1. 공통 허용 경로 (Auth, OAuth2, Swagger)
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/oauth2/**",
                                 "/login/oauth2/code/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/webjars/**",
-                                "/chat/**",
-                                "/chatroom",
-                                "/connect/**",
-                                "/publish/**",
-                                "/topic/**",
-                                "/index.html",
-                                "/favicon.ico" // 아까 떴던 경고 방지
+                                "/favicon.ico"
                         ).permitAll()
 
-                        // HTTP 메서드별 권한 제어
-                        .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
-
-                        // 그 외 모든 요청은 인증 필요
-                        .anyRequest().authenticated()
+                        // 2. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
+                        .requestMatchers(
                                 "/index/**",
                                 "/test/**",
                                 "/test/listing/**",
-                                "/api/uploads/images",
-                                "/uploads/images/**").permitAll() //test용
-                        //.requestMatchers("/**").permitAll() // 일단 다되게 만듬
-                        .requestMatchers("/oauth2/**").permitAll()
-                        .anyRequest().authenticated()               // 그 외 모든 요청은 인증(토큰) 필요
-                )
+                                "/api/uploads/images/**", // 이미지 업로드 경로
+                                "/uploads/images/**"       // 이미지 조회 경로
+                        ).permitAll()
 
+                        // 3. HTTP 메서드별 권한 제의
+                        .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
+
+                        // 4. [가장 중요] anyRequest는 반드시 마지막에!
+                        .anyRequest().authenticated()
+                )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(oauth2SuccessHandler)
-
                 )
-
-                // JWT 필터 위치 지정
+                // JWT 필터 추가
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
