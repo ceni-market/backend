@@ -72,7 +72,7 @@ public class ChatController {
     public String goToChatRoom(@PathVariable Long chatRoomId, Model model) {
         model.addAttribute("chatRoomId", chatRoomId);
 //        model.addAttribute("buyerEmail", buyerEmail);
-        return "chatpage";
+        return "chatroom";
     }
 
     @PostMapping("/history/{chatRoomId}")

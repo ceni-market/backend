@@ -41,18 +41,20 @@ public class ChatService {
         this.listingRepository = listingRepository;
     }
 
-    public void saveMessage(Long roomId, ChatMessageDto MessageSendRequest){
+    public void saveMessage(Long roomId, ChatMessageDto messageSendRequest){
         //채팅방 객체 조회 (있는 경우만)
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
         //보낸사람 객체 조회
-        User sender = userRepository.findByEmail(MessageSendRequest.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
+        User sender = userRepository.findByEmail(messageSendRequest.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
+        //메시지 타입 조회
+        MessageType type = messageSendRequest.getContentType();
         //메시지 저장
         //메시지 엔티티 조립
         ChatMessage message = ChatMessage.builder()
                 .chatRoom(chatRoom)
                 .user(sender)
-                .messageType(MessageType.TEXT)
-                .content(MessageSendRequest.getMessage())
+                .messageType(type)
+                .content(messageSendRequest.getMessage())
                 .build();
         //메시지 저장
         chatMessageRepository.save(message);
@@ -132,6 +134,7 @@ public class ChatService {
             ChatMessageDto messageDto = ChatMessageDto.builder()
                     .message(message.getContent())
                     .senderEmail(message.getSender().getEmail())
+                    .contentType(message.getMessageType())
                     .build();
             messageDtos.add(messageDto);
         }
