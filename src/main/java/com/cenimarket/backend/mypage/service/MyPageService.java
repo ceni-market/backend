@@ -63,5 +63,9 @@ public class MyPageService {
                 .map(ListingsListResponse::from);
     }
 
-
+    // 검색
+    public Page<ListingsListResponse> getSearch(Pageable pageable, String keyword) {
+        return listingQueryRepository.search(keyword, pageable)
+                .map(ListingsListResponse::from);
+    }
 }
