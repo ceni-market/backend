@@ -1,14 +1,13 @@
 package com.cenimarket.backend.listing.dto.response;
 
-import com.cenimarket.backend.category.domain.Category;
 import com.cenimarket.backend.listing.domain.Listing;
-import com.cenimarket.backend.listing.domain.ListingImage;
+import com.cenimarket.backend.listing.domain.ListingStatus;
+import com.cenimarket.backend.listing.domain.ListingType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
@@ -21,6 +20,8 @@ public class ListingsListResponse {
     private final CategoryResponse category;
     private final Integer likeCount;
     private final LocalDateTime updatedAt;
+    private final ListingStatus status;
+    private final ListingType type;
 
     public static ListingsListResponse from(Listing listing) {
         return ListingsListResponse.builder()
@@ -35,6 +36,8 @@ public class ListingsListResponse {
                 .category(CategoryResponse.from(listing.getCategory()))
                 .likeCount(listing.getLikeCount())
                 .updatedAt(listing.getUpdatedAt())
+                .status(listing.getStatus())
+                .type(listing.getType())
                 .build();
     }
 }
