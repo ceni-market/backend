@@ -55,7 +55,9 @@ public class SecurityConfig {
                                 "/index.html",
                                 "/index/**",
                                 "/test/**",
-                                "/test/listing/**").permitAll()
+                                "/test/listing/**",
+                                "/api/uploads/images",
+                                "/uploads/images/**").permitAll() //test용
                         //.requestMatchers("/**").permitAll() // 일단 다되게 만듬
                         .requestMatchers("/oauth2/**").permitAll()
                         .anyRequest().authenticated()               // 그 외 모든 요청은 인증(토큰) 필요
