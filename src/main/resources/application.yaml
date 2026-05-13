@@ -82,4 +82,13 @@ jwt:
   # 7일
   refresh-expiration: 604800000
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, metrics
+  endpoint:
+    health:
+      show-details: always
+
 
