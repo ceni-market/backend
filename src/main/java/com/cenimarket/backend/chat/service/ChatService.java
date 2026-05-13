@@ -140,4 +140,12 @@ public class ChatService {
         }
         return messageDtos;
     }
+
+    @Transactional
+    public void leaveChatRoom (Long userId, Long chatRoomId) {
+        ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, chatRoomId)
+                .orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "이 채팅방에 참여하고 있지 않습니다."));
+
+        chatRoomMemberRepository.delete(member);
+    }
 }
