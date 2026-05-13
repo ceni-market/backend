@@ -7,6 +7,7 @@ import com.cenimarket.backend.chat.domain.MessageType;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
+import com.cenimarket.backend.chat.dto.response.ChatRoomListResponse;
 import com.cenimarket.backend.chat.repository.ChatMessageRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;
@@ -99,6 +100,20 @@ public class ChatService {
         System.out.println("완료");
     }
 
+    public List<ChatRoomListResponse> getMyChatRoom(Long userId) {
+        List<ChatRoomMember> members = chatRoomMemberRepository.findByUserId(userId);
+        List<ChatRoomListResponse> myChatRooms = new ArrayList<>();
+        for(ChatRoomMember member : members){
+            ChatRoom myChatRoom = member.getChatRoom();
+            Long id = myChatRoom.getId();
+            ChatRoomListResponse myChatRoomDto = ChatRoomListResponse.builder()
+                    .chatRoomId(id)
+                    .build();
+            myChatRooms.add(myChatRoomDto);
+        }
+        return myChatRooms;
+    }
+
     public Long getChatRoomId(Long sellerId, Long buyerId) {
         ChatRoom chatRoom = chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
         return chatRoom.getId();
@@ -141,7 +156,6 @@ public class ChatService {
         return messageDtos;
     }
 
-    @Transactional
     public void leaveChatRoom (Long userId, Long chatRoomId) {
         ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, chatRoomId)
                 .orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "이 채팅방에 참여하고 있지 않습니다."));
