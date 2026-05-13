@@ -26,45 +26,55 @@ import java.util.UUID;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // 비밀번호 암호화를 위해 주입
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        String email = (String) attributes.get("email");
-        /* [추가]: 구글에서 사용자 이름 가져오기 */
-        String name = (String) attributes.get("name");
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        User user;
+        System.out.println("--- OAuth2 로드 시작 (" + registrationId + ") ---");
 
-        // DB에서 이메일로 기존 유저 확인 (자동 계정 통합)
-        if (userOptional.isPresent()) {
-            user = userOptional.get();
-            // 정책: 탈퇴 유저(DELETED)는 재가입 불가
-            if (user.getStatus() == UserStatus.DELETED) {
-                throw new BusinessException(ErrorCode.BUSINESS_ERROR);
-            }
-            // 미인증 유저 자동 인증 처리
-            if (user.getEmailVerifiedAt() == null) {
-                user.setEmailVerifiedAt(LocalDateTime.now());
-                userRepository.save(user);
-            }
+        String email = "";
+        String name = "";
+
+        if ("kakao".equals(registrationId)) {
+            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+
+            email = (String) kakaoAccount.get("email");
+            name = (profile != null) ? (String) profile.get("nickname") : "카카오유저";
+
+            System.out.println("카카오에서 가져온 정보: " + email + " / " + name);
         } else {
-            // 2. 신규 가입 처리 (기존 3단계 데이터 규격에 맞춤)
-            user = userRepository.save(User.builder()
-                    .email(email)
-                    .name(name)
-                    .passwordHash(passwordEncoder.encode(UUID.randomUUID().toString())) // 소셜용 임의 비번
-                    .status(UserStatus.ACTIVE)
-                    .emailVerifiedAt(LocalDateTime.now()) // 구글이 인증했으므로 바로 인증 처리
-                    .build());
+            email = (String) attributes.get("email");
+            name = (String) attributes.get("name");
         }
 
-        // 3. 인증된 유저 객체 반환 (세션/JWT 생성용)
-        return new UserPrincipal(user, attributes);
+        // ⭐ 여기가 핵심: 에러가 나면 콘솔에 빨갛게 찍히도록 try-catch 추가
+        try {
+            String finalEmail = email;
+            String finalName = name;
+
+            User user = userRepository.findByEmail(email)
+                    .map(existingUser -> {
+                        System.out.println("기존 유저 발견: " + existingUser.getEmail());
+                        return existingUser;
+                    })
+                    .orElseGet(() -> {
+                        System.out.println("신규 유저 가입 시도: " + finalEmail);
+                        // 비밀번호는 소셜 로그인용 랜덤값 혹은 고정값
+                        return userRepository.save(User.createSocialUser(finalEmail, finalName, "SOCIAL_AUTH"));
+                    });
+
+            System.out.println("--- OAuth2 로드 완료 (성공) ---");
+            return new UserPrincipal(user, attributes);
+
+        } catch (Exception e) {
+            System.err.println("!!! DB 저장 중 에러 발생 !!!");
+            e.printStackTrace(); // 🔴 에러 원인이 콘솔에 상세히 찍힙니다.
+            throw new OAuth2AuthenticationException("데이터베이스 처리 중 에러: " + e.getMessage());
+        }
     }
 }

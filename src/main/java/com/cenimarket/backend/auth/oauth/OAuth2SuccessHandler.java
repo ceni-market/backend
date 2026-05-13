@@ -27,10 +27,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-
+        System.out.println("여긴되나");
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        User user = userRepository.findByEmail(userPrincipal.getUsername())
+        User user = userRepository.findByEmail(userPrincipal.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_ERROR));
 
         user.setLastLoginAt(LocalDateTime.now()); // 시간을 현재로 세팅

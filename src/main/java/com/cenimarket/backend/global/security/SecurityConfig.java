@@ -29,49 +29,43 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                // 2. 세션 정책 설정 (JWT를 쓰므로 세션을 서버에 생성하지 않음)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // 3. 권한 설정
                 .authorizeHttpRequests(auth -> auth
+                        // 1. 공통 허용 경로 (Auth, OAuth2, Swagger)
                         .requestMatchers(
-                                "/api/auth/**").permitAll() // 홈 화면, 로그인, 회원가입 관련은 인증 없이 허용
-                        .requestMatchers(
+                                "/api/auth/**",
+                                "/oauth2/**",
+                                "/login/oauth2/code/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/webjars/**").permitAll() // 2. ⭐ Swagger 관련 모든 경로 허용 (토큰 없이 접근 가능)
-                        // 게시글 조회 API는 토큰 없이 허용
-                        .requestMatchers(HttpMethod.GET, "/api/listings").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
+                                "/favicon.ico"
+                        ).permitAll()
+
+                        // 2. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
                         .requestMatchers(
-                                "/chat/**",
-                                "/chatroom",
-                                "/connect/**",
-                                "/publish/**",
-                                "/topic/**").permitAll() //채팅관련 url
-                        .requestMatchers(
-                                "/index.html",
                                 "/index/**",
                                 "/test/**",
                                 "/test/listing/**",
-                                "/api/uploads/images",
-                                "/uploads/images/**").permitAll() //test용
-                        //.requestMatchers("/**").permitAll() // 일단 다되게 만듬
-                        .requestMatchers("/oauth2/**").permitAll()
-                        .anyRequest().authenticated()               // 그 외 모든 요청은 인증(토큰) 필요
+                                "/api/uploads/images/**", // 이미지 업로드 경로
+                                "/uploads/images/**"       // 이미지 조회 경로
+                        ).permitAll()
+
+                        // 3. HTTP 메서드별 권한 제의
+                        .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
+
+                        // 4. [가장 중요] anyRequest는 반드시 마지막에!
+                        .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                // 이제 선언된 필드를 사용하여 에러가 사라집니다.
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(oauth2SuccessHandler)
                 )
-                // 4. JWT 필터 추가 (UsernamePasswordAuthenticationFilter보다 먼저 실행)
+                // JWT 필터 추가
                 .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-
                 .build();
     }
 }

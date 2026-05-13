@@ -70,5 +70,20 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
     public void setLastLoginAt(LocalDateTime now) {
         this.lastLoginAt=now;
     }
+
+    public static User createSocialUser(String email, String name, String encodedPassword) {
+        User user = User.builder()
+                .email(email)
+                .name(name)
+                .passwordHash(encodedPassword)
+                .status(UserStatus.ACTIVE)
+                .build();
+
+        // 초기 인증 및 로그인 시간 설정
+        user.setEmailVerifiedAt(LocalDateTime.now());
+        user.setLastLoginAt(LocalDateTime.now());
+
+        return user;
+    }
 }
 
