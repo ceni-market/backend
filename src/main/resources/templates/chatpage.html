@@ -50,16 +50,26 @@
             Authorization: `Bearer ${token}`
         }, function (frame) {
             console.log('Connected: ' + frame);
-            getMessageHistory(roomId, senderEmail);
-
-            // 구독 설정: /topic/{roomId} 주소로 오는 메시지를 받음
-            stompClient.subscribe('/topic/' + roomId, function (response) {
-                const chatData = JSON.parse(response.body);
-                // 서버에서 messageSendRequest.getMessage()만 보냈으므로 그대로 출력
-                showMessage(chatData, senderEmail);
-            });
-        }, function(error) {
-            console.log('STOMP error: ' + error);
+            getMessageHistory(roomId, senderEmail)
+                .then(() => {
+                    // 로드 성공 시에만 구독 시작 (선택 사항)
+                    stompClient.subscribe('/topic/' + roomId, function (response) {
+                        const chatData = JSON.parse(response.body);
+                        showMessage(chatData, senderEmail);
+                    });
+                })
+                .catch(error => {
+                    // 2. 과거 메시지 로드 실패 시 처리 (권한 없음 등)
+                    console.error("초기 로딩 에러:", error.message);
+                    alert(error.message); // "접근 권한 없음." 출력
+                    // 만약 권한이 없으면 소켓 연결도 필요 없으므로 연결 해제
+                    if (stompClient !== null) {
+                        stompClient.disconnect(() => {
+                            console.log("권한 없음으로 인해 연결 해제");
+                        });
+                    }
+                    location.href = '/index';
+                });
         });
     }
 
@@ -69,7 +79,8 @@
             const chatMessage = {
                 // ChatMessageSendRequest DTO 구조에 맞춰서 전송
                 senderEmail: senderEmail,
-                message: messageContent
+                message: messageContent,
+                contentType: "TEXT"
             };
             // 발행 설정: /publish/{roomId} 주소로 메시지 보냄
             // WebSocketConfig의 ApplicationDestinationPrefixes("/publish")와 결합됨
@@ -103,7 +114,7 @@
             roomId: roomId
         };
 
-        fetch(`/chat/history/${roomId}`, {
+        return fetch(`/chat/history/${roomId}`, {
             method: 'POST', // POST 방식 사용
             headers: {
                 'Content-Type': 'application/json', // JSON 데이터를 보낸다고 명시
@@ -112,12 +123,16 @@
             body: JSON.stringify({
                 buyerEmail: buyerEmail // Body에 데이터 포함
             })
+        }).then(response => {
+            if(!response.ok){
+                return response.json().then(error => {throw new Error(error.message);
+                });
+            }
+            return response.json();
         })
-            .then(response => response.json())
             .then(messages => {
                 messages.forEach(message => showMessage(message, buyerEmail));
             })
-            .catch(error => console.error("채팅 기록 로드 실패:", error));
     }
 
     // 엔터키 지원

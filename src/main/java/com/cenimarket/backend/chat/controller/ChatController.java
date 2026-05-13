@@ -1,6 +1,6 @@
 package com.cenimarket.backend.chat.controller;
 
-import com.cenimarket.backend.chat.domain.ChatMessage;
+import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
@@ -8,12 +8,13 @@ import com.cenimarket.backend.chat.repository.ChatMessageRepository;
 import com.cenimarket.backend.chat.service.ChatService;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
+import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,18 +70,21 @@ public class ChatController {
     }
 
     @GetMapping("/{chatRoomId}")
-    public String goToChatRoom(@PathVariable Long chatRoomId, Model model) {
-        model.addAttribute("chatRoomId", chatRoomId);
-//        model.addAttribute("buyerEmail", buyerEmail);
-        return "chatpage";
+    public String goToChatRoom(@PathVariable Long chatRoomId) {
+        return "chatroom";
     }
 
     @PostMapping("/history/{chatRoomId}")
     @ResponseBody
     public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId){
-        String buyerEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<ChatMessageDto> chatHistory = chatService.getChatHistory(chatRoomId, buyerEmail);
-        return chatHistory;
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return chatService.getChatHistory(chatRoomId, userEmail);
+    }
+
+    @DeleteMapping("/{chatRoomId}/delete")
+    public ResponseEntity<?> leaveChatRoom(@AuthenticationPrincipal UserPrincipal userprincipal, @PathVariable Long chatRoomId){ //채팅방 나가기
+        chatService.leaveChatRoom(userprincipal.getId(), chatRoomId);
+        return ResponseEntity.ok(ApiResponse.ok("채팅방 나가기 성공"));
     }
 
 }

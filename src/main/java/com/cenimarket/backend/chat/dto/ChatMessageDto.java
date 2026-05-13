@@ -1,8 +1,11 @@
 package com.cenimarket.backend.chat.dto;
 
+import com.cenimarket.backend.chat.domain.MessageType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import static java.awt.SystemColor.text;
 
 @Getter
 @Setter
@@ -13,10 +16,13 @@ public class ChatMessageDto { //메시지 전송용 수신 발신 공용 DTO. �
     private String message;
     @NotNull
     private String senderEmail;
+    @NotNull
+    private MessageType contentType;
 
     @Builder
-    public ChatMessageDto(String message, String senderEmail){
+    public ChatMessageDto(String message, String senderEmail, MessageType contentType){
         this.message = message;
         this.senderEmail = senderEmail;
+        this.contentType = contentType;
     }
 }

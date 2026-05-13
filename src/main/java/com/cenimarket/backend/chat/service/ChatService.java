@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cenimarket.backend.global.error.ErrorCode.BUSINESS_ERROR;
+
 @Service
 @Transactional
 public class ChatService {
@@ -39,18 +41,20 @@ public class ChatService {
         this.listingRepository = listingRepository;
     }
 
-    public void saveMessage(Long roomId, ChatMessageDto MessageSendRequest){
+    public void saveMessage(Long roomId, ChatMessageDto messageSendRequest){
         //채팅방 객체 조회 (있는 경우만)
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
         //보낸사람 객체 조회
-        User sender = userRepository.findByEmail(MessageSendRequest.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
+        User sender = userRepository.findByEmail(messageSendRequest.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
+        //메시지 타입 조회
+        MessageType type = messageSendRequest.getContentType();
         //메시지 저장
         //메시지 엔티티 조립
         ChatMessage message = ChatMessage.builder()
                 .chatRoom(chatRoom)
                 .user(sender)
-                .messageType(MessageType.TEXT)
-                .content(MessageSendRequest.getMessage())
+                .messageType(type)
+                .content(messageSendRequest.getMessage())
                 .build();
         //메시지 저장
         chatMessageRepository.save(message);
@@ -113,21 +117,35 @@ public class ChatService {
         return response;
     }
 
-    public List<ChatMessageDto> getChatHistory(Long chatRoomId, String buyerEmail){
+    public List<ChatMessageDto> getChatHistory(Long chatRoomId, String currentUserEmail){
         //현재 사용자가 해당 채팅방의 참가자인지 확인
-        System.out.println("바이어의 이메일은 " + buyerEmail);
+        System.out.println("현재 로그인 된 유저의 이메일은 " + currentUserEmail);
+        User user = userRepository.findByEmail(currentUserEmail).orElseThrow();
+        Long userId = user.getId();
+        System.out.println("현재 로그인 된 유저의 ID는 " + userId);
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
-        User user = userRepository.findByEmail(buyerEmail).orElseThrow();
-        //이전 채팅 데이터를 DTO로 변환하여 반환
+        if( !chatRoom.getSeller().getId().equals(userId) && !chatRoom.getBuyer().getId().equals(userId) ){
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "접근 권한 없음.");
+        }
+        // 채팅방의 멤버이면, 이전 채팅 데이터를 DTO로 변환하여 반환
         List<ChatMessage> messages = chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(chatRoomId);
         List<ChatMessageDto> messageDtos = new ArrayList<>();
         for(ChatMessage message : messages){
             ChatMessageDto messageDto = ChatMessageDto.builder()
                     .message(message.getContent())
                     .senderEmail(message.getSender().getEmail())
+                    .contentType(message.getMessageType())
                     .build();
             messageDtos.add(messageDto);
         }
         return messageDtos;
+    }
+
+    @Transactional
+    public void leaveChatRoom (Long userId, Long chatRoomId) {
+        ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, chatRoomId)
+                .orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "이 채팅방에 참여하고 있지 않습니다."));
+
+        chatRoomMemberRepository.delete(member);
     }
 }

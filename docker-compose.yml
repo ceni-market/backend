@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ceni-mysql
+
+    environment:
+      MYSQL_DATABASE: ceni_market
+      MYSQL_ROOT_PASSWORD: 1234
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+    restart: always
+
+  backend:
+    build:
+      context: .
+
+    container_name: ceni-backend
+
+    depends_on:
+      - mysql
+
+    ports:
+      - "8088:8088"
+
+    env_file:
+      - .env.prod
+
+    restart: always
+
+volumes:
+  mysql-data:

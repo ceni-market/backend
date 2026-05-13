@@ -38,3 +38,6 @@ out/
 
 # Uploaded local files
 /uploads/
+
+.env
+.env.prod
