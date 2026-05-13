@@ -31,6 +31,13 @@ public class ChatController {
         this.userRepository = userRepository;
     }
 
+    @PostMapping("/mychat")
+    @ResponseBody
+    public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = principal.getId();
+        return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRoom(userId)));
+    }
+
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<ChatRoomCreateResponse> createChatRoom(@RequestBody Map<String, Object> data) {
