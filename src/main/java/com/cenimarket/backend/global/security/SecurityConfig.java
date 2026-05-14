@@ -2,6 +2,7 @@ package com.cenimarket.backend.global.security;
 
 import com.cenimarket.backend.auth.oauth.OAuth2SuccessHandler;
 import com.cenimarket.backend.auth.service.CustomOAuth2UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            String uri = request.getRequestURI();
+                            String userAgent = request.getHeader("User-Agent");
+
+                            boolean isApi = uri.startsWith("/api/");
+                            boolean isMobile = userAgent != null &&
+                                    userAgent.matches(".*(Mobi|Android|iPhone|iPad|iPod).*");
+
+                            if (isApi) {
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                return;
+                            }
+
+                            if (isMobile) {
+                                response.sendRedirect("/mobile/login");
+                                return;
+                            }
+
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        })
+                )
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
@@ -45,6 +68,10 @@ public class SecurityConfig {
 
                         // 2. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
                         .requestMatchers(
+                                "/mobile/login",
+                                "/css/**",
+                                "/images/**",
+                                "/favicon.ico",
                                 "/index/**",
                                 "/test/**",
                                 "/test/listing/**",
