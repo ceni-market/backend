@@ -1,10 +1,10 @@
-package com.cenimarket.backend.mobile.controller;
+package com.cenimarket.backend.auth.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class MobilePageController {
+public class MobileAuthController {
     @GetMapping("/mobile/login")
     public String loginPage() {
         return "auth/login";
