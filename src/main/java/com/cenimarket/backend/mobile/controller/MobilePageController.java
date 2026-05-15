@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MobilePageController {
-    @GetMapping("/login")
+    @GetMapping("/mobile/login")
     public String loginPage() {
         return "auth/login";
     }
