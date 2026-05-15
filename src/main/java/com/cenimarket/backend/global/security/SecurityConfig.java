@@ -68,7 +68,7 @@ public class SecurityConfig {
 
                         // 2. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
                         .requestMatchers(
-                                "/mobile/login",
+                                "/mobile/**",
                                 "/css/**",
                                 "/images/**",
                                 "/favicon.ico",
