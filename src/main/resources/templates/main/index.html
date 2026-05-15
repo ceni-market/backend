@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세니마켓</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/mobile-common.css}" href="/css/mobile-common.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="/css/main.css">
+</head>
+<body>
+<main class="mobile-page">
+    <section class="mobile-screen market-screen" aria-labelledby="main-title">
+        <header class="market-header">
+            <img class="market-logo-symbol"
+                 th:src="@{/images/main/itcen-logo-symbol.png}"
+                 src="/images/main/itcen-logo-symbol.png"
+                 alt="">
+            <h1 id="main-title">세니마켓</h1>
+        </header>
+
+        <form class="market-search" action="#" method="get" role="search">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <label class="visually-hidden" for="keyword">검색어</label>
+            <input id="keyword" name="keyword" type="search" placeholder="검색어를 입력해주세요">
+        </form>
+
+        <nav class="market-tabs" aria-label="상품 보기">
+            <a class="market-tab is-active" href="#" aria-current="page">전체</a>
+            <a class="market-tab" href="#">관심</a>
+        </nav>
+
+        <div class="market-list-header">
+            <span th:text="${totalCount != null ? '전체 ' + totalCount + '건' : '전체 128건'}">전체 128건</span>
+            <label class="visually-hidden" for="tradeType">거래 유형</label>
+            <select id="tradeType" name="tradeType" aria-label="거래 유형">
+                <option value="">전체</option>
+                <option value="sale">판매</option>
+                <option value="share">나눔</option>
+            </select>
+        </div>
+
+        <section class="listing-list" aria-label="상품 목록" th:if="${listings == null}">
+            <a class="listing-card" href="#" th:each="item : ${#numbers.sequence(1, 6)}">
+                <img class="listing-image"
+                     th:src="@{/images/main/product-macbook.png}"
+                     src="/images/main/product-macbook.png"
+                     alt="맥북 에어 M1 13인치">
+                <div class="listing-info">
+                    <strong class="listing-title">맥북 에어 M1 13인치</strong>
+                    <span class="listing-category">ITㆍ디지털</span>
+                    <div class="listing-meta">
+                        <span class="listing-price">900,000원</span>
+                        <span class="listing-time">1시간 전</span>
+                        <span class="listing-like">
+                            <i class="bi bi-heart" aria-hidden="true"></i>
+                            <span>3</span>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </section>
+
+        <section class="listing-list" aria-label="상품 목록" th:if="${listings != null}">
+            <a class="listing-card"
+               href="#"
+               th:each="listing : ${listings}"
+               th:href="@{/listings/{id}(id=${listing.id})}">
+                <img class="listing-image"
+                     th:src="${listing.imageUrl}"
+                     src="/images/main/product-macbook.png"
+                     th:alt="${listing.title}"
+                     alt="상품 이미지">
+                <div class="listing-info">
+                    <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
+                    <span class="listing-category" th:text="${listing.categoryName}">ITㆍ디지털</span>
+                    <div class="listing-meta">
+                        <span class="listing-price" th:text="${listing.priceText}">900,000원</span>
+                        <span class="listing-time" th:text="${listing.createdAgo}">1시간 전</span>
+                        <span class="listing-like">
+                            <i class="bi bi-heart" aria-hidden="true"></i>
+                            <span th:text="${listing.likeCount}">3</span>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </section>
+
+        <nav th:replace="~{fragments/mobile :: bottomNav('home')}"></nav>
+    </section>
+</main>
+</body>
+</html>

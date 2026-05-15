@@ -1,0 +1,232 @@
+@charset "UTF-8";
+
+.market-screen {
+    padding: 31px 30px 96px;
+}
+
+.market-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 31px;
+}
+
+.market-logo-symbol {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.market-header h1 {
+    margin: 0;
+    color: var(--text-default);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29px;
+    letter-spacing: 0;
+}
+
+.market-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    margin-top: 29px;
+    border: 1px solid var(--border-input);
+    border-radius: 5px;
+    background: #fff;
+}
+
+.market-search i {
+    position: absolute;
+    left: 20px;
+    color: var(--text-placeholder);
+    font-size: 20px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.market-search input {
+    width: 100%;
+    height: 100%;
+    padding: 0 18px 0 60px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text-default);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+}
+
+.market-search input::placeholder {
+    color: var(--text-placeholder);
+    opacity: 1;
+}
+
+.market-search:focus-within {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(7, 87, 200, 0.1);
+}
+
+.market-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 15px;
+}
+
+.market-tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 39px;
+    border-bottom: 1px solid var(--divider-brand);
+    color: var(--text-muted);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;
+}
+
+.market-tab.is-active {
+    border-bottom: 2px solid var(--brand-primary);
+    color: var(--brand-primary);
+    font-weight: 600;
+}
+
+.market-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 27px;
+    margin-top: 15px;
+    padding: 5px;
+    color: var(--text-subtle);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+}
+
+.market-list-header select {
+    width: 161px;
+    height: 24px;
+    padding: 0 20px 0 8px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-placeholder);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14px;
+    outline: 0;
+    appearance: auto;
+}
+
+.listing-list {
+    margin-top: 5px;
+}
+
+.listing-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    height: 100px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--page-subtle);
+}
+
+.listing-card:hover .listing-title {
+    color: var(--brand-primary);
+}
+
+.listing-image {
+    width: 95px;
+    height: 80px;
+    border-radius: 5px;
+    object-fit: cover;
+    flex: 0 0 auto;
+}
+
+.listing-info {
+    display: grid;
+    grid-template-rows: 17px 14px 17px;
+    align-content: center;
+    row-gap: 10px;
+    min-width: 0;
+    flex: 1 1 auto;
+    height: 80px;
+}
+
+.listing-title {
+    overflow: hidden;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.listing-category {
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.listing-meta {
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+    align-items: center;
+    column-gap: 20px;
+    min-width: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+}
+
+.listing-price {
+    color: #000;
+}
+
+.listing-like {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.listing-like i {
+    font-size: 11px;
+    line-height: 1;
+}
+
+@media (max-width: 429px) {
+    .market-screen {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+}
+
+@media (max-width: 374px) {
+    .market-screen {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .listing-card {
+        gap: 14px;
+    }
+
+    .listing-meta {
+        column-gap: 12px;
+    }
+}
