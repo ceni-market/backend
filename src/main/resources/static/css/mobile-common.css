@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+:root {
+    --brand-primary: #0757c8;
+    --text-default: #1f2937;
+    --text-muted: #5f6b7a;
+    --text-subtle: #667085;
+    --text-placeholder: #9aa6b8;
+    --border-input: #d5deec;
+    --divider-brand: #d9e3f2;
+    --page-subtle: #f8fafc;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #eef5ff;
+    color: var(--text-default);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+.mobile-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #eef5ff;
+}
+
+.mobile-screen {
+    position: relative;
+    width: min(100vw, 430px);
+    min-height: 932px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.mobile-footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    height: 80px;
+    padding: 15px 30px;
+    border-top: 1px solid var(--divider-brand);
+    background: #fff;
+}
+
+.mobile-footer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14px;
+    text-align: center;
+}
+
+.mobile-footer-item i {
+    display: block;
+    width: 25px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 24px;
+}
+
+.mobile-footer-item.is-active {
+    color: var(--brand-primary);
+}
+
+.mobile-footer-item.is-active i {
+    font-weight: 700;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 429px) {
+    .mobile-screen {
+        min-height: max(100vh, 932px);
+    }
+}
+
+@media (max-width: 374px) {
+    .mobile-footer {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+}
