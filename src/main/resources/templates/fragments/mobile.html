@@ -3,28 +3,32 @@
 <body>
 <nav class="mobile-footer" aria-label="하단 메뉴" th:fragment="bottomNav(activeMenu)">
     <a class="mobile-footer-item"
-       href="#"
+       th:href="@{/mobile/main}"
+       href="/mobile/main"
        th:classappend="${activeMenu == 'home' ? ' is-active' : ''}"
        th:attr="aria-current=${activeMenu == 'home' ? 'page' : null}">
         <i class="bi bi-house" aria-hidden="true"></i>
         <span>홈</span>
     </a>
     <a class="mobile-footer-item"
-       href="#"
+       th:href="@{/mobile/category}"
+       href="/mobile/category"
        th:classappend="${activeMenu == 'category' ? ' is-active' : ''}"
        th:attr="aria-current=${activeMenu == 'category' ? 'page' : null}">
         <i class="bi bi-grid" aria-hidden="true"></i>
         <span>카테고리</span>
     </a>
     <a class="mobile-footer-item"
-       href="#"
+       th:href="@{/mobile/chat}"
+       href="/mobile/chat"
        th:classappend="${activeMenu == 'chat' ? ' is-active' : ''}"
        th:attr="aria-current=${activeMenu == 'chat' ? 'page' : null}">
         <i class="bi bi-chat-dots" aria-hidden="true"></i>
         <span>채팅</span>
     </a>
     <a class="mobile-footer-item"
-       href="#"
+       th:href="@{/mobile/mypage}"
+       href="/mobile/mypage"
        th:classappend="${activeMenu == 'mypage' ? ' is-active' : ''}"
        th:attr="aria-current=${activeMenu == 'mypage' ? 'page' : null}">
         <i class="bi bi-person" aria-hidden="true"></i>
