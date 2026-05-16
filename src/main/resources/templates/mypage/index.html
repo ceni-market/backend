@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 정보 - 세니마켓</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/mobile-common.css}" href="/css/mobile-common.css">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}" href="/css/mypage.css">
+</head>
+<body>
+<main class="mobile-page">
+    <section class="mobile-screen mypage-screen" aria-labelledby="mypage-title">
+        <header class="mypage-header">
+            <h1 id="mypage-title">내 정보</h1>
+        </header>
+
+        <section class="mypage-content" aria-label="내 정보">
+            <div class="profile-summary">
+                <div class="profile-avatar" aria-hidden="true">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                <strong>이동규</strong>
+                <span>sp2877@knou.ac.kr</span>
+            </div>
+
+            <div class="mypage-menu" aria-label="계정 메뉴">
+                <button class="mypage-menu-item" type="button">
+                    <span class="mypage-menu-icon">
+                        <i class="bi bi-person" aria-hidden="true"></i>
+                    </span>
+                    <span class="mypage-menu-text">
+                        <strong>프로필 사진 변경</strong>
+                        <span>프로필 사진을 변경할 수 있어요.</span>
+                    </span>
+                </button>
+
+                <button class="mypage-menu-item" type="button">
+                    <span class="mypage-menu-icon logout-icon" aria-hidden="true"></span>
+                    <span class="mypage-menu-text">
+                        <strong>로그아웃</strong>
+                        <span>현재 계정에서 로그아웃합니다.</span>
+                    </span>
+                </button>
+
+                <button class="mypage-menu-item is-danger" type="button">
+                    <span class="mypage-menu-icon trash-icon" aria-hidden="true"></span>
+                    <span class="mypage-menu-text">
+                        <strong>회원 탈퇴</strong>
+                        <span>회원 탈퇴 시 모든 데이터가 삭제됩니다.</span>
+                    </span>
+                </button>
+            </div>
+        </section>
+
+        <nav th:replace="~{fragments/mobile :: bottomNav('mypage')}"></nav>
+    </section>
+</main>
+</body>
+</html>

@@ -9,4 +9,14 @@ public class MobileListingController {
     public String loginPage() {
         return "main/index";
     }
+
+    @GetMapping("/mobile/listings/write")
+    public String listingWritePage() {
+        return "listing/write";
+    }
+
+    @GetMapping("/mobile/listings/detail")
+    public String listingDetailPage() {
+        return "listing/detail";
+    }
 }

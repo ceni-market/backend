@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카테고리 - 세니마켓</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/mobile-common.css}" href="/css/mobile-common.css">
+    <link rel="stylesheet" th:href="@{/css/category.css}" href="/css/category.css">
+</head>
+<body>
+<main class="mobile-page">
+    <section class="mobile-screen category-screen" aria-labelledby="category-title">
+        <header class="category-header">
+            <h1 id="category-title">카테고리</h1>
+        </header>
+
+        <nav class="category-list" aria-label="카테고리 목록">
+            <a class="category-item is-active" href="#" aria-current="page">
+                <span>전체</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+            <a class="category-item" href="#">
+                <span>ITㆍ디지털</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+            <a class="category-item" href="#">
+                <span>가전제품</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+            <a class="category-item" href="#">
+                <span>가구ㆍ인테리어</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+            <a class="category-item" href="#">
+                <span>생활ㆍ주방</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+            <a class="category-item" href="#">
+                <span>스포츠ㆍ취미</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+            <a class="category-item" href="#">
+                <span>도서ㆍ음반</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+            <a class="category-item" href="#">
+                <span>유아ㆍ기타</span>
+                <span class="category-arrow" aria-hidden="true"></span>
+            </a>
+        </nav>
+
+        <nav th:replace="~{fragments/mobile :: bottomNav('category')}"></nav>
+    </section>
+</main>
+</body>
+</html>
