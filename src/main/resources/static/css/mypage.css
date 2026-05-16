@@ -1,0 +1,205 @@
+@charset "UTF-8";
+
+.mypage-screen {
+    padding-bottom: 96px;
+}
+
+.mypage-header {
+    display: flex;
+    align-items: center;
+    height: 82px;
+    padding: 0 30px;
+    background: #fff;
+}
+
+.mypage-header h1 {
+    margin: 0;
+    color: var(--text-default);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29px;
+    letter-spacing: 0;
+}
+
+.mypage-content {
+    min-height: 770px;
+    padding: 30px 30px 0;
+    background: var(--page-subtle);
+}
+
+.profile-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: #e8f3ff;
+    color: var(--brand-primary);
+}
+
+.profile-avatar i {
+    font-size: 44px;
+    line-height: 1;
+}
+
+.profile-summary strong {
+    margin-top: 10px;
+    color: var(--text-default);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 21px;
+}
+
+.profile-summary span {
+    margin-top: 5px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17px;
+}
+
+.mypage-menu {
+    margin-top: 30px;
+    border: 1px solid var(--border-input);
+    border-radius: 5px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.mypage-menu-item {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 20px;
+    width: 100%;
+    height: 80px;
+    padding: 0 20px;
+    border: 0;
+    border-bottom: 1px solid var(--border-input);
+    background: #fff;
+    color: var(--text-default);
+    text-align: left;
+    cursor: default;
+}
+
+.mypage-menu-item:last-child {
+    border-bottom: 0;
+}
+
+.mypage-menu-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: var(--brand-primary);
+    flex: 0 0 auto;
+}
+
+.mypage-menu-icon i {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.mypage-menu-text {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+}
+
+.mypage-menu-text strong {
+    color: var(--text-default);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 17px;
+}
+
+.mypage-menu-text span {
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mypage-menu-item.is-danger .mypage-menu-icon,
+.mypage-menu-item.is-danger .mypage-menu-text strong {
+    color: #ef6b72;
+}
+
+.logout-icon::before {
+    position: absolute;
+    content: "";
+    left: 1px;
+    top: 3px;
+    width: 14px;
+    height: 18px;
+    border: 1.8px solid currentColor;
+    border-right: 0;
+    border-radius: 2px;
+}
+
+.logout-icon::after {
+    position: absolute;
+    content: "";
+    right: 0;
+    top: 7px;
+    width: 15px;
+    height: 9px;
+    border-top: 1.8px solid currentColor;
+    border-right: 1.8px solid currentColor;
+    transform: skewX(-25deg);
+}
+
+.trash-icon::before {
+    position: absolute;
+    content: "";
+    left: 5px;
+    top: 8px;
+    width: 14px;
+    height: 14px;
+    border: 1.8px solid currentColor;
+    border-top: 0;
+    border-radius: 0 0 2px 2px;
+}
+
+.trash-icon::after {
+    position: absolute;
+    content: "";
+    left: 4px;
+    top: 4px;
+    width: 16px;
+    height: 1.8px;
+    border-radius: 99px;
+    background: currentColor;
+    box-shadow:
+        4px -3px 0 -0.4px currentColor,
+        4px 8px 0 -0.6px currentColor,
+        8px 8px 0 -0.6px currentColor;
+}
+
+@media (max-width: 374px) {
+    .mypage-header,
+    .mypage-content {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .mypage-menu-item {
+        column-gap: 16px;
+    }
+
+    .mypage-menu-text span {
+        white-space: normal;
+    }
+}

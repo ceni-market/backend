@@ -42,7 +42,10 @@
         </div>
 
         <section class="listing-list" aria-label="상품 목록" th:if="${listings == null}">
-            <a class="listing-card" href="#" th:each="item : ${#numbers.sequence(1, 6)}">
+            <a class="listing-card"
+               th:href="@{/mobile/listings/detail}"
+               href="/mobile/listings/detail"
+               th:each="item : ${#numbers.sequence(1, 6)}">
                 <img class="listing-image"
                      th:src="@{/images/main/product-macbook.png}"
                      src="/images/main/product-macbook.png"
