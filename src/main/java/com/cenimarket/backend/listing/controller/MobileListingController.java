@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MobileListingController {
     @GetMapping("/mobile/main")
     public String loginPage() {
-        return "/main/index";
+        return "main/index";
     }
 }
