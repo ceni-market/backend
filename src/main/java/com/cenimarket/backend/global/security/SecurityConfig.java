@@ -45,6 +45,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/favicon.ico"
+
                         ).permitAll()
 
                         // 2. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
@@ -57,7 +58,8 @@ public class SecurityConfig {
                                 "/test/**",
                                 "/test/listing/**",
                                 "/api/uploads/images/**", // 이미지 업로드 경로
-                                "/uploads/images/**"       // 이미지 조회 경로
+                                "/uploads/images/**",     // 이미지 조회 경로
+                                "/main/index"
                         ).permitAll()
 
                         // 3. HTTP 메서드별 권한 제의
