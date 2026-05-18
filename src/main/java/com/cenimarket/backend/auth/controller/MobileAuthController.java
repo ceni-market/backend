@@ -53,11 +53,6 @@ public class MobileAuthController {
         refreshCookie.setMaxAge(30 * 24 * 60 * 60); // 30일 고정
         response.addCookie(refreshCookie);
 
-        return "redirect:/mobile/main/index";
-    }
-
-    @GetMapping("/main/index")
-    public String mainIndexPage() {
-        return "main/index";
+        return "redirect:/mobile/main";
     }
 }
