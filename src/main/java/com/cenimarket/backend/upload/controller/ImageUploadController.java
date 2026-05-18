@@ -17,10 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/uploads")
 public class ImageUploadController {
+
     private final ImageUploadService imageUploadService;
 
     @PostMapping("/images")
-    public ResponseEntity<ApiResponse<ImageUploadResponse>> uploadImage(
+    public ResponseEntity<ApiResponse<ImageUploadResponse>> uploadImages(
             @RequestParam("files") List<MultipartFile> files
     ) {
         ImageUploadResponse response = imageUploadService.uploadImages(files);
