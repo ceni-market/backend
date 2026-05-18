@@ -209,6 +209,37 @@
     line-height: 1;
 }
 
+.listing-write-button {
+    position: fixed;
+    right: max(20px, calc((100vw - 430px) / 2 + 20px));
+    bottom: 95px;
+    z-index: 15;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(7, 87, 200, 0.28);
+}
+
+.listing-write-button:hover,
+.listing-write-button:focus-visible {
+    background: #0649a8;
+}
+
+.listing-write-button:focus-visible {
+    outline: 3px solid rgba(7, 87, 200, 0.25);
+    outline-offset: 3px;
+}
+
+.listing-write-button i {
+    font-size: 26px;
+    line-height: 1;
+}
+
 @media (max-width: 429px) {
     .market-screen {
         padding-right: 30px;
@@ -228,5 +259,9 @@
 
     .listing-meta {
         column-gap: 12px;
+    }
+
+    .listing-write-button {
+        right: 20px;
     }
 }
