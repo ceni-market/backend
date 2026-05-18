@@ -14,7 +14,7 @@
     <section class="mobile-screen market-screen" aria-labelledby="main-title">
         <header class="market-header">
             <img class="market-logo-symbol"
-                 th:src="@{/images/main/itcen-logo-symbol.png}"
+                 th:src="@{/images/logo.webp}"
                  src="/images/main/itcen-logo-symbol.png"
                  alt="">
             <h1 id="main-title">세니마켓</h1>
@@ -89,6 +89,13 @@
                 </div>
             </a>
         </section>
+
+        <a class="listing-write-button"
+           th:href="@{/mobile/listings/write}"
+           href="/mobile/listings/write"
+           aria-label="글쓰기">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        </a>
 
         <nav th:replace="~{fragments/mobile :: bottomNav('home')}"></nav>
     </section>
