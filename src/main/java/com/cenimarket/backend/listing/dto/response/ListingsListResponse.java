@@ -19,6 +19,7 @@ public class ListingsListResponse {
     private final ListingImageResponse image;
     private final CategoryResponse category;
     private final Integer likeCount;
+    private final Integer viewCount;
     private final LocalDateTime updatedAt;
     private final ListingStatus status;
     private final ListingType type;
@@ -35,6 +36,7 @@ public class ListingsListResponse {
                 )
                 .category(CategoryResponse.from(listing.getCategory()))
                 .likeCount(listing.getLikeCount())
+                .viewCount(listing.getViewCount())
                 .updatedAt(listing.getUpdatedAt())
                 .status(listing.getStatus())
                 .type(listing.getType())
