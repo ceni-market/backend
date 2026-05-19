@@ -11,11 +11,15 @@ import lombok.RequiredArgsConstructor;
 public class MyPageInfoResponse {
     private final String profileImageUrl;
     private final String name;
+    private final Long id;
+    private final String email;
 
     public static MyPageInfoResponse from(UserPrincipal user) {
         return MyPageInfoResponse.builder()
                 .profileImageUrl(user.getProfileImageUrl())
                 .name(user.getName())
+                .id(user.getId())
+                .email(user.getEmail())
                 .build();
     }
 }
