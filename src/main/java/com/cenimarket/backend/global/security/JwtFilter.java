@@ -3,6 +3,7 @@ package com.cenimarket.backend.global.security;
 import com.cenimarket.backend.global.security.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +45,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
     // 헤더에서 "Bearer " 뒤의 토큰값만 쏙 빼오는 메서드
     private String resolveToken(HttpServletRequest request) {
+
+        // 1. 헤더 검사 (REST API)
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
+        }
+
+        // 2. 쿠키 검사 (타임리프 SSR 모바일 환경)
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
         }
         return null;
     }
