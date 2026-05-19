@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>맥북 에어 M1 13인치 - 세니마켓</title>
+    <title th:text="${listing.title + ' - 세니마켓'}">상품 상세 - 세니마켓</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/mobile-common.css}" href="/css/mobile-common.css">
@@ -19,50 +19,51 @@
                  alt="">
         </header>
 
+        <!-- 상품 이미지가 없으면 기본 이미지를 보여준다. -->
         <section class="detail-image-section" aria-label="상품 이미지">
             <img class="detail-main-image"
-                 th:src="@{/images/listing/detail-macbook-main.png}"
+                 th:src="${!#lists.isEmpty(listing.images) ? listing.images[0].imageUrl : '/images/listing/detail-macbook-main.png'}"
                  src="/images/listing/detail-macbook-main.png"
-                 alt="맥북 에어 M1 13인치">
-            <div class="detail-thumbnails" aria-label="상품 이미지 썸네일">
-                <img th:src="@{/images/listing/detail-macbook-thumb.png}"
+                 th:alt="${listing.title}"
+                 alt="상품 이미지">
+            <div class="detail-thumbnails"
+                 aria-label="상품 이미지 썸네일"
+                 th:if="${!#lists.isEmpty(listing.images)}">
+                <img th:each="image : ${listing.images}"
+                     th:src="${image.imageUrl}"
                      src="/images/listing/detail-macbook-thumb.png"
-                     alt="맥북 썸네일 1">
-                <img th:src="@{/images/listing/detail-macbook-thumb.png}"
-                     src="/images/listing/detail-macbook-thumb.png"
-                     alt="맥북 썸네일 2">
-                <img th:src="@{/images/listing/detail-macbook-thumb.png}"
-                     src="/images/listing/detail-macbook-thumb.png"
-                     alt="맥북 썸네일 3">
+                     th:alt="${listing.title}"
+                     alt="상품 썸네일">
             </div>
         </section>
 
+        <!-- 컨트롤러에서 전달한 listing 모델로 상세 정보를 출력한다. -->
         <section class="detail-info" aria-labelledby="detail-title">
-            <h2 id="detail-title">맥북 에어 M1 13인치</h2>
-            <strong class="detail-price">650,000원</strong>
+            <h2 id="detail-title" th:text="${listing.title}">상품명</h2>
+            <strong class="detail-price" th:text="${listing.price + '원'}">0원</strong>
 
             <dl class="detail-specs">
                 <div>
                     <dt>카테고리</dt>
-                    <dd>ITㆍ디지털</dd>
+                    <dd th:text="${listing.category.name}">카테고리</dd>
                 </div>
                 <div>
                     <dt>등록일</dt>
-                    <dd>2026.05.06</dd>
+                    <dd th:text="${#temporals.format(listing.updatedAt, 'yyyy.MM.dd')}">등록일</dd>
                 </div>
                 <div>
                     <dt>조회수</dt>
-                    <dd>115</dd>
+                    <dd th:text="${listing.viewCount}">0</dd>
                 </div>
                 <div>
                     <dt>관심수</dt>
-                    <dd>12</dd>
+                    <dd th:text="${listing.likeCount}">0</dd>
                 </div>
             </dl>
 
             <section class="detail-description" aria-labelledby="description-title">
                 <h3 id="description-title">상품설명</h3>
-                <p>2021년에 구매한 맥북 에어 M1 13인치 모델입니다. 사용감은 약간 있지만 전체적으로 깨끗한 편이고 성능 문제 전혀 없습니다. 구성품은 충전기, 케이블 포함입니다.</p>
+                <p th:text="${listing.description}">상품설명</p>
             </section>
         </section>
 

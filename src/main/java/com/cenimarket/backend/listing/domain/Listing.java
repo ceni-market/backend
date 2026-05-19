@@ -137,6 +137,10 @@ public class Listing extends SoftDeleteEntity {
             this.likeCount--;
         }
     }
+    // 조회수 증가
+    public void increaseViewCount(){
+        this.viewCount++;
+    }
     // 거래완료
     public void completeSale(LocalDateTime completedAt){
         this.status = ListingStatus.SOLD;

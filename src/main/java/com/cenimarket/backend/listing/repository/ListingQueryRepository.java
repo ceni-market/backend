@@ -26,4 +26,6 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
             @Param("keyword") String keyword,
             Pageable pageable
     );
+
+    Page<Listing> findAllByCategoryId(Long categoryId, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package com.cenimarket.backend.listing.service;
 
+import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
@@ -20,9 +21,17 @@ public class ListingQueryService {
         return listingQueryRepository.findAll(pageable).map(ListingsListResponse::from);
     }
 
-    //게시글 상세 조회
+    // 카테고리별 조회
+    public Page<ListingsListResponse> findAllByCategory(Long categoryId, Pageable pageable) {
+        return listingQueryRepository.findAllByCategoryId(categoryId, pageable)
+                .map(ListingsListResponse::from);
+    }
+
+    // 상세 조회 시 조회수도 함께 증가시킨다.
     public ListingDetailResponse findById(Long id) {
-        return ListingDetailResponse.from(listingQueryRepository.findListingById(id));
+        Listing listing = listingQueryRepository.findListingById(id);
+        listing.increaseViewCount();
+        return ListingDetailResponse.from(listing);
     }
 
 }
