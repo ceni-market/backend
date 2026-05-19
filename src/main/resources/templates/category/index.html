@@ -17,36 +17,15 @@
         </header>
 
         <nav class="category-list" aria-label="카테고리 목록">
-            <a class="category-item is-active" href="#" aria-current="page">
+            <a class="category-item"
+               th:href="@{/mobile/main}">
                 <span>전체</span>
                 <span class="category-arrow" aria-hidden="true"></span>
             </a>
-            <a class="category-item" href="#">
-                <span>ITㆍ디지털</span>
-                <span class="category-arrow" aria-hidden="true"></span>
-            </a>
-            <a class="category-item" href="#">
-                <span>가전제품</span>
-                <span class="category-arrow" aria-hidden="true"></span>
-            </a>
-            <a class="category-item" href="#">
-                <span>가구ㆍ인테리어</span>
-                <span class="category-arrow" aria-hidden="true"></span>
-            </a>
-            <a class="category-item" href="#">
-                <span>생활ㆍ주방</span>
-                <span class="category-arrow" aria-hidden="true"></span>
-            </a>
-            <a class="category-item" href="#">
-                <span>스포츠ㆍ취미</span>
-                <span class="category-arrow" aria-hidden="true"></span>
-            </a>
-            <a class="category-item" href="#">
-                <span>도서ㆍ음반</span>
-                <span class="category-arrow" aria-hidden="true"></span>
-            </a>
-            <a class="category-item" href="#">
-                <span>유아ㆍ기타</span>
+            <a class = "category-item"
+                th:each="category : ${categories}"
+                th:href="@{/mobile/main(categoryId=${category.id})}">
+                <span th:text="${category.name}">카테고리명</span>
                 <span class="category-arrow" aria-hidden="true"></span>
             </a>
         </nav>
