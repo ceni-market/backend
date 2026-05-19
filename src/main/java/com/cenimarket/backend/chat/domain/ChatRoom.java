@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,5 +52,10 @@ public class ChatRoom extends SoftDeleteEntity {
         this.buyer = buyer;
         this.listing = listing;
         this.lastMessage = lastMessage;
+    }
+
+    public void updateLastMessage(ChatMessage message, LocalDateTime lastMessageAt) {
+        this.lastMessage = message;
+        this.lastMessageAt = lastMessageAt;
     }
 }

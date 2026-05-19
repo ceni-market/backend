@@ -7,7 +7,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,5 +38,9 @@ public class ChatRoomMember extends BaseEntity {
         this.user = user;
         this.chatRoom = chatRoom;
         this.lastReadMessage = chatMessage;
+    }
+
+    public void updateLastReadAt(LocalDateTime lastReadAt){
+        this.lastReadAt = lastReadAt;
     }
 }

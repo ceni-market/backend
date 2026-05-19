@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,10 @@ public class ChatController {
         Long buyerId = buyer.getId();
         System.out.println("판매자 ID 추출 시작");
         Long sellerId = ((Number)data.get("sellerId")).longValue();
+        //두 사람의 id가 같은 경우 오류 리턴.
+        if(buyerId == sellerId){
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "채팅방을 생성할 수 없습니다.");
+        }
         System.out.println("ChatRoomCreateRequestDTO 조립 시작");
         ChatRoomCreateRequest request = ChatRoomCreateRequest.builder()
                 .listingId(((Number)data.get("listingId")).longValue())
@@ -66,8 +71,6 @@ public class ChatController {
             System.out.println("chatService.createChatRoom 실행");
             chatService.createChatRoom(request);
             System.out.println("완료");
-//        Long chatRoomId = chatService.getChatRoomId(sellerId, buyerId);
-//        return "chat/" + chatRoomId;
             System.out.println("chatService.getChatRoom 실행");
             ChatRoomCreateResponse response = chatService.getChatRoom(sellerId, buyerId);
             System.out.println("완료");
