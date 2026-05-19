@@ -6,8 +6,10 @@ import com.cenimarket.backend.chat.domain.ChatRoomMember;
 import com.cenimarket.backend.chat.domain.MessageType;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
+import com.cenimarket.backend.chat.dto.request.ChatRoomMemberLastReadRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
 import com.cenimarket.backend.chat.dto.response.ChatRoomListResponse;
+import com.cenimarket.backend.chat.dto.response.LastChatMessageResponse;
 import com.cenimarket.backend.chat.repository.ChatMessageRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;
@@ -20,8 +22,10 @@ import com.cenimarket.backend.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.cenimarket.backend.global.error.ErrorCode.BUSINESS_ERROR;
 
@@ -42,7 +46,7 @@ public class ChatService {
         this.listingRepository = listingRepository;
     }
 
-    public void saveMessage(Long roomId, ChatMessageDto messageSendRequest){
+    public void saveMessage(Long roomId, ChatMessageDto messageSendRequest){  //채팅 저장
         //채팅방 객체 조회 (있는 경우만)
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
         //보낸사람 객체 조회
@@ -58,7 +62,12 @@ public class ChatService {
                 .content(messageSendRequest.getMessage())
                 .build();
         //메시지 저장
-        chatMessageRepository.save(message);
+        ChatMessage savedMessage = chatMessageRepository.save(message);
+        //DTO로 필요한 데이터만 추출 (마지막 메시지 업데이트 용)
+        LastChatMessageResponse messageDto = LastChatMessageResponse.of(savedMessage.getId(), savedMessage.getCreatedAt());
+        //채팅방의 마지막 메시지 업데이트
+        //채팅방의 마지막 활성화 시간 업데이트
+        chatRoom.updateLastMessage(savedMessage, messageDto.getCreatedAt());
     }
 
     public void createChatRoom(ChatRoomCreateRequest request) {
@@ -157,9 +166,23 @@ public class ChatService {
     }
 
     public void leaveChatRoom (Long userId, Long chatRoomId) {
+        Long chatRoomMemberCount = chatRoomMemberRepository.countByChatRoomId(chatRoomId);
         ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, chatRoomId)
                 .orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "이 채팅방에 참여하고 있지 않습니다."));
+        if(chatRoomMemberCount == 2){
+            chatRoomMemberRepository.delete(member);
+        } else {
+            ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                    .orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "해당 채팅방이 없습니다."));
 
-        chatRoomMemberRepository.delete(member);
+            chatRoomMemberRepository.delete(member);
+            chatRoomRepository.delete(chatRoom);
+        }
+    }
+
+    public void setLastReadAt(String userEmail, Long roomId) {
+        Long userId = userRepository.findByEmail(userEmail).get().getId();
+        ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, roomId).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "해당 채팅방에 참여 중이지 않습니다.") );
+        member.updateLastReadAt(LocalDateTime.now());
     }
 }

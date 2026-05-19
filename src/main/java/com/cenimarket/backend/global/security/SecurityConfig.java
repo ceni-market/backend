@@ -49,11 +49,19 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/favicon.ico"
-
                         ).permitAll()
-
-                        // 2. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
+                        // 2.채팅 (채팅은 해당 인증은 허용하고, 별도로 인증 절차 진행)
                         .requestMatchers(
+                                "/chat",
+                                "/chat/**",
+                                "/mobile/chat/**",
+                                "/connect/**", //웹소켓 통신 요청, 구독 요청 주소
+                                "/topic/**",   //메시지 송신 주소
+                                "/publish/**"  //메시지 발행 주소
+                        ).permitAll()
+                        // 3. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
+                        .requestMatchers(
+                                "/mobile/**",
                                 "/css/**",
                                 "/images/**",
                                 "/favicon.ico",
@@ -68,7 +76,7 @@ public class SecurityConfig {
                         // 모바일 환경 권한 설정
                         .requestMatchers("/mobile/login").permitAll()
                         .requestMatchers("/mobile/**").authenticated()
-                        
+
                         // 3. HTTP 메서드별 권한 제의
                         .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
 
