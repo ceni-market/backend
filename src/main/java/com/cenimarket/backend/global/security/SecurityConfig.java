@@ -27,14 +27,13 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider; // 1. 만든 판독기 주입
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler oauth2SuccessHandler;
+    private final MobileAuthenticationEntryPoint mobileAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        })
+                        .authenticationEntryPoint(mobileAuthenticationEntryPoint)
                 )
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
@@ -55,7 +54,6 @@ public class SecurityConfig {
 
                         // 2. 테스트 및 정적 리소스 허용 (중요: uploads 포함)
                         .requestMatchers(
-                                "/mobile/**",
                                 "/css/**",
                                 "/images/**",
                                 "/favicon.ico",
@@ -67,6 +65,10 @@ public class SecurityConfig {
                                 "/main/index"
                         ).permitAll()
 
+                        // 모바일 환경 권한 설정
+                        .requestMatchers("/mobile/login").permitAll()
+                        .requestMatchers("/mobile/**").authenticated()
+                        
                         // 3. HTTP 메서드별 권한 제의
                         .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
 

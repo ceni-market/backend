@@ -21,10 +21,10 @@ public class MobileAuthController {
 
     private final LoginService loginService;
 
-    // 로그인 페이지 열기 (GET 요청도 이 주소로 처리)
+    // 로그인 페이지 열기
     @GetMapping("/login")
     public String loginPage() {
-        return "auth/login"; // src/main/resources/templates/auth/login.html을 엶
+        return "auth/login";
     }
 
     @PostMapping("/login")
