@@ -137,7 +137,15 @@
     border-bottom: 1px solid var(--page-subtle);
 }
 
-.listing-card:hover .listing-title {
+.listing-detail-link {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.listing-detail-link:hover .listing-title {
     color: var(--brand-primary);
 }
 
@@ -196,17 +204,34 @@
 }
 
 .listing-like {
-    justify-self: end;
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--text-muted);
+    cursor: pointer;
     font-weight: 400;
+}
+
+.listing-like:disabled {
+    cursor: wait;
+    opacity: 0.7;
 }
 
 .listing-like i {
     font-size: 11px;
     line-height: 1;
+}
+
+.listing-like.is-liked {
+    color: #e94f86;
+}
+
+.listing-like.is-liked i {
+    color: #e92f6d;
 }
 
 .listing-write-button {

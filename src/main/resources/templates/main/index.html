@@ -43,52 +43,62 @@
         </div>
 
         <section class="listing-list" aria-label="상품 목록" th:if="${listings == null}">
-            <a class="listing-card"
-               th:href="@{/mobile/listings/detail}"
-               href="/mobile/listings/detail"
-               th:each="item : ${#numbers.sequence(1, 6)}">
-                <img class="listing-image"
-                     th:src="@{/images/main/product-macbook.png}"
-                     src="/images/main/product-macbook.png"
-                     alt="맥북 에어 M1 13인치">
-                <div class="listing-info">
-                    <strong class="listing-title">맥북 에어 M1 13인치</strong>
-                    <span class="listing-category">ITㆍ디지털</span>
-                    <div class="listing-meta">
-                        <span class="listing-price">900,000원</span>
-                        <span class="listing-time">1시간 전</span>
-                        <span class="listing-like">
-                            <i class="bi bi-heart" aria-hidden="true"></i>
-                            <span>3</span>
-                        </span>
+            <div class="listing-card"
+                 th:each="item : ${#numbers.sequence(1, 6)}">
+                <a class="listing-detail-link"
+                   th:href="@{/mobile/listings/detail}"
+                   href="/mobile/listings/detail">
+                    <img class="listing-image"
+                         th:src="@{/images/main/product-macbook.png}"
+                         src="/images/main/product-macbook.png"
+                         alt="맥북 에어 M1 13인치">
+                    <div class="listing-info">
+                        <strong class="listing-title">맥북 에어 M1 13인치</strong>
+                        <span class="listing-category">ITㆍ디지털</span>
+                        <div class="listing-meta">
+                            <span class="listing-price">900,000원</span>
+                            <span class="listing-time">1시간 전</span>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+                <button type="button" class="listing-like">
+                    <i class="bi bi-heart" aria-hidden="true"></i>
+                    <span>3</span>
+                </button>
+            </div>
         </section>
 
         <!-- 컨트롤러에서 전달한 listings를 반복하며 실제 상품 목록을 출력한다. -->
         <section class="listing-list" aria-label="상품 목록" th:if="${listings != null}">
-            <a class="listing-card"
-               th:each="listing : ${listings}"
-               th:href="@{/mobile/listings/detail(id=${listing.id})}">
-                <img class="listing-image"
-                     th:src="${listing.image != null ? listing.image.imageUrl : '/images/main/product-macbook.png'}"
-                     src="/images/main/product-macbook.png"
-                     th:alt="${listing.title}"
-                     alt="상품 이미지">
-                <div class="listing-info">
-                    <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
-                    <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
-                    <div class="listing-meta">
-                        <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
-                        <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
-                        <span class="listing-like">
-                            <i class="bi bi-heart" aria-hidden="true"></i>
-                            <span th:text="${listing.likeCount}">3</span>
-                        </span>
+            <div class="listing-card"
+                 th:each="listing : ${listings}">
+                <a class="listing-detail-link"
+                   th:href="@{/mobile/listings/detail(id=${listing.id})}">
+                    <img class="listing-image"
+                         th:src="${listing.image != null ? listing.image.imageUrl : '/images/main/product-macbook.png'}"
+                         src="/images/main/product-macbook.png"
+                         th:alt="${listing.title}"
+                         alt="상품 이미지">
+                    <div class="listing-info">
+                        <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
+                        <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
+                        <div class="listing-meta">
+                            <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
+                            <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+                <button type="button"
+                        class="listing-like"
+                        th:classappend="${listing.likedByMe} ? ' is-liked'"
+                        th:aria-pressed="${listing.likedByMe}"
+                        th:data-listing-id="${listing.id}">
+                    <i class="bi"
+                       th:classappend="${listing.likedByMe} ? ' bi-heart-fill' : ' bi-heart'"
+                       aria-hidden="true"></i>
+                    <span th:text="${listing.likeCount}">3</span>
+                </button>
+            </div>
         </section>
 
         <a class="listing-write-button"
@@ -101,5 +111,6 @@
         <nav th:replace="~{fragments/mobile :: bottomNav('home')}"></nav>
     </section>
 </main>
+<script th:src="@{/js/main.js}" src="/js/main.js"></script>
 </body>
 </html>

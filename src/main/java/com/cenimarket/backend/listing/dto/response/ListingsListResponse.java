@@ -23,8 +23,13 @@ public class ListingsListResponse {
     private final LocalDateTime updatedAt;
     private final ListingStatus status;
     private final ListingType type;
+    private final boolean likedByMe;
 
     public static ListingsListResponse from(Listing listing) {
+        return from(listing, false);
+    }
+
+    public static ListingsListResponse from(Listing listing, boolean likedByMe) {
         return ListingsListResponse.builder()
                 .id(listing.getId())
                 .title(listing.getTitle())
@@ -40,6 +45,7 @@ public class ListingsListResponse {
                 .updatedAt(listing.getUpdatedAt())
                 .status(listing.getStatus())
                 .type(listing.getType())
+                .likedByMe(likedByMe)
                 .build();
     }
 }
