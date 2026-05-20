@@ -41,7 +41,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     )
     Page<Transaction> findMyTransactions(
             @Param("userId") Long userId,
-            @Param("role") TransactionRole role,
+            @Param("role") String role,
             Pageable pageable
     );
 }
