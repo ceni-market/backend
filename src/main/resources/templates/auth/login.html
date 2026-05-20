@@ -18,7 +18,7 @@
             <p>세니마켓에 오신 것을 환영합니다!</p>
         </div>
 
-        <form class="login-form" action="#" method="post">
+        <form class="login-form" action="/mobile/login" method="post">
             <label class="login-field">
                 <i class="bi bi-person" aria-hidden="true"></i>
                 <span class="visually-hidden">이메일</span>
@@ -40,5 +40,9 @@
              alt="">
     </section>
 </main>
+
+<script th:if="${param.error}" th:inline="javascript">
+    window.alert("이메일 또는 비밀번호가 올바르지 않습니다.");
+</script>
 </body>
 </html>
