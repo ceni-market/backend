@@ -1,5 +1,6 @@
 package com.cenimarket.backend.listing.controller;
 
+import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,9 +27,13 @@ public class ListingQueryController {
     @GetMapping("/api/listings")
     public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getListings
             (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
-    Pageable pageable, @RequestParam(required = false) ListingType type) {
+    Pageable pageable,
+             @RequestParam(required = false) ListingType type,
+             @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        Long userId = userPrincipal.getId();
+
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
-                listingQueryService.findAll(pageable)
+                listingQueryService.findAll(pageable, userId)
         )));
     }
 
