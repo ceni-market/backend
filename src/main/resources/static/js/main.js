@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (!response.ok) {
+                    const result = await response.json();
+                    alert(result.message || '관심 등록에 실패했습니다.');
                     return;
                 }
 

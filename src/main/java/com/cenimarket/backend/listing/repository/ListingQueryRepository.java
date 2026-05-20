@@ -28,4 +28,8 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
     );
 
     Page<Listing> findAllByCategoryId(Long categoryId, Pageable pageable);
+
+    Page<Listing> findAllByType(ListingType type, Pageable pageable);
+
+    Page<Listing> findAllByCategoryIdAndType(Long categoryId, ListingType type, Pageable pageable);
 }

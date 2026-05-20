@@ -67,7 +67,7 @@
     border: 1px solid var(--border-input);
     border-radius: 5px;
     color: var(--text-muted);
-    cursor: default;
+    cursor: pointer;
 }
 
 .trade-option input {
@@ -76,7 +76,7 @@
     pointer-events: none;
 }
 
-.trade-option.is-selected {
+.trade-option:has(input:checked) {
     border-color: var(--brand-primary);
     color: var(--brand-primary);
 }
@@ -105,7 +105,7 @@
     flex: 0 0 auto;
 }
 
-.trade-option.is-selected .trade-radio {
+.trade-option:has(input:checked) .trade-radio {
     border: 1px solid var(--brand-primary);
     background:
         radial-gradient(circle at center, var(--brand-primary) 0 5px, transparent 5.5px),
@@ -152,6 +152,12 @@
 .write-field textarea::placeholder {
     color: var(--text-placeholder);
     opacity: 1;
+}
+
+.write-field input:read-only {
+    background: #f3f4f6;
+    color: var(--text-muted);
+    cursor: not-allowed;
 }
 
 .write-field select:focus,

@@ -27,44 +27,67 @@
         </form>
 
         <nav class="market-tabs" aria-label="상품 보기">
-            <a class="market-tab is-active" href="#" aria-current="page">전체</a>
-            <a class="market-tab" href="#">관심</a>
+            <a class="market-tab"
+               th:href="@{/mobile/main}"
+               th:classappend="${tab == null or tab == 'all'} ? ' is-active'"
+               th:attr="aria-current=${tab == null or tab == 'all' ? 'page' : null}">전체</a>
+            <a class="market-tab"
+               th:href="@{/mobile/main(tab='likes')}"
+               th:classappend="${tab == 'likes'} ? ' is-active'"
+               th:attr="aria-current=${tab == 'likes' ? 'page' : null}">관심</a>
         </nav>
 
         <div class="market-list-header">
             <!-- 컨트롤러에서 전달한 전체 상품 개수를 출력한다. -->
-            <span th:text="${totalCount != null ? '전체 ' + totalCount + '건' : '전체 128건'}">전체 128건</span>
-            <label class="visually-hidden" for="tradeType">거래 유형</label>
-            <select id="tradeType" name="tradeType" aria-label="거래 유형">
-                <option value="">전체</option>
-                <option value="sale">판매</option>
-                <option value="share">나눔</option>
-            </select>
+            <span th:text="${tab == 'likes' ? '관심 ' + totalCount + '건' : '전체 ' + totalCount + '건'}">전체 128건</span>
+            <form class="trade-type-form" th:if="${tab == null or tab == 'all'}" th:action="@{/mobile/main}" method="get">
+                <input type="hidden"
+                       name="categoryId"
+                       th:if="${categoryId != null}"
+                       th:value="${categoryId}">
+                <label class="visually-hidden" for="tradeType">거래 유형</label>
+                <select id="tradeType" name="type" aria-label="거래 유형" onchange="this.form.submit()">
+                    <option value="" th:selected="${type == null}">전체</option>
+                    <option value="SALE" th:selected="${type != null and type.name() == 'SALE'}">판매</option>
+                    <option value="GIVEAWAY" th:selected="${type != null and type.name() == 'GIVEAWAY'}">나눔</option>
+                </select>
+            </form>
         </div>
 
         <section class="listing-list" aria-label="상품 목록" th:if="${listings == null}">
             <div class="listing-card"
                  th:each="item : ${#numbers.sequence(1, 6)}">
-                <a class="listing-detail-link"
+                <a class="listing-image-link"
                    th:href="@{/mobile/listings/detail}"
-                   href="/mobile/listings/detail">
+                   href="/mobile/listings/detail"
+                   aria-label="상품 상세 보기">
                     <img class="listing-image"
                          th:src="@{/images/main/product-macbook.png}"
                          src="/images/main/product-macbook.png"
                          alt="맥북 에어 M1 13인치">
-                    <div class="listing-info">
-                        <strong class="listing-title">맥북 에어 M1 13인치</strong>
-                        <span class="listing-category">ITㆍ디지털</span>
-                        <div class="listing-meta">
-                            <span class="listing-price">900,000원</span>
-                            <span class="listing-time">1시간 전</span>
-                        </div>
-                    </div>
                 </a>
-                <button type="button" class="listing-like">
-                    <i class="bi bi-heart" aria-hidden="true"></i>
-                    <span>3</span>
-                </button>
+                <div class="listing-info">
+                    <div class="listing-row">
+                        <a class="listing-title-link" href="/mobile/listings/detail">
+                            <strong class="listing-title">맥북 에어 M1 13인치</strong>
+                        </a>
+                        <span class="listing-view-count">
+                            <i class="bi bi-eye" aria-hidden="true"></i>
+                            <span>12</span>
+                        </span>
+                    </div>
+                    <div class="listing-row">
+                        <span class="listing-category">ITㆍ디지털</span>
+                        <button type="button" class="listing-like">
+                            <i class="bi bi-heart" aria-hidden="true"></i>
+                            <span>3</span>
+                        </button>
+                    </div>
+                    <div class="listing-row">
+                        <span class="listing-price">900,000원</span>
+                        <span class="listing-time">1시간 전</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -72,32 +95,44 @@
         <section class="listing-list" aria-label="상품 목록" th:if="${listings != null}">
             <div class="listing-card"
                  th:each="listing : ${listings}">
-                <a class="listing-detail-link"
-                   th:href="@{/mobile/listings/detail(id=${listing.id})}">
+                <a class="listing-image-link"
+                   th:href="@{/mobile/listings/detail(id=${listing.id})}"
+                   aria-label="상품 상세 보기">
                     <img class="listing-image"
                          th:src="${listing.image != null ? listing.image.imageUrl : '/images/main/product-macbook.png'}"
                          src="/images/main/product-macbook.png"
                          th:alt="${listing.title}"
                          alt="상품 이미지">
-                    <div class="listing-info">
-                        <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
-                        <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
-                        <div class="listing-meta">
-                            <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
-                            <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
-                        </div>
-                    </div>
                 </a>
-                <button type="button"
-                        class="listing-like"
-                        th:classappend="${listing.likedByMe} ? ' is-liked'"
-                        th:aria-pressed="${listing.likedByMe}"
-                        th:data-listing-id="${listing.id}">
-                    <i class="bi"
-                       th:classappend="${listing.likedByMe} ? ' bi-heart-fill' : ' bi-heart'"
-                       aria-hidden="true"></i>
-                    <span th:text="${listing.likeCount}">3</span>
-                </button>
+                <div class="listing-info">
+                    <div class="listing-row">
+                        <a class="listing-title-link"
+                           th:href="@{/mobile/listings/detail(id=${listing.id})}">
+                            <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
+                        </a>
+                        <span class="listing-view-count">
+                            <i class="bi bi-eye" aria-hidden="true"></i>
+                            <span th:text="${listing.viewCount}">0</span>
+                        </span>
+                    </div>
+                    <div class="listing-row">
+                        <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
+                        <button type="button"
+                                class="listing-like"
+                                th:classappend="${listing.likedByMe} ? ' is-liked'"
+                                th:aria-pressed="${listing.likedByMe}"
+                                th:data-listing-id="${listing.id}">
+                            <i class="bi"
+                               th:classappend="${listing.likedByMe} ? ' bi-heart-fill' : ' bi-heart'"
+                               aria-hidden="true"></i>
+                            <span th:text="${listing.likeCount}">3</span>
+                        </button>
+                    </div>
+                    <div class="listing-row">
+                        <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
+                        <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
+                    </div>
+                </div>
             </div>
         </section>
 
