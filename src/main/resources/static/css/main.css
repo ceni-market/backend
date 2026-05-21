@@ -108,6 +108,10 @@
     line-height: 17px;
 }
 
+.trade-type-form {
+    margin: 0;
+}
+
 .market-list-header select {
     width: 161px;
     height: 24px;
@@ -137,16 +141,8 @@
     border-bottom: 1px solid var(--page-subtle);
 }
 
-.listing-detail-link {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    min-width: 0;
-    flex: 1 1 auto;
-}
-
-.listing-detail-link:hover .listing-title {
-    color: var(--brand-primary);
+.listing-image-link {
+    flex: 0 0 auto;
 }
 
 .listing-image {
@@ -158,16 +154,34 @@
 }
 
 .listing-info {
-    display: grid;
-    grid-template-rows: 17px 14px 17px;
-    align-content: center;
-    row-gap: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
     min-width: 0;
     flex: 1 1 auto;
     height: 80px;
 }
 
+.listing-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+}
+
+.listing-title-link {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.listing-title-link:hover .listing-title {
+    color: var(--brand-primary);
+}
+
 .listing-title {
+    display: block;
     overflow: hidden;
     color: #000;
     font-size: 14px;
@@ -187,33 +201,39 @@
     white-space: nowrap;
 }
 
-.listing-meta {
-    display: grid;
-    grid-template-columns: max-content max-content 1fr;
+.listing-price {
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+}
+
+.listing-price-time {
+    display: inline-flex;
     align-items: center;
-    column-gap: 20px;
+    gap: 20px;
     min-width: 0;
+}
+
+.listing-time {
+    flex: 0 0 auto;
     color: var(--text-muted);
     font-size: 14px;
     font-weight: 500;
     line-height: 17px;
 }
 
-.listing-price {
-    color: #000;
-}
-
 .listing-like {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-left: auto;
     padding: 0;
     border: 0;
     background: transparent;
     color: var(--text-muted);
     cursor: pointer;
     font-weight: 400;
+    flex: 0 0 auto;
 }
 
 .listing-like:disabled {
@@ -232,6 +252,21 @@
 
 .listing-like.is-liked i {
     color: #e92f6d;
+}
+
+.listing-view-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+    color: var(--text-muted);
+    font-size: 11px;
+    line-height: 1;
+}
+
+.listing-view-count i {
+    font-size: 12px;
+    line-height: 1;
 }
 
 .listing-write-button {
@@ -280,10 +315,6 @@
 
     .listing-card {
         gap: 14px;
-    }
-
-    .listing-meta {
-        column-gap: 12px;
     }
 
     .listing-write-button {

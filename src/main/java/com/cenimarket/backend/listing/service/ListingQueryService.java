@@ -2,6 +2,7 @@ package com.cenimarket.backend.listing.service;
 
 import com.cenimarket.backend.like.repository.ListingLikeRepository;
 import com.cenimarket.backend.listing.domain.Listing;
+import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
@@ -28,6 +29,29 @@ public class ListingQueryService {
     public Page<ListingsListResponse> findAllByCategory(Long categoryId, Pageable pageable, Long userId) {
         return listingQueryRepository.findAllByCategoryId(categoryId, pageable)
                 .map(listing -> toListResponse(listing, userId));
+    }
+
+    // 판매/나눔 유형별 조회
+    public Page<ListingsListResponse> findAllByType(ListingType type, Pageable pageable, Long userId) {
+        return listingQueryRepository.findAllByType(type, pageable)
+                .map(listing -> toListResponse(listing, userId));
+    }
+
+    // 카테고리와 판매/나눔 유형을 함께 적용한 조회
+    public Page<ListingsListResponse> findAllByCategoryAndType(
+            Long categoryId,
+            ListingType type,
+            Pageable pageable,
+            Long userId
+    ) {
+        return listingQueryRepository.findAllByCategoryIdAndType(categoryId, type, pageable)
+                .map(listing -> toListResponse(listing, userId));
+    }
+
+    // 내가 관심 등록한 게시글 조회
+    public Page<ListingsListResponse> findLikedByUser(Pageable pageable, Long userId) {
+        return listingLikeRepository.findLikedListingsByUserId(userId, pageable)
+                .map(listing -> ListingsListResponse.from(listing, true));
     }
 
     // 상세 조회 시 조회수도 함께 증가시킨다.

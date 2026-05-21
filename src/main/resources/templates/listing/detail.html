@@ -69,7 +69,14 @@
 
         <div class="detail-action-bar">
             <a class="detail-list-button" th:href="@{/mobile/main}" href="/mobile/main">목록으로</a>
-            <a class="detail-chat-button" th:href="@{/mobile/chat/detail}" href="/mobile/chat/detail">1:1 채팅하기</a>
+            <a class="detail-chat-button"
+               th:if="${!isOwner}"
+               th:href="@{/mobile/chat/detail}"
+               href="/mobile/chat/detail">1:1 채팅하기</a>
+            <a class="detail-chat-button"
+               th:if="${isOwner}"
+               th:href="@{/mobile/listings/edit(id=${listing.id})}"
+               href="/mobile/listings/edit">수정하기</a>
         </div>
     </section>
 </main>
