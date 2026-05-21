@@ -34,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 2. 토큰이 있고, 판독기(provider)로 검사했을 때 정상이라면?
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-            // 3. 신분증(Authentication)을 만들어서 서버 주머니에 넣음
+            // 신분증(Authentication)을 만들어서 서버 주머니에 넣음
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

@@ -73,6 +73,9 @@ public class RefreshTokenService {
         }
     }
 
+    /**
+     * 해당 클래스 전용: 토큰 유효성 검증 및 일치 여부 확인 후 유효한 토큰 객체 반환
+     */
     private RefreshToken findAndValidate(String tokenValue) {
         // 1. DB에서 토큰 값으로 데이터를 찾습니다.
         Optional<RefreshToken> optionalToken = refreshTokenR.findByToken(tokenValue);
@@ -94,5 +97,22 @@ public class RefreshTokenService {
 
         // 5. 모든 검증을 통과했다면 유효한 토큰 객체를 반환합니다.
         return savedToken;
+    }
+
+    /**
+     * 모바일 타임리프 필터 전용: 토큰 유효성 검증 및 일치 여부 확인
+     * 토큰이 DB에 존재하고 만료되지 않았다면 true, 문제 있다면 false를 반환
+     */
+    public boolean isValidRefreshToken(String tokenValue) {
+        try {
+            // 1. private 검증 메서드를 그대로 활용
+            RefreshToken savedToken = findAndValidate(tokenValue);
+
+            // 2. 예외 없이 정상적으로 토큰 객체가 반환되었다면 유효한 토큰
+            return savedToken != null;
+        } catch (Exception e) {
+            // 3. 만약 findAndValidate 안에서 BusinessException(만료, 토큰없음)이 터지면 false를 리턴
+            return false;
+        }
     }
 }
