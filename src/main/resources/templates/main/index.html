@@ -71,10 +71,6 @@
                         <a class="listing-title-link" href="/mobile/listings/detail">
                             <strong class="listing-title">맥북 에어 M1 13인치</strong>
                         </a>
-                        <span class="listing-view-count">
-                            <i class="bi bi-eye" aria-hidden="true"></i>
-                            <span>12</span>
-                        </span>
                     </div>
                     <div class="listing-row">
                         <span class="listing-category">ITㆍ디지털</span>
@@ -84,8 +80,14 @@
                         </button>
                     </div>
                     <div class="listing-row">
-                        <span class="listing-price">900,000원</span>
-                        <span class="listing-time">1시간 전</span>
+                        <span class="listing-price-time">
+                            <span class="listing-price">900,000원</span>
+                            <span class="listing-time">1시간 전</span>
+                        </span>
+                        <span class="listing-view-count">
+                            <i class="bi bi-eye" aria-hidden="true"></i>
+                            <span>12</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -110,10 +112,6 @@
                            th:href="@{/mobile/listings/detail(id=${listing.id})}">
                             <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
                         </a>
-                        <span class="listing-view-count">
-                            <i class="bi bi-eye" aria-hidden="true"></i>
-                            <span th:text="${listing.viewCount}">0</span>
-                        </span>
                     </div>
                     <div class="listing-row">
                         <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
@@ -129,8 +127,14 @@
                         </button>
                     </div>
                     <div class="listing-row">
-                        <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
-                        <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
+                        <span class="listing-price-time">
+                            <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
+                            <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
+                        </span>
+                        <span class="listing-view-count">
+                            <i class="bi bi-eye" aria-hidden="true"></i>
+                            <span th:text="${listing.viewCount}">0</span>
+                        </span>
                     </div>
                 </div>
             </div>

@@ -173,6 +173,7 @@
 
 .listing-title-link {
     min-width: 0;
+    max-width: 100%;
 }
 
 .listing-title-link:hover .listing-title {
@@ -205,6 +206,13 @@
     font-size: 14px;
     font-weight: 500;
     line-height: 17px;
+}
+
+.listing-price-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
 }
 
 .listing-time {
