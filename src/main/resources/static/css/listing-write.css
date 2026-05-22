@@ -178,7 +178,21 @@
     border-radius: 5px;
     background: var(--page-subtle);
     color: var(--brand-primary);
-    cursor: default;
+    cursor: pointer;
+}
+
+.write-field .image-file-input {
+    display: none;
+}
+
+.image-replace-notice {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-subtle);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 12px;
+    text-align: center;
 }
 
 .image-upload-plus {
@@ -208,13 +222,18 @@
 }
 
 .image-upload-box strong {
+    max-width: calc(100% - 40px);
     margin-bottom: 4px;
+    overflow: hidden;
     font-size: 12px;
     font-weight: 500;
     line-height: 14px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.image-upload-box span:last-child {
+.image-upload-help {
     color: var(--text-subtle);
     font-size: 10px;
     font-weight: 500;

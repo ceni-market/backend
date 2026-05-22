@@ -42,7 +42,7 @@ public class ListingQueryController {
     public ResponseEntity<ApiResponse<ListingDetailResponse>> getListingDetail(
             @PathVariable("id") Long id ) {
         return ResponseEntity.ok(ApiResponse.ok(
-                listingQueryService.findById(id)
+                listingQueryService.findDetail(id)
         ));
     }
 

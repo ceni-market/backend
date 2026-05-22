@@ -19,6 +19,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 public class ImageUploadService {
+    private static final int MAX_IMAGE_COUNT = 10;
+    private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
     private final S3Client s3Client;
 
@@ -32,6 +34,10 @@ public class ImageUploadService {
 
         if (files == null || files.isEmpty()) {
             throw new IllegalArgumentException("업로드할 이미지가 없습니다.");
+        }
+
+        if (files.size() > MAX_IMAGE_COUNT) {
+            throw new IllegalArgumentException("이미지는 최대 10장까지 업로드할 수 있습니다.");
         }
 
         List<String> imageUrls = new ArrayList<>();
@@ -75,6 +81,10 @@ public class ImageUploadService {
 
         if (file.isEmpty()) {
             throw new IllegalArgumentException("빈 파일은 업로드할 수 없습니다.");
+        }
+
+        if (file.getSize() > MAX_IMAGE_SIZE) {
+            throw new IllegalArgumentException("이미지는 개당 5MB 이하만 업로드할 수 있습니다.");
         }
 
         String contentType = file.getContentType();

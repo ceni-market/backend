@@ -54,10 +54,17 @@ public class ListingQueryService {
                 .map(listing -> ListingsListResponse.from(listing, true));
     }
 
-    // 상세 조회 시 조회수도 함께 증가시킨다.
-    public ListingDetailResponse findById(Long id) {
+    // 상세 화면 조회 시 조회수도 함께 증가시킨다.
+    public ListingDetailResponse findDetail(Long id) {
         Listing listing = listingQueryRepository.findListingById(id);
         listing.increaseViewCount();
+        return ListingDetailResponse.from(listing);
+    }
+
+    // 수정 화면에 기존 값을 채울 때는 조회수를 증가시키지 않는다.
+    @Transactional(readOnly = true)
+    public ListingDetailResponse findDetailForEdit(Long id) {
+        Listing listing = listingQueryRepository.findListingById(id);
         return ListingDetailResponse.from(listing);
     }
 

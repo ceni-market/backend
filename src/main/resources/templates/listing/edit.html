@@ -19,7 +19,7 @@
             <h1 id="write-title">수정하기</h1>
         </header>
 
-        <form class="write-form" th:action="@{/mobile/listings/edit(id=${listing.id})}" method="post">
+        <form class="write-form" th:action="@{/mobile/listings/edit(id=${listing.id})}" method="post" enctype="multipart/form-data">
             <fieldset class="write-fieldset">
                 <legend>거래 종류</legend>
                 <label class="trade-option">
@@ -60,11 +60,17 @@
 
             <div class="write-field">
                 <span class="write-label">상품 이미지</span>
-                <button class="image-upload-box" type="button">
+                <button id="imageUploadButton" class="image-upload-box" type="button">
                     <span class="image-upload-plus" aria-hidden="true"></span>
-                    <strong>사진을 추가하세요</strong>
-                    <span>(최대 10장, 개당 10MB 이하)</span>
+                    <strong id="imageUploadText"
+                            th:text="${#lists.isEmpty(listing.images) ? '사진을 추가하세요' : '기존 이미지 ' + #lists.size(listing.images) + '장 등록됨'}">
+                        사진을 추가하세요
+                    </strong>
+                    <span class="image-upload-help">(최대 10장, 개당 5MB 이하)</span>
+                    <span class="image-replace-notice">새 이미지를 선택하면 기존 이미지는 모두 교체됩니다</span>
                 </button>
+
+                <input id="images" class="image-file-input" name="images" type="file" accept="image/*" multiple>
             </div>
 
             <div class="write-field">

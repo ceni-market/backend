@@ -46,13 +46,27 @@
     align-items: center;
     gap: 5px;
     margin-top: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
 }
 
-.detail-thumbnails img {
+.detail-thumbnails::-webkit-scrollbar {
+    display: none;
+}
+
+.detail-thumbnail {
+    flex: 0 0 auto;
     width: 90px;
     height: 60px;
+    border: 2px solid transparent;
     border-radius: 10px;
     object-fit: cover;
+    cursor: pointer;
+}
+
+.detail-thumbnail.is-active {
+    border-color: var(--brand-primary);
 }
 
 .detail-info {
