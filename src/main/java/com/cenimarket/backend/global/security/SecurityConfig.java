@@ -34,62 +34,105 @@ public class SecurityConfig {
     private final OAuth2SuccessHandler oauth2SuccessHandler;
 
     /**
-     * ⚛️ 1. 리액트 (REST API) 전용 필터 체인
-     * /api/로 시작하는 모든 요청은 이 문지기가 검사합니다.
+     * ⚛️ [방 1] 리액트 (REST API + 소셜 로그인) 전용 필터 체인
+     * - 리액트에서 들어오는 모든 데이터 요청 및 소셜 로그인을 전담합니다.
+     * - OAuth2 인증 도중 세션이 필요하므로 세션 정책을 IF_REQUIRED로 설정합니다.
      */
     @Bean
-    @Order(1) // 📌 순위 1등으로 설정
+    @Order(1)
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/api/**") // 📌 /api/** 주소만 이 체인이 가로챔
+                .securityMatcher("/api/**")
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 소셜 로그인이 리액트 영역이므로 세션 정책을 IF_REQUIRED로 완화하여 유실 방지
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                        })
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // 로그인, 회원가입 허용
+                        // 소셜 로그인 관련 백엔드 엔드포인트가 /api/로 시작할 경우를 대비해 개방
+                        .requestMatchers("/api/auth/**", "/api/oauth2/**", "/api/login/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/listings/**").permitAll()
+                        .requestMatchers("/api/uploads/images/**", "/api/test/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                // 📌 리액트 전용 필터 적용 (헤더 검사)
-                //.addFilterBefore(new RestJwtFilter(jwtTokenProvider, refreshTokenService), UsernamePasswordAuthenticationFilter.class)
+                // 📌 [이식] 리액트 체인 안으로 소셜 로그인 처리 필터 장착
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(oauth2SuccessHandler)
+                )
+                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     /**
-     * 🍃 2. 타임리프 (모바일 SSR 웹뷰) 전용 필터 체인
-     * /mobile/ 또는 정적 리소스 요청은 이 문지기가 검사합니다.
+     * 🍃 [방 2] 모바일 (타임리프 SSR 웹뷰) 전용 필터 체인
+     * - 순수하게 모바일 내부 화면 렌더링용 주소만 관리합니다.
+     * - 소셜 로그인 짐을 덜어냈으므로, 마음 편히 완벽한 STATELESS 환경으로 잠금 처리합니다.
      */
     @Bean
     @Order(2)
     public SecurityFilterChain mobileSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .securityMatcher("/mobile/**")
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(mobileAuthenticationEntryPoint)
                 )
                 .csrf(csrf -> csrf.disable())
+                // 📌 [수정] 소셜 로그인이 빠졌기 때문에 모바일은 순수 토큰제(STATELESS)로 안전하게 변경 가능
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. 오직 로그인 페이지와 정적 리소스(CSS, 이미지)만 인증 없이 패스!
-                        .requestMatchers(
-                                "/mobile/login",
-                                "/css/**",
-                                "/images/**",
-                                "/favicon.ico"
-                        ).permitAll()
-
-                        // 2. [/mobile/main 포함] 나머지 모든 모바일 주소는 로그인(인증) 필수!
+                        .requestMatchers("/mobile/login").permitAll()
                         .requestMatchers("/mobile/**").authenticated()
-
-                        // 3. 전역 잠금
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                        .successHandler(oauth2SuccessHandler)
-                )
-                // 📌 [가장 중요 - 수정] UsernamePasswordAuthenticationFilter 대신 LogoutFilter 앞에 둡니다.
-                // 이렇게 해야 시큐리티가 예외를 판단하거나 검사하기 전에 우리 커스텀 '쿠키 필터'가 최우선으로 작동합니다.
                 .addFilterBefore(new MobileJwtFilter(jwtTokenProvider, refreshTokenService), LogoutFilter.class)
                 .build();
+    }
+
+    /**
+     * 🛠️ [방 3] 기타 공통 자원 (Swagger 및 정적 리소스, 소셜 로그인 기본 루프 경로)
+     */
+    @Bean
+    @Order(3)
+    public SecurityFilterChain 메타SecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher(
+                        "/v3/api-docs/**", "/swagger-ui/**", "/oauth2/**", "/login/oauth2/code/**",
+                        "/css/**", "/images/**", "/favicon.ico",
+                        "/uploads/images/**", "/index/**", "/test/**", "/main/index"
+                )
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+                )
+                .build();
+    }
+
+    /**
+     * 🌐 4. 글로벌 CORS 허용 정책 설정
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://www.ceni-market.site",
+                "https://ceni-market.site"
+        ));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
