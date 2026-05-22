@@ -11,6 +11,8 @@ import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.dto.response.ListingUpdateResponse;
 import com.cenimarket.backend.listing.service.ListingQueryService;
 import com.cenimarket.backend.listing.service.ListingService;
+import com.cenimarket.backend.upload.dto.ImageUploadResponse;
+import com.cenimarket.backend.upload.service.ImageUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +36,7 @@ public class MobileListingController {
     private final ListingQueryService listingQueryService;
     private final ListingService listingService;
     private final CategoryService categoryService;
+    private final ImageUploadService imageUploadService;
 
     @GetMapping("/mobile/main")
     public String mainPage(
@@ -78,8 +84,14 @@ public class MobileListingController {
     @PostMapping("/mobile/listings")
     public String createListing(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @ModelAttribute ListingCreateRequest request
+            @ModelAttribute ListingCreateRequest request,
+            @RequestParam("images") List<MultipartFile> images
     ) {
+        if (images != null && !images.isEmpty() && !images.get(0).isEmpty()) {
+            ImageUploadResponse uploadResponse = imageUploadService.uploadImages(images);
+            request.setImageUrls(uploadResponse.getImageUrls());
+        }
+
         ListingCreateResponse response =
                 listingService.createListing(userPrincipal.getId(), request);
 
@@ -92,7 +104,7 @@ public class MobileListingController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             Model model
     ) {
-        ListingDetailResponse listing = listingQueryService.findById(id);
+        ListingDetailResponse listing = listingQueryService.findDetailForEdit(id);
 
         if (!listing.getSeller().getId().equals(userPrincipal.getId())) {
             return "redirect:/mobile/listings/detail?id=" + id;
@@ -121,7 +133,7 @@ public class MobileListingController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             Model model
     ) {
-        ListingDetailResponse listing = listingQueryService.findById(id);
+        ListingDetailResponse listing = listingQueryService.findDetail(id);
         boolean isOwner = listing.getSeller().getId().equals(userPrincipal.getId());
         model.addAttribute("listing", listing);
         model.addAttribute("isOwner", isOwner);

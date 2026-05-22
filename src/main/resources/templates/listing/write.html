@@ -19,7 +19,7 @@
             <h1 id="write-title">글쓰기</h1>
         </header>
 
-        <form class="write-form" th:action="@{/mobile/listings}" method="post">
+        <form class="write-form" th:action="@{/mobile/listings}" method="post" enctype="multipart/form-data">
             <fieldset class="write-fieldset">
                 <legend>거래 종류</legend>
                 <label class="trade-option">
@@ -59,11 +59,13 @@
 
             <div class="write-field">
                 <span class="write-label">상품 이미지</span>
-                <button class="image-upload-box" type="button">
+                <button id="imageUploadButton" class="image-upload-box" type="button">
                     <span class="image-upload-plus" aria-hidden="true"></span>
-                    <strong>사진을 추가하세요</strong>
+                    <strong id="imageUploadText">사진을 추가하세요</strong>
                     <span>(최대 10장, 개당 10MB 이하)</span>
                 </button>
+
+                <input id="images" class="image-file-input" name="images" type="file" accept="image/*" multiple>
             </div>
 
             <div class="write-field">

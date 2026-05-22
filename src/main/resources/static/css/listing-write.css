@@ -178,7 +178,11 @@
     border-radius: 5px;
     background: var(--page-subtle);
     color: var(--brand-primary);
-    cursor: default;
+    cursor: pointer;
+}
+
+.write-field .image-file-input {
+    display: none;
 }
 
 .image-upload-plus {
