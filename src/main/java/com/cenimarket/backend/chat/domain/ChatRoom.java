@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "chat_rooms")

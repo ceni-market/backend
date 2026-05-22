@@ -19,6 +19,7 @@ import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.repository.ListingRepository;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,17 +111,32 @@ public class ChatService {
     }
 
     public List<ChatRoomListResponse> getMyChatRoom(Long userId) {
+        //ChatRoomMember 조회
         List<ChatRoomMember> members = chatRoomMemberRepository.findByUserId(userId);
-        List<ChatRoomListResponse> myChatRooms = new ArrayList<>();
+        List<ChatRoomListResponse> chatRoomList = new ArrayList<>();
+        User contactUser = null;
+        //ChatRoomMember -> ChatRoom 조회
         for(ChatRoomMember member : members){
+            System.out.println("멤버는 " + member);
             ChatRoom myChatRoom = member.getChatRoom();
-            Long id = myChatRoom.getId();
-            ChatRoomListResponse myChatRoomDto = ChatRoomListResponse.builder()
-                    .chatRoomId(id)
-                    .build();
-            myChatRooms.add(myChatRoomDto);
+            System.out.println("채팅방 id는 " + myChatRoom.getId());
+            ChatRoom chatRoomData = chatRoomRepository.findMyChatRoomsData(myChatRoom.getId());
+            System.out.println("채팅방 dto는" + chatRoomData);
+            if(chatRoomData.getBuyer().getId() == userId) {
+                contactUser = chatRoomData.getSeller();
+            } else {
+                contactUser = chatRoomData.getBuyer();
+            }
+            chatRoomList.add(ChatRoomListResponse
+                    .from(chatRoomData.getId(),
+                            contactUser,
+                            chatRoomData.getListing(),
+                            chatRoomData.getLastMessage(),
+                            chatRoomData.getLastMessageAt(),
+                            100));
         }
-        return myChatRooms;
+
+        return chatRoomList;
     }
 
     public Long getChatRoomId(Long sellerId, Long buyerId) {
@@ -128,7 +144,7 @@ public class ChatService {
         return chatRoom.getId();
     }
 
-    public ChatRoomCreateResponse getChatRoom(Long sellerId, Long buyerId) {
+    public ChatRoomCreateResponse getExistChatRoom(Long sellerId, Long buyerId) {
         ChatRoom chatRoom= chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
         System.out.println("Service - chatRoom 조회 완료");
         ChatRoomCreateResponse response = ChatRoomCreateResponse.builder()
@@ -185,4 +201,5 @@ public class ChatService {
         ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, roomId).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "해당 채팅방에 참여 중이지 않습니다.") );
         member.updateLastReadAt(LocalDateTime.now());
     }
+
 }

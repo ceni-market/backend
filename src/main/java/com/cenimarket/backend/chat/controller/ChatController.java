@@ -11,6 +11,7 @@ import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,14 +24,10 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/chat")
+@RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
-
-    public ChatController(ChatService chatService, UserRepository userRepository, ChatMessageRepository chatMessageRepository) {
-        this.chatService = chatService;
-        this.userRepository = userRepository;
-    }
 
     @PostMapping("/mychat")
     @ResponseBody
@@ -64,7 +61,7 @@ public class ChatController {
         System.out.println("완료");
         System.out.println("기존 채팅방이 있는지 검사 시작");
         try{
-            ChatRoomCreateResponse chatRoom = chatService.getChatRoom(sellerId, buyerId);
+            ChatRoomCreateResponse chatRoom = chatService.getExistChatRoom(sellerId, buyerId);
             return ResponseEntity.ok(chatRoom);
         } catch (BusinessException e){
             System.out.println("기존 채팅방 없음. 새로운 채팅방 생성.");
@@ -72,7 +69,7 @@ public class ChatController {
             chatService.createChatRoom(request);
             System.out.println("완료");
             System.out.println("chatService.getChatRoom 실행");
-            ChatRoomCreateResponse response = chatService.getChatRoom(sellerId, buyerId);
+            ChatRoomCreateResponse response = chatService.getExistChatRoom(sellerId, buyerId);
             System.out.println("완료");
             System.out.println("리턴");
             return ResponseEntity.ok(response);
