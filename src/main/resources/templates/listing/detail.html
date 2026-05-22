@@ -29,7 +29,9 @@
             <div class="detail-thumbnails"
                  aria-label="상품 이미지 썸네일"
                  th:if="${!#lists.isEmpty(listing.images)}">
-                <img th:each="image : ${listing.images}"
+                <img class="detail-thumbnail"
+                     th:each="image, imageStat : ${listing.images}"
+                     th:classappend="${imageStat.index == 0} ? ' is-active'"
                      th:src="${image.imageUrl}"
                      src="/images/listing/detail-macbook-thumb.png"
                      th:alt="${listing.title}"
@@ -80,5 +82,6 @@
         </div>
     </section>
 </main>
+<script th:src="@{/js/listing-detail.js}" src="/js/listing-detail.js"></script>
 </body>
 </html>

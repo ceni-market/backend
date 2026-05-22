@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ListingImageRepository extends JpaRepository<ListingImage, Long> {
 
+    void deleteByListing_Id(Long listingId);
+
 }

@@ -85,7 +85,7 @@ public class MobileListingController {
     public String createListing(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @ModelAttribute ListingCreateRequest request,
-            @RequestParam("images") List<MultipartFile> images
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
     ) {
         if (images != null && !images.isEmpty() && !images.get(0).isEmpty()) {
             ImageUploadResponse uploadResponse = imageUploadService.uploadImages(images);
@@ -120,8 +120,14 @@ public class MobileListingController {
     public String updateListing(
             @RequestParam Long id,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @ModelAttribute ListingUpdateRequest request
+            @ModelAttribute ListingUpdateRequest request,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
     ) {
+        if (images != null && !images.isEmpty() && !images.get(0).isEmpty()) {
+            ImageUploadResponse uploadResponse = imageUploadService.uploadImages(images);
+            request.setImageUrls(uploadResponse.getImageUrls());
+        }
+
         ListingUpdateResponse response = listingService.updateListing(userPrincipal.getId(), id, request);
 
         return "redirect:/mobile/listings/detail?id=" + response.listingId();

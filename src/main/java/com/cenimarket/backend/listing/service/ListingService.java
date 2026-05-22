@@ -77,6 +77,19 @@ public class ListingService {
                 request.getType()
         );
 
+        if (request.getImageUrls() != null) {
+            listingImageRepository.deleteByListing_Id(listingId);
+
+            for (int i = 0; i < request.getImageUrls().size(); i++) {
+                ListingImage listingImage = ListingImage.create(
+                        listing,
+                        request.getImageUrls().get(i),
+                        i
+                );
+                listingImageRepository.save(listingImage);
+            }
+        }
+
         return new ListingUpdateResponse(listing.getId());
     }
     //게시글 삭제

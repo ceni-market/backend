@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageUploadButton = document.getElementById('imageUploadButton');
     const imageUploadText = document.getElementById('imageUploadText');
     const imageInput = document.getElementById('images');
+    const defaultImageUploadText = imageUploadText.textContent.trim();
+    const maxImageSize = 5 * 1024 * 1024;
 
     cancelButton.addEventListener('click', () => {
         const confirmed = confirm('작성 중인 내용이 사라집니다. 취소할까요?');
@@ -39,15 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedCount > 10) {
             alert('이미지는 최대 10장까지 등록할 수 있습니다.');
             imageInput.value = '';
-            imageUploadText.textContent = '사진을 추가하세요';
+            imageUploadText.textContent = defaultImageUploadText;
+            return;
+        }
+
+        const oversizedFile = Array.from(imageInput.files).find((file) => file.size > maxImageSize);
+
+        if (oversizedFile) {
+            alert('이미지는 개당 5MB 이하만 등록할 수 있습니다.');
+            imageInput.value = '';
+            imageUploadText.textContent = defaultImageUploadText;
             return;
         }
 
         if (selectedCount > 0) {
-            imageUploadText.textContent = `${selectedCount}장 선택됨`;
+            const firstFileName = imageInput.files[0].name;
+
+            if (selectedCount === 1) {
+                imageUploadText.textContent = `${firstFileName} 선택됨`;
+                return;
+            }
+
+            imageUploadText.textContent = `${firstFileName} 외 ${selectedCount - 1}개 선택됨`;
             return;
         }
 
-        imageUploadText.textContent = '사진을 추가하세요';
+        imageUploadText.textContent = defaultImageUploadText;
     });
 });
