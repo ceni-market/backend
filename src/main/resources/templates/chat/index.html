@@ -23,37 +23,26 @@
         </form>
 
         <section class="chat-list" aria-label="채팅방 목록">
-            <a class="chat-room-card" th:href="@{/mobile/chat/detail}" href="/mobile/chat/detail">
+            <div th:each="myChatRoom : ${myChatRooms}">
+            <a class="chat-room-card"
+               th:href="@{|/mobile/chat/${myChatRoom.chatRoomId}|}"
+               href="/mobile/chat/"
+            >
                 <img class="chat-room-avatar"
-                     th:src="@{/images/chat/partner-lee-jaeyong.png}"
+                     th:src="@{${myChatRoom.contactUser.profileImageUrl}}"
                      src="/images/chat/partner-lee-jaeyong.png"
-                     alt="이재용 프로필">
+                     alt="대화 상대 프로필 이미지">
                 <div class="chat-room-info">
-                    <strong class="chat-room-name">이재용</strong>
-                    <span class="chat-room-item">갤럭시S26 Ultra 512GB</span>
-                    <span class="chat-room-message">지금 바로 챙겨서 나갈게요.</span>
+                    <strong class="chat-room-name" th:text="${myChatRoom.contactUser.name}">이재용</strong>
+                    <span class="chat-room-item" th:text="${myChatRoom.listing.title}">갤럭시S26 Ultra 512GB</span>
+                    <span class="chat-room-message" th:text="${myChatRoom.lastMessage.content}">지금 바로 챙겨서 나갈게요.</span>
                 </div>
                 <div class="chat-room-meta" aria-label="오후 2:30, 읽지 않은 메시지 2개">
                     <time datetime="14:30">오후 2:30</time>
-                    <span class="chat-room-badge">2</span>
+                    <span class="chat-room-badge" th:text="${myChatRoom.unReadMessageCount}">2</span>
                 </div>
             </a>
-
-            <a class="chat-room-card" th:href="@{/mobile/chat/detail}" href="/mobile/chat/detail">
-                <img class="chat-room-avatar"
-                     th:src="@{/images/chat/partner-lee-jaeyong.png}"
-                     src="/images/chat/partner-lee-jaeyong.png"
-                     alt="이재용 프로필">
-                <div class="chat-room-info">
-                    <strong class="chat-room-name">이재용</strong>
-                    <span class="chat-room-item">갤럭시S26 Ultra 512GB</span>
-                    <span class="chat-room-message">지금 바로 챙겨서 나갈게요.</span>
-                </div>
-                <div class="chat-room-meta" aria-label="오후 2:30, 읽지 않은 메시지 2개">
-                    <time datetime="14:30">오후 2:30</time>
-                    <span class="chat-room-badge">2</span>
-                </div>
-            </a>
+            </div>
         </section>
 
         <nav th:replace="~{fragments/mobile :: bottomNav('chat')}"></nav>
