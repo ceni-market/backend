@@ -29,9 +29,9 @@
                href="/mobile/chat/"
             >
                 <img class="chat-room-avatar"
-                     th:src="@{/images/chat/partner-lee-jaeyong.png}"
+                     th:src="@{${myChatRoom.contactUser.profileImageUrl}}"
                      src="/images/chat/partner-lee-jaeyong.png"
-                     alt="이재용 프로필">
+                     alt="대화 상대 프로필 이미지">
                 <div class="chat-room-info">
                     <strong class="chat-room-name" th:text="${myChatRoom.contactUser.name}">이재용</strong>
                     <span class="chat-room-item" th:text="${myChatRoom.listing.title}">갤럭시S26 Ultra 512GB</span>

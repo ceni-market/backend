@@ -4,7 +4,6 @@ import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
-import com.cenimarket.backend.chat.repository.ChatMessageRepository;
 import com.cenimarket.backend.chat.service.ChatService;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
@@ -18,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +30,7 @@ public class ChatController {
     @PostMapping("/mychat")
     @ResponseBody
     public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
-        Long userId = principal.getId();
-        return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRoom(userId)));
+        return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRoom(principal)));
     }
 
     @PostMapping("/create")
@@ -83,8 +80,9 @@ public class ChatController {
 
     @PostMapping("/history/{chatRoomId}")
     @ResponseBody
-    public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId){
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal principal){
+//        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        String userEmail = principal.getEmail();
         return chatService.getChatHistory(chatRoomId, userEmail);
     }
 

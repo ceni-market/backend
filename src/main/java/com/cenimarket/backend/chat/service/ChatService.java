@@ -1,12 +1,12 @@
 package com.cenimarket.backend.chat.service;
 
+import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.domain.ChatMessage;
 import com.cenimarket.backend.chat.domain.ChatRoom;
 import com.cenimarket.backend.chat.domain.ChatRoomMember;
 import com.cenimarket.backend.chat.domain.MessageType;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.dto.request.ChatRoomCreateRequest;
-import com.cenimarket.backend.chat.dto.request.ChatRoomMemberLastReadRequest;
 import com.cenimarket.backend.chat.dto.response.ChatRoomCreateResponse;
 import com.cenimarket.backend.chat.dto.response.ChatRoomListResponse;
 import com.cenimarket.backend.chat.dto.response.LastChatMessageResponse;
@@ -19,7 +19,6 @@ import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.repository.ListingRepository;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,18 +109,16 @@ public class ChatService {
         System.out.println("완료");
     }
 
-    public List<ChatRoomListResponse> getMyChatRoom(Long userId) {
+    public List<ChatRoomListResponse> getMyChatRoom(UserPrincipal userPrincipal) {
+        Long userId = userPrincipal.getId();
         //ChatRoomMember 조회
         List<ChatRoomMember> members = chatRoomMemberRepository.findByUserId(userId);
         List<ChatRoomListResponse> chatRoomList = new ArrayList<>();
         User contactUser = null;
         //ChatRoomMember -> ChatRoom 조회
         for(ChatRoomMember member : members){
-            System.out.println("멤버는 " + member);
             ChatRoom myChatRoom = member.getChatRoom();
-            System.out.println("채팅방 id는 " + myChatRoom.getId());
             ChatRoom chatRoomData = chatRoomRepository.findMyChatRoomsData(myChatRoom.getId());
-            System.out.println("채팅방 dto는" + chatRoomData);
             if(chatRoomData.getBuyer().getId() == userId) {
                 contactUser = chatRoomData.getSeller();
             } else {
@@ -135,7 +132,6 @@ public class ChatService {
                             chatRoomData.getLastMessageAt(),
                             100));
         }
-
         return chatRoomList;
     }
 
