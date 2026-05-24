@@ -19,32 +19,28 @@ import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.repository.ListingRepository;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.cenimarket.backend.global.error.ErrorCode.BUSINESS_ERROR;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ChatService {
+
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final ListingRepository listingRepository;
 
-    public ChatService(ChatRoomRepository chatRoomRepository, ChatRoomMemberRepository chatRoomMemberRepository, ChatMessageRepository chatMessageRepository, UserRepository userRepository, ListingRepository listingRepository) {
-        this.chatRoomRepository = chatRoomRepository;
-        this.chatRoomMemberRepository = chatRoomMemberRepository;
-        this.chatMessageRepository = chatMessageRepository;
-        this.userRepository = userRepository;
-        this.listingRepository = listingRepository;
-    }
 
     public void saveMessage(Long roomId, ChatMessageDto messageSendRequest){  //채팅 저장
         //채팅방 객체 조회 (있는 경우만)
@@ -109,8 +105,9 @@ public class ChatService {
         System.out.println("완료");
     }
 
-    public List<ChatRoomListResponse> getMyChatRoom(UserPrincipal userPrincipal) {
-        Long userId = userPrincipal.getId();
+    //채팅방 목록 생성에 필요한 데이터 불러오는 메서드
+    public List<ChatRoomListResponse> getMyChatRooms(UserPrincipal user) {
+        Long userId = user.getId();
         //ChatRoomMember 조회
         List<ChatRoomMember> members = chatRoomMemberRepository.findByUserId(userId);
         List<ChatRoomListResponse> chatRoomList = new ArrayList<>();
@@ -118,12 +115,8 @@ public class ChatService {
         //ChatRoomMember -> ChatRoom 조회
         for(ChatRoomMember member : members){
             ChatRoom myChatRoom = member.getChatRoom();
+            contactUser = myChatRoom.getTargetUser(user.getId());
             ChatRoom chatRoomData = chatRoomRepository.findMyChatRoomsData(myChatRoom.getId());
-            if(chatRoomData.getBuyer().getId() == userId) {
-                contactUser = chatRoomData.getSeller();
-            } else {
-                contactUser = chatRoomData.getBuyer();
-            }
             chatRoomList.add(ChatRoomListResponse
                     .from(chatRoomData.getId(),
                             contactUser,
@@ -135,11 +128,18 @@ public class ChatService {
         return chatRoomList;
     }
 
-    public Long getChatRoomId(Long sellerId, Long buyerId) {
-        ChatRoom chatRoom = chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
-        return chatRoom.getId();
+    //채팅방 내부에서 보여줄 채팅방 데이터 불러오는 메서드
+    public ChatRoomListResponse getChatRoomDetails(UserPrincipal user, Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "채팅방이 존재하지 않습니다."));
+        User targetUser = userRepository.findById(chatRoom.getTargetUser(user.getId()).getId()).orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "게시글이 존재하지 않습니다."));
+        Listing listing = listingRepository.findById(chatRoom.getListing().getId()).orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "게시글이 존재하지 않습니다."));
+        return ChatRoomListResponse.builder()
+                .contactUser(targetUser)
+                .listing(listing)
+                .build();
     }
 
+    // 게시글에서 채팅 요청 시 기존 채팅방이 있는지 조회하는 메서드.
     public ChatRoomCreateResponse getExistChatRoom(Long sellerId, Long buyerId) {
         ChatRoom chatRoom= chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
         System.out.println("Service - chatRoom 조회 완료");
@@ -153,15 +153,13 @@ public class ChatService {
         return response;
     }
 
-    public List<ChatMessageDto> getChatHistory(Long chatRoomId, String currentUserEmail){
+    //채팅방의 기존 채팅 내역을 반환하는 메서드
+    public List<ChatMessageDto> getChatHistory(UserPrincipal currentUser, Long chatRoomId){
         //현재 사용자가 해당 채팅방의 참가자인지 확인
-        System.out.println("현재 로그인 된 유저의 이메일은 " + currentUserEmail);
-        User user = userRepository.findByEmail(currentUserEmail).orElseThrow();
-        Long userId = user.getId();
-        System.out.println("현재 로그인 된 유저의 ID는 " + userId);
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow();
+        Long userId = currentUser.getId();
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "채팅방을 찾을 수 없습니다."));
         if( !chatRoom.getSeller().getId().equals(userId) && !chatRoom.getBuyer().getId().equals(userId) ){
-            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "접근 권한 없음.");
+            throw new BusinessException(BUSINESS_ERROR, "접근 권한 없음.");
         }
         // 채팅방의 멤버이면, 이전 채팅 데이터를 DTO로 변환하여 반환
         List<ChatMessage> messages = chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(chatRoomId);

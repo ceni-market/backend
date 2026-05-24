@@ -17,36 +17,35 @@
                 <i class="bi bi-arrow-left" aria-hidden="true"></i>
             </a>
             <div class="chat-detail-title">
-                <h1 id="chat-partner">이재용</h1>
-                <span>갤럭시S26 Ultra 512GB</span>
+                <h1 id="chat-partner" th:text="${myChatRoom.contactUser.name}">이재용</h1>
+                <span th:text="${myChatRoom.listing.title}">갤럭시S26 Ultra 512GB</span>
             </div>
         </header>
 
         <time class="chat-date" datetime="2026-05-01">2026년 05월 01일</time>
 
-        <section class="chat-message-list" aria-label="메시지 목록">
-            <div class="chat-message-row is-partner">
-                <p class="chat-bubble chat-bubble-partner">강현님 안녕하세요.</p>
-                <time class="chat-message-time" datetime="14:30">오후 2:30</time>
-            </div>
+        <section class="chat-message-list" aria-label="메시지 목록" th:each="chatHistory : ${chatHistories}">
 
-            <div class="chat-message-row is-partner">
-                <p class="chat-bubble chat-bubble-partner">강현님 안녕하세요.</p>
-                <time class="chat-message-time" datetime="14:30">오후 2:30</time>
-            </div>
-
-            <div class="chat-message-row is-me">
-                <time class="chat-message-time" datetime="14:30">오후 2:30</time>
-                <p class="chat-bubble chat-bubble-me">재용님 안녕하세요!!</p>
-            </div>
-
-            <div class="chat-message-row is-partner chat-image-row">
-                <img class="chat-message-image"
-                     th:src="@{/images/chat/chat-message-lee-jaeyong.png}"
+            <div th:if="${chatHistory.senderEmail==myChatRoom.contactUser.email}" class="chat-message-row is-partner">
+                <p th:if="${chatHistory.contentType.name == 'TEXT'}" class="chat-bubble chat-bubble-partner" th:text="${chatHistory.message}">강현님 안녕하세요.</p>
+                <img th:if="${chatHistory.contentType.name == 'IMAGE'}"
+                     class="chat-message-image"
+                     th:src="@{${chatHistory.message}}"
                      src="/images/chat/chat-message-lee-jaeyong.png"
                      alt="채팅 이미지">
                 <time class="chat-message-time" datetime="14:30">오후 2:30</time>
             </div>
+
+            <div th:if="${chatHistory.senderEmail!=myChatRoom.contactUser.email}" class="chat-message-row is-me">
+                <time class="chat-message-time" datetime="14:30">오후 2:30</time>
+                <p  th:if="${chatHistory.contentType.name == 'TEXT'}" class="chat-bubble chat-bubble-me" th:text="${chatHistory.message}">재용님 안녕하세요.</p>
+                <img th:if="${chatHistory.contentType.name == 'IMAGE'}"
+                     class="chat-message-image"
+                     th:src="@{${chatHistory.message}}"
+                     src="/images/chat/chat-message-lee-jaeyong.png"
+                     alt="채팅 이미지">
+            </div>
+
         </section>
 
         <form class="chat-compose" action="#" method="post">
