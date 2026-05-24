@@ -53,6 +53,14 @@ public class ChatRoom extends SoftDeleteEntity {
         this.lastMessage = lastMessage;
     }
 
+    public User getTargetUser(Long userId) {
+        if(userId.equals(seller.getId())){
+            return buyer;
+        } else {
+            return seller;
+        }
+    }
+
     public void updateLastMessage(ChatMessage message, LocalDateTime lastMessageAt) {
         this.lastMessage = message;
         this.lastMessageAt = lastMessageAt;

@@ -30,7 +30,7 @@ public class ChatController {
     @PostMapping("/mychat")
     @ResponseBody
     public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
-        return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRoom(principal)));
+        return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRooms(principal)));
     }
 
     @PostMapping("/create")
@@ -80,10 +80,9 @@ public class ChatController {
 
     @PostMapping("/history/{chatRoomId}")
     @ResponseBody
-    public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal principal){
+    public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user){
 //        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        String userEmail = principal.getEmail();
-        return chatService.getChatHistory(chatRoomId, userEmail);
+        return chatService.getChatHistory(user, chatRoomId);
     }
 
     @DeleteMapping("/{chatRoomId}/delete")
