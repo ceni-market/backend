@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/mobile-common.css}" href="/css/mobile-common.css">
     <link rel="stylesheet" th:href="@{/css/chat.css}" href="/css/chat.css">
+    <
 </head>
 <body>
 <main class="mobile-page">
@@ -38,7 +39,7 @@
                     <span class="chat-room-message" th:text="${myChatRoom.lastMessage.content}">지금 바로 챙겨서 나갈게요.</span>
                 </div>
                 <div class="chat-room-meta" aria-label="오후 2:30, 읽지 않은 메시지 2개">
-                    <time datetime="14:30">오후 2:30</time>
+                    <time th:datetime="${myChatRoom.lastMessageAt}" th:text="${myChatRoom.lastMessageAtConvert}">오후 2:30</time>
                     <span class="chat-room-badge" th:text="${myChatRoom.unReadMessageCount}">2</span>
                 </div>
             </a>

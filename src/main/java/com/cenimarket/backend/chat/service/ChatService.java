@@ -15,12 +15,12 @@ import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
+import com.cenimarket.backend.global.util.TimeConvertUtil;
 import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.repository.ListingRepository;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,6 +123,7 @@ public class ChatService {
                             chatRoomData.getListing(),
                             chatRoomData.getLastMessage(),
                             chatRoomData.getLastMessageAt(),
+                            TimeConvertUtil.convertTime(chatRoomData.getLastMessageAt()),
                             100));
         }
         return chatRoomList;
