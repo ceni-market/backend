@@ -91,6 +91,20 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new MobileJwtFilter(jwtTokenProvider, refreshTokenService), LogoutFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/mobile/logout") // 로그아웃 처리 엔드포인트
+                        .logoutSuccessUrl("/mobile/login") // 로그아웃 성공 시 이동할 주소
+                        .invalidateHttpSession(true)
+                        .deleteCookies("accessToken", "refreshToken", "JSESSIONID") // 💡 현재 사용 중인 토큰 쿠키명 입력
+                        .addLogoutHandler((request, response, authentication) -> {
+                            // 인증 정보가 있다면 DB에서 리프레시 토큰 무효화(삭제)
+                            if (authentication != null && authentication.getName() != null) {
+                                String email = authentication.getName();
+                                // 💡 RefreshTokenService에 구현된 삭제 메서드 호출
+                                refreshTokenService.deleteByEmail(email);
+                            }
+                        })
+                )
                 .build();
     }
 
@@ -104,7 +118,7 @@ public class SecurityConfig {
                 .securityMatcher(
                         "/v3/api-docs/**", "/swagger-ui/**", "/oauth2/**", "/login/oauth2/code/**",
                         "/css/**", "/images/**", "/favicon.ico",
-                        "/uploads/images/**", "/index/**", "/test/**", "/main/index"
+                        "/uploads/images/**","/uploads/profiles/**", "/index/**", "/test/**", "/main/index"
                 )
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
@@ -129,7 +143,7 @@ public class SecurityConfig {
                 "https://m.ceni-market.site"
 
         ));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 

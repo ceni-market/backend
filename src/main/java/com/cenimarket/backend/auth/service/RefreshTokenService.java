@@ -27,6 +27,7 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenR;
     private final JwtTokenProvider jwtTokenProvider; // JWT 발급을 위한 컴포넌트
+    private final UserRepository userRepository;
 
     /**
      * [재발급] 컨트롤러에서 호출하는 비즈니스 로직
@@ -114,5 +115,19 @@ public class RefreshTokenService {
             // 3. 만약 findAndValidate 안에서 BusinessException(만료, 토큰없음)이 터지면 false를 리턴
             return false;
         }
+    }
+
+    /**
+     * 📌 로그아웃 전용: 이메일 기반 리프레시 토큰 삭제
+     * - 만약 사용자가 연속으로 로그아웃을 누르거나 이미 토큰이 유실된 상태여도
+     * 에러가 터지지 않도록 .ifPresent()로 안전하게 방어 제어합니다.
+     */
+    @Transactional // 쓰기 권한 부여
+    public void deleteByEmail(String email) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            refreshTokenR.findByUser(user).ifPresent(token -> {
+                refreshTokenR.delete(token);
+            });
+        });
     }
 }

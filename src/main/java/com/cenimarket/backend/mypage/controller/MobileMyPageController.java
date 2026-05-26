@@ -56,4 +56,25 @@ public class MobileMyPageController {
         // 4. templates/mypage.html 화면 파일 렌더링
         return "mypage/index";
     }
+
+    @PostMapping("/mypage/upload")
+    public String updateProfileImage(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam("profileImage") MultipartFile profileImage // HTML의 name="profileImage"
+    ) {
+        // 1. 비로그인 사용자 차단
+        if (userPrincipal == null) {
+            return "redirect:/mobile/login";
+        }
+
+        // 2. 파일이 비어있지 않은 경우에만 업로드 로직 수행
+        if (!profileImage.isEmpty()) {
+            // 외부 인프라(AWS S3) 파일 업로드 및 DB 회원 정보(이미지 URL) 갱신
+            profileService.updateProfileImage(userPrincipal.getEmail(), profileImage);
+        }
+
+        // 3. 작업 완료 후, 마이페이지 화면으로 새로고침(리다이렉트)
+        return "redirect:/mobile/mypage";
+    }
 }
+

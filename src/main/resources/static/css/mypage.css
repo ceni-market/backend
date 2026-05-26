@@ -42,6 +42,14 @@
     border-radius: 50%;
     background: #e8f3ff;
     color: var(--brand-primary);
+    overflow: hidden;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .profile-avatar i {

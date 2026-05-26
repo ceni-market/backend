@@ -4,6 +4,7 @@ import com.cenimarket.backend.auth.repository.RefreshTokenRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.user.domain.User;
+import com.cenimarket.backend.user.domain.UserStatus;
 import com.cenimarket.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,12 @@ public class WithdrawalService {
         // 1. 유저 조회
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_ERROR));
+
+        // 💡 [디펜시브 추가] 이미 탈퇴 처리된 유저가 또 탈퇴 요청을 보낸 경우 방어
+        if (user.getStatus() == UserStatus.DELETED) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR);
+        }
+
         // 2. 비밀번호 검증
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
