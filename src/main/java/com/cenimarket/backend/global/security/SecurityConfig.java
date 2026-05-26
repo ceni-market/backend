@@ -118,7 +118,7 @@ public class SecurityConfig {
                 .securityMatcher(
                         "/v3/api-docs/**", "/swagger-ui/**", "/oauth2/**", "/login/oauth2/code/**",
                         "/css/**", "/images/**", "/favicon.ico",
-                        "/uploads/images/**","/uploads/profiles/**", "/index/**", "/test/**", "/main/index"
+                        "/uploads/images/**", "/uploads/profiles/**", "/index/**", "/test/**", "/main/index"
                 )
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
@@ -141,7 +141,6 @@ public class SecurityConfig {
                 "https://www.ceni-market.site",
                 "https://ceni-market.site",
                 "https://m.ceni-market.site"
-
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

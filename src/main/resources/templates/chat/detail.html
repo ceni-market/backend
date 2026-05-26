@@ -6,6 +6,8 @@
     <title>이재용 - 채팅</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/mobile-common.css}" href="/css/mobile-common.css">
     <link rel="stylesheet" th:href="@{/css/chat.css}" href="/css/chat.css">
 </head>
@@ -25,7 +27,6 @@
         <time class="chat-date" datetime="2026-05-01">2026년 05월 01일</time>
 
         <section class="chat-message-list" aria-label="메시지 목록" th:each="chatHistory : ${chatHistories}">
-
             <div th:if="${chatHistory.senderEmail==myChatRoom.contactUser.email}" class="chat-message-row is-partner">
                 <p th:if="${chatHistory.contentType.name == 'TEXT'}" class="chat-bubble chat-bubble-partner" th:text="${chatHistory.message}">강현님 안녕하세요.</p>
                 <img th:if="${chatHistory.contentType.name == 'IMAGE'}"
@@ -33,11 +34,10 @@
                      th:src="@{${chatHistory.message}}"
                      src="/images/chat/chat-message-lee-jaeyong.png"
                      alt="채팅 이미지">
-                <time class="chat-message-time" datetime="14:30">오후 2:30</time>
+                <time class="chat-message-time" th:datetime="${chatHistory.createdAt}" th:text="${#temporals.format(chatHistory.createdAt, 'a hh:mm')}">오후 2:30</time>
             </div>
-
             <div th:if="${chatHistory.senderEmail!=myChatRoom.contactUser.email}" class="chat-message-row is-me">
-                <time class="chat-message-time" datetime="14:30">오후 2:30</time>
+                <time class="chat-message-time" th:datetime="${chatHistory.createdAt}" th:text="${#temporals.format(chatHistory.createdAt, 'a hh:mm')}">오후 2:30</time>
                 <p  th:if="${chatHistory.contentType.name == 'TEXT'}" class="chat-bubble chat-bubble-me" th:text="${chatHistory.message}">재용님 안녕하세요.</p>
                 <img th:if="${chatHistory.contentType.name == 'IMAGE'}"
                      class="chat-message-image"
@@ -45,7 +45,6 @@
                      src="/images/chat/chat-message-lee-jaeyong.png"
                      alt="채팅 이미지">
             </div>
-
         </section>
 
         <form class="chat-compose" action="#" method="post">
@@ -61,6 +60,42 @@
             </button>
         </form>
     </section>
+    <script th:inline="javascript">
+        const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW1kb29AZ21haWwuY29tIiwiaWF0IjoxNzc5NzE3MjEyLCJleHAiOjE3Nzk4OTcyMTJ9.PTqP148Uov4eUOWo7ggIJ_byZzym7MuDkYEctHknyAk"
+
+        function connect() {
+            const socket = new SockJS('/connect');
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({
+                    'Authorization' : `Bearer ${token}`,
+                    'roomId' : 1
+                }, (frame) => {
+                    console.log("Connected!!뷉" + frame);
+                }, () => {
+                    stompClient.subscribe('/topic/' + 1,
+                        (response) => {
+                        console.log("dkasljfa" + response);
+                        // const chatData = JSON.parse(response.body);
+                        // showMessage(chatData, userEmail);
+                    });
+                });
+        }
+
+
+        //enter키로 전송.
+        document.getElementById('message').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        window.addEventListener('beforeunload', (event) => {
+            if(stompClient !== null && stompClient.connected){
+                stompClient.disconnect();
+            }
+        })
+
+        connect();
+    </script>
 </main>
 </body>
 </html>
