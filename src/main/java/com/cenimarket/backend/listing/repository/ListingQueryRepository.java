@@ -32,4 +32,20 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
     Page<Listing> findAllByType(ListingType type, Pageable pageable);
 
     Page<Listing> findAllByCategoryIdAndType(Long categoryId, ListingType type, Pageable pageable);
+
+    // 내가 쓴 글 조회 - 타입과 상태에 맞게 반환
+    @Query("""
+    select l
+    from Listing l
+    join fetch l.category
+    where l.seller.id = :sellerId
+      and (:type is null or l.type = :type)
+      and (:status is null or l.status = :status)
+""")
+    Page<Listing> findAllBySellerIdAndTypeAndStatus(
+            @Param("sellerId") Long sellerId,
+            @Param("type") ListingType type,
+            @Param("status") ListingStatus status,
+            Pageable pageable
+    );
 }

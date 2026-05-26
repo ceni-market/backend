@@ -44,8 +44,8 @@ public class MyPageService {
     }
 
     // 내가 쓴 글 조회
-    public Page<ListingsListResponse> getMyListings(Pageable pageable, Long id) {
-        return listingQueryRepository.findAllBySellerId(id, pageable).map(ListingsListResponse::from);
+    public Page<ListingsListResponse> getMyListings(Pageable pageable, Long id, ListingType type, ListingStatus status) {
+        return listingQueryRepository.findAllBySellerIdAndTypeAndStatus(id, type, status, pageable).map(ListingsListResponse::from);
     }
 
     // 관심 상품 조회
