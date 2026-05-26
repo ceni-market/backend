@@ -2,6 +2,8 @@ package com.cenimarket.backend.mypage.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.global.response.ApiResponse;
+import com.cenimarket.backend.listing.domain.ListingStatus;
+import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.dto.response.PageResponse;
 import com.cenimarket.backend.mypage.dto.response.MyPageDashBoardResponse;
@@ -42,9 +44,10 @@ public class MyPageController {
     @GetMapping("/api/mypage/listings")
     public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getMyListings
     (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
-     Pageable pageable, @AuthenticationPrincipal UserPrincipal user) {
+     Pageable pageable, @AuthenticationPrincipal UserPrincipal user,
+     @RequestParam(required = false) ListingType type, @RequestParam(required = false) ListingStatus status) {
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
-                myPageService.getMyListings(pageable, user.getId())
+                myPageService.getMyListings(pageable, user.getId(), type, status)
         )));
     }
 
