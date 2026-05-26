@@ -65,7 +65,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(oauth2SuccessHandler)
                 )
-                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new RestJwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -99,7 +99,7 @@ public class SecurityConfig {
      */
     @Bean
     @Order(3)
-    public SecurityFilterChain 메타SecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain etcSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .securityMatcher(
                         "/v3/api-docs/**", "/swagger-ui/**", "/oauth2/**", "/login/oauth2/code/**",

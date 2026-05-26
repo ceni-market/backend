@@ -19,14 +19,18 @@
         <section class="mypage-content" aria-label="내 정보">
             <div class="profile-summary">
                 <div class="profile-avatar" aria-hidden="true">
-                    <i class="bi bi-person-fill"></i>
+                    <img th:if="${profileImageUrl != null and !#strings.isEmpty(profileImageUrl)}"
+                         th:src="${profileImageUrl}">
+
+                    <i th:if="${profileImageUrl == null or #strings.isEmpty(profileImageUrl)}"
+                       class="bi bi-person-fill"></i>
                 </div>
-                <strong>이동규</strong>
-                <span>sp2877@knou.ac.kr</span>
+                <strong th:text="${username ?: '사용자'}"></strong>
+                <span th:text="${email ?: '이메일 정보 없음'}"></span>
             </div>
 
             <div class="mypage-menu" aria-label="계정 메뉴">
-                <button class="mypage-menu-item" type="button">
+                <button class="mypage-menu-item" type="button" id="uploadBtn">
                     <span class="mypage-menu-icon">
                         <i class="bi bi-person" aria-hidden="true"></i>
                     </span>
@@ -35,6 +39,10 @@
                         <span>프로필 사진을 변경할 수 있어요.</span>
                     </span>
                 </button>
+
+                <form id="imageForm" th:action="@{/mobile/mypage/upload}" method="post" enctype="multipart/form-data" style="display: none;">
+                    <input type="file" id="fileInput" name="profileImage" accept="image/*">
+                </form>
 
                 <button class="mypage-menu-item" type="button">
                     <span class="mypage-menu-icon logout-icon" aria-hidden="true"></span>
@@ -57,5 +65,18 @@
         <nav th:replace="~{fragments/mobile :: bottomNav('mypage')}"></nav>
     </section>
 </main>
+
+<script>
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+            document.getElementById('imageForm').submit();
+        }
+    });
+</script>
+
 </body>
 </html>
