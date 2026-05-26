@@ -44,7 +44,7 @@
                     <input type="file" id="fileInput" name="profileImage" accept="image/*">
                 </form>
 
-                <button class="mypage-menu-item" type="button">
+                <button class="mypage-menu-item" type="button" id="logoutBtn">
                     <span class="mypage-menu-icon logout-icon" aria-hidden="true"></span>
                     <span class="mypage-menu-text">
                         <strong>로그아웃</strong>
@@ -52,13 +52,20 @@
                     </span>
                 </button>
 
-                <button class="mypage-menu-item is-danger" type="button">
+                <button class="mypage-menu-item is-danger" type="button" id="withdrawBtn">
                     <span class="mypage-menu-icon trash-icon" aria-hidden="true"></span>
                     <span class="mypage-menu-text">
                         <strong>회원 탈퇴</strong>
-                        <span>회원 탈퇴 시 모든 데이터가 삭제됩니다.</span>
+                        <span>탈퇴 시 모든 데이터가 삭제되며, 동일 계정으로 재가입이 불가합니다.</span>
                     </span>
                 </button>
+
+                <form id="logoutForm" th:action="@{/mobile/logout}" method="post" style="display: none;"></form>
+
+                <form id="withdrawForm" th:action="@{/mobile/withdraw}" method="post" style="display: none;">
+                    <input type="hidden" id="withdrawPassword" name="password">
+                </form>
+
             </div>
         </section>
 
@@ -74,6 +81,43 @@
     document.getElementById('fileInput').addEventListener('change', function() {
         if (this.files && this.files.length > 0) {
             document.getElementById('imageForm').submit();
+        }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        if (confirm('로그아웃 하시겠습니까?')) {
+            document.getElementById('logoutForm').submit();
+        }
+    });
+
+    // 🚨 회원 탈퇴 버튼 클릭 이벤트
+    document.getElementById('withdrawBtn').addEventListener('click', () => {
+        // 1차 의사 확인
+        const firstCheck = confirm('정말로 회원 탈퇴를 진행하시겠습니까?');
+
+        if (firstCheck) {
+            // 💡 2차 경고 안내와 함께 비밀번호를 직접 입력받습니다.
+            const passwordInput = prompt(
+                '⚠️ [중요] 회원 탈퇴 안내\n\n' +
+                '탈퇴 즉시 모든 데이터는 영구 삭제되며 복구할 수 없습니다.\n' +
+                '또한, 탈퇴 후에는 동일한 계정으로의 재가입이 절대 불가능합니다.\n\n' +
+                '위 사항에 동의하신다면 본인 확인을 위해 비밀번호를 입력해 주세요.'
+            );
+
+            // 유저가 '취소'를 누르지 않고 '확인'을 누른 경우
+            if (passwordInput !== null) {
+                // 공백 입력 방어 로직
+                if (passwordInput.trim() === '') {
+                    alert('비밀번호를 정확히 입력해야 탈퇴가 가능합니다.');
+                    return;
+                }
+
+                // 숨겨진 폼의 input에 입력받은 비밀번호를 세팅
+                document.getElementById('withdrawPassword').value = passwordInput;
+
+                // 최종 폼 전송 (백엔드 WithdrawalService로 이동)
+                document.getElementById('withdrawForm').submit();
+            }
         }
     });
 </script>
