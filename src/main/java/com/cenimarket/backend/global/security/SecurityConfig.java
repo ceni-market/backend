@@ -125,7 +125,9 @@ public class SecurityConfig {
                 "http://localhost:5173",
                 "http://localhost:3000",
                 "https://www.ceni-market.site",
-                "https://ceni-market.site"
+                "https://ceni-market.site",
+                "https://m.ceni-market.site"
+
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
