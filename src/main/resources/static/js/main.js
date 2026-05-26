@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = true;
 
             try {
-                const response = await fetch(`/api/listings/${listingId}/likes`, {
+                const response = await fetch(`/mobile/listings/${listingId}/likes`, {
                     method
                 });
 
