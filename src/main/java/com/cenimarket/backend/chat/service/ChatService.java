@@ -123,7 +123,7 @@ public class ChatService {
             ChatRoom chatRoomData = chatRoomRepository.findMyChatRoomsData(myChatRoom.getId());
             LocalDateTime readAt = member.getLastReadAt();
             System.out.println(readAt);
-            int unreadCount = chatMessageRepository.countUnreadMessage(readAt);
+            int unreadCount = chatMessageRepository.countUnreadMessage(readAt, contactUser);
             chatRoomList.add(ChatRoomListResponse
                     .from(chatRoomData.getId(),
                             contactUser,
