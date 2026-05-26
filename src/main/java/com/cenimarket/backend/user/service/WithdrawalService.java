@@ -30,6 +30,7 @@ public class WithdrawalService {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
         }
 
+
         // 2. 비밀번호 검증
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
