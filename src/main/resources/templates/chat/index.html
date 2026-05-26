@@ -36,11 +36,12 @@
                 <div class="chat-room-info">
                     <strong class="chat-room-name" th:text="${myChatRoom.contactUser.name}">이재용</strong>
                     <span class="chat-room-item" th:text="${myChatRoom.listing.title}">갤럭시S26 Ultra 512GB</span>
-                    <span class="chat-room-message" th:text="${myChatRoom.lastMessage.content}">지금 바로 챙겨서 나갈게요.</span>
+                    <span th:if="${myChatRoom.lastMessage.messageType.name() == 'IMAGE'}" class="chat-room-message" th:text="이미지">지금 바로 챙겨서 나갈게요.</span>
+                    <span th:unless="${myChatRoom.lastMessage.messageType.name() == 'IMAGE'}" class="chat-room-message" th:text="${myChatRoom.lastMessage.content}">지금 바로 챙겨서 나갈게요.</span>
                 </div>
                 <div class="chat-room-meta" aria-label="오후 2:30, 읽지 않은 메시지 2개">
                     <time th:datetime="${myChatRoom.lastMessageAt}" th:text="${myChatRoom.lastMessageAtConvert}">오후 2:30</time>
-                    <span class="chat-room-badge" th:text="${myChatRoom.unReadMessageCount}">2</span>
+                    <span th:if="${myChatRoom.unReadMessageCount > 0}" class="chat-room-badge" th:text="${myChatRoom.unReadMessageCount}">2</span>
                 </div>
             </a>
             </div>

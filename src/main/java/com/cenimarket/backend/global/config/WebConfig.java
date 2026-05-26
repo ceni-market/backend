@@ -10,9 +10,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // /uploads/images/** 요청을 프로젝트 루트의 uploads/images 폴더와 연결한다.
-        registry.addResourceHandler("/uploads/images/**")
+        registry.addResourceHandler("/uploads/profiles/**")
                 .addResourceLocations("file:uploads/images/");
-        registry.addResourceHandler("uploads/profiles/**")
+        registry.addResourceHandler("/uploads/profiles/**")
                 .addResourceLocations("file:uploads/profiles/");
     }
 }
