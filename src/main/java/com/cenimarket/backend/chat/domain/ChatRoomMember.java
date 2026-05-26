@@ -4,6 +4,8 @@ import com.cenimarket.backend.global.domain.BaseEntity;
 import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 

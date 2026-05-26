@@ -15,18 +15,20 @@ import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
+import com.cenimarket.backend.global.util.TimeConvertUtil;
 import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.repository.ListingRepository;
 import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.cenimarket.backend.global.error.ErrorCode.BUSINESS_ERROR;
 
@@ -92,6 +94,7 @@ public class ChatService {
         ChatRoomMember member1 = ChatRoomMember.builder()
                 .user(buyer)
                 .chatRoom(chatRoom)
+                .lastReadAt(LocalDateTime.now())
                 .build();
         chatRoomMemberRepository.save(member1);
         System.out.println("완료");
@@ -100,6 +103,7 @@ public class ChatService {
         ChatRoomMember member2 = ChatRoomMember.builder()
                 .user(seller)
                 .chatRoom(chatRoom)
+                .lastReadAt(LocalDateTime.now())
                 .build();
         chatRoomMemberRepository.save(member2);
         System.out.println("완료");
@@ -117,13 +121,17 @@ public class ChatService {
             ChatRoom myChatRoom = member.getChatRoom();
             contactUser = myChatRoom.getTargetUser(user.getId());
             ChatRoom chatRoomData = chatRoomRepository.findMyChatRoomsData(myChatRoom.getId());
+            LocalDateTime readAt = member.getLastReadAt();
+            System.out.println(readAt);
+            int unreadCount = chatMessageRepository.countUnreadMessage(readAt);
             chatRoomList.add(ChatRoomListResponse
                     .from(chatRoomData.getId(),
                             contactUser,
                             chatRoomData.getListing(),
                             chatRoomData.getLastMessage(),
                             chatRoomData.getLastMessageAt(),
-                            100));
+                            TimeConvertUtil.convertTime(chatRoomData.getLastMessageAt()),
+                            unreadCount));
         }
         return chatRoomList;
     }
@@ -140,12 +148,20 @@ public class ChatService {
     }
 
     // 게시글에서 채팅 요청 시 기존 채팅방이 있는지 조회하는 메서드.
-    public ChatRoomCreateResponse getExistChatRoom(Long sellerId, Long buyerId) {
-        ChatRoom chatRoom= chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
+    public ChatRoomCreateResponse getExistChatRoom(ChatRoomCreateRequest request) { //채팅을 요청한 게시글이 바뀌면 ListingId가 바뀌도록 해야함.
+        Long sellerId = request.getSellerId();                                      //지금은 Response DTO만 값이 바뀌고 있음. 이거 엔티티로 바꾸려면 계속 조회 해야되는데
+        Long buyerId = request.getBuyerId();                                        //채팅방에 들어갈 때마다 조회하는거 너무 비효율적이라 어떡할지 모르겠음.
+        Long listingId = request.getListingId();
+        ChatRoom chatRoom = chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId)
+                .orElseGet(() -> chatRoomRepository.findBySellerIdAndBuyerId(buyerId, sellerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR)));
         System.out.println("Service - chatRoom 조회 완료");
+        if(chatRoom.getListing().getId() != listingId){
+            ChatRoom currentChatRoom =chatRoomRepository.findById(chatRoom.getId()).orElseThrow();
+            currentChatRoom.updateListing(listingRepository.findById(listingId).orElseThrow());//여기 두 개 채워야됌.
+        }
         ChatRoomCreateResponse response = ChatRoomCreateResponse.builder()
                 .chatRoomId(chatRoom.getId())
-                .listingId(chatRoom.getListing().getId())
+                .listingId(listingId)
                 .sellerId(chatRoom.getSeller().getId())
                 .buyerId(chatRoom.getBuyer().getId())
                 .build();

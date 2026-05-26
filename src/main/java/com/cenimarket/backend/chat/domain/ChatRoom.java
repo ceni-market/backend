@@ -5,6 +5,7 @@ import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class ChatRoom extends SoftDeleteEntity {
     @JoinColumn(name = "listing_id", nullable = false)
     private Listing listing;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     @JoinColumn(name = "last_message_id")
     private ChatMessage lastMessage;
 
@@ -64,5 +65,9 @@ public class ChatRoom extends SoftDeleteEntity {
     public void updateLastMessage(ChatMessage message, LocalDateTime lastMessageAt) {
         this.lastMessage = message;
         this.lastMessageAt = lastMessageAt;
+    }
+
+    public void updateListing(Listing listing){
+        this.listing = listing;
     }
 }
