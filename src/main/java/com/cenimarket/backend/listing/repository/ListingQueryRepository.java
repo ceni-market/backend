@@ -26,12 +26,22 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
             @Param("keyword") String keyword,
             Pageable pageable
     );
-
-    Page<Listing> findAllByCategoryId(Long categoryId, Pageable pageable);
-
-    Page<Listing> findAllByType(ListingType type, Pageable pageable);
-
-    Page<Listing> findAllByCategoryIdAndType(Long categoryId, ListingType type, Pageable pageable);
+    // 모바일 검색
+    @Query("""
+      select l
+      from Listing l
+      where (:keyword is null
+             or l.title like concat('%', :keyword, '%')
+             or l.description like concat('%', :keyword, '%'))
+        and (:categoryId is null or l.category.id = :categoryId)
+        and (:type is null or l.type = :type)
+  """)
+    Page<Listing> findAllByCondition(
+            @Param("keyword") String keyword,
+            @Param("categoryId") Long categoryId,
+            @Param("type") ListingType type,
+            Pageable pageable
+    );
 
     // 내가 쓴 글 조회 - 타입과 상태에 맞게 반환
     @Query("""
