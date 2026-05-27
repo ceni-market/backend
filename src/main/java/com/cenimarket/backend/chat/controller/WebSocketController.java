@@ -2,20 +2,17 @@ package com.cenimarket.backend.chat.controller;
 
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.service.ChatService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class WebSocketController {
     private final ChatService chatService;
     private final SimpMessageSendingOperations messageSendingOperations;
-
-    public WebSocketController(ChatService chatService, SimpMessageSendingOperations messageSendingOperations) {
-        this.chatService = chatService;
-        this.messageSendingOperations = messageSendingOperations;
-    }
 
     /* config(WebSocketConfig.java)에 설정한 바와 같이 /publish 주소로 오는 요청은 여기로 라우팅된다.
     @DestinationVariable은 @MessageMapping과 함께 사용된다.

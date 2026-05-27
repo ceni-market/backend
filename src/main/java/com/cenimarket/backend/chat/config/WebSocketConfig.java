@@ -1,5 +1,6 @@
 package com.cenimarket.backend.chat.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -7,20 +8,23 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final StompHandler stompHandler;
-
-    public WebSocketConfig(StompHandler stompHandler) {
-        this.stompHandler = stompHandler;
-    }
+    private final StompHandShakeInterceptor stompHandShakeInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/connect")
-                .setAllowedOriginPatterns("*")
-                .withSockJS(); //프론트엔드 기술. ws: 대신에 http: 엔드포인트를 사용할 수 있게 해준다.
+                .setAllowedOrigins("http://localhost:8088")
+                .addInterceptors(stompHandShakeInterceptor)
+                .withSockJS()
+                .setSessionCookieNeeded(true);
     }
 
     @Override

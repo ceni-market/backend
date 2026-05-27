@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>이재용 - 채팅</title>
+    <title>[[|${myChatRoom.listingInfo.title}  ${myChatRoom.contactUserInfo.name}|]]</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
@@ -19,15 +19,15 @@
                 <i class="bi bi-arrow-left" aria-hidden="true"></i>
             </a>
             <div class="chat-detail-title">
-                <h1 id="chat-partner" th:text="${myChatRoom.contactUser.name}">이재용</h1>
-                <span th:text="${myChatRoom.listing.title}">갤럭시S26 Ultra 512GB</span>
+                <h1 id="chat-partner" th:text="${myChatRoom.contactUserInfo.name}">이재용</h1>
+                <span th:text="${myChatRoom.listingInfo.title}">갤럭시S26 Ultra 512GB</span>
             </div>
         </header>
 
         <time class="chat-date" datetime="2026-05-01">2026년 05월 01일</time>
 
         <section class="chat-message-list" aria-label="메시지 목록" th:each="chatHistory : ${chatHistories}">
-            <div th:if="${chatHistory.senderEmail==myChatRoom.contactUser.email}" class="chat-message-row is-partner">
+            <div th:if="${chatHistory.senderEmail==myChatRoom.contactUserInfo.email}" class="chat-message-row is-partner">
                 <p th:if="${chatHistory.contentType.name == 'TEXT'}" class="chat-bubble chat-bubble-partner" th:text="${chatHistory.message}">강현님 안녕하세요.</p>
                 <img th:if="${chatHistory.contentType.name == 'IMAGE'}"
                      class="chat-message-image"
@@ -36,7 +36,7 @@
                      alt="채팅 이미지">
                 <time class="chat-message-time" th:datetime="${chatHistory.createdAt}" th:text="${#temporals.format(chatHistory.createdAt, 'a hh:mm')}">오후 2:30</time>
             </div>
-            <div th:if="${chatHistory.senderEmail!=myChatRoom.contactUser.email}" class="chat-message-row is-me">
+            <div th:if="${chatHistory.senderEmail!=myChatRoom.contactUserInfo.email}" class="chat-message-row is-me">
                 <time class="chat-message-time" th:datetime="${chatHistory.createdAt}" th:text="${#temporals.format(chatHistory.createdAt, 'a hh:mm')}">오후 2:30</time>
                 <p  th:if="${chatHistory.contentType.name == 'TEXT'}" class="chat-bubble chat-bubble-me" th:text="${chatHistory.message}">재용님 안녕하세요.</p>
                 <img th:if="${chatHistory.contentType.name == 'IMAGE'}"
@@ -61,25 +61,23 @@
         </form>
     </section>
     <script th:inline="javascript">
-        const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW1kb29AZ21haWwuY29tIiwiaWF0IjoxNzc5NzE3MjEyLCJleHAiOjE3Nzk4OTcyMTJ9.PTqP148Uov4eUOWo7ggIJ_byZzym7MuDkYEctHknyAk"
 
         function connect() {
-            const socket = new SockJS('/connect');
+            const socket = new SockJS(`/connect`, null, {withCredentials: true});
             stompClient = Stomp.over(socket);
 
-            stompClient.connect({
-                    'Authorization' : `Bearer ${token}`,
-                    'roomId' : 1
-                }, (frame) => {
-                    console.log("Connected!!뷉" + frame);
-                }, () => {
-                    stompClient.subscribe('/topic/' + 1,
-                        (response) => {
-                        console.log("dkasljfa" + response);
-                        // const chatData = JSON.parse(response.body);
-                        // showMessage(chatData, userEmail);
-                    });
-                });
+            stompClient.connect({}, (frame) => {
+                console.log("Connected!!" + frame);
+            }, (error) => {
+                console.error("초기 로딩 에러", error.message);
+                // alert(error.message);
+                // if (stompClient !== null) {
+                //     stompClient.disconnect(() => {
+                //         console.log("권한 없음으로 인해 연결 해제");
+                //     });
+                // }
+                // location.href = '/mobile/main';
+            });
         }
 
 

@@ -27,9 +27,10 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
 
-    @PostMapping("/mychat")
+    @GetMapping("/mychat")
     @ResponseBody
     public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
+        System.out.println("요청발생!!");
         return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRooms(principal)));
     }
 
@@ -78,11 +79,11 @@ public class ChatController {
         return "chatroom";
     }
 
-    @PostMapping("/history/{chatRoomId}")
+    @GetMapping("/history/{chatRoomId}")
     @ResponseBody
-    public List<ChatMessageDto> getChatHistory(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user){
-//        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return chatService.getChatHistory(user, chatRoomId);
+    public ResponseEntity<ApiResponse<List<ChatMessageDto>>> getChatHistory(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user){
+        System.out.println("채팅기록 요청!!");
+        return ResponseEntity.ok(ApiResponse.ok(chatService.getChatHistory(user, chatRoomId)));
     }
 
     @DeleteMapping("/{chatRoomId}/delete")
