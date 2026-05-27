@@ -50,7 +50,7 @@ public class ListingQueryService {
 
     // 내가 관심 등록한 게시글 조회
     public Page<ListingsListResponse> findLikedByUser(Pageable pageable, Long userId) {
-        return listingLikeRepository.findLikedListingsByUserId(userId, pageable)
+        return listingLikeRepository.findLikedListingsByUserId(userId, null, null, pageable)
                 .map(listing -> ListingsListResponse.from(listing, true));
     }
 

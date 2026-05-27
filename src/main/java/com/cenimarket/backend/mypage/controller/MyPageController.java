@@ -55,9 +55,10 @@ public class MyPageController {
     @GetMapping("/api/mypage/likes")
     public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getMyLikes
     (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
-     Pageable pageable, @AuthenticationPrincipal UserPrincipal user) {
+     Pageable pageable, @AuthenticationPrincipal UserPrincipal user,
+     @RequestParam(required = false) ListingType type, @RequestParam(required = false) ListingStatus status) {
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
-                myPageService.getMyLikes(pageable, user.getId())
+                myPageService.getMyLikes(pageable, user.getId(), type, status)
         )));
     }
 

@@ -49,8 +49,8 @@ public class MyPageService {
     }
 
     // 관심 상품 조회
-    public Page<ListingsListResponse> getMyLikes(Pageable pageable, Long id) {
-        return listingLikeRepository.findLikedListingsByUserId(id, pageable).map(ListingsListResponse::from);
+    public Page<ListingsListResponse> getMyLikes(Pageable pageable, Long id, ListingType type, ListingStatus status) {
+        return listingLikeRepository.findLikedListingsByUserId(id, type, status, pageable).map(ListingsListResponse::from);
     }
 
     // 최근 거래 내역 조회
