@@ -1,6 +1,7 @@
 package com.cenimarket.backend.user.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
+import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.user.dto.request.WithdrawalRequestDTO;
 import com.cenimarket.backend.user.service.WithdrawalService;
 import jakarta.servlet.http.Cookie;
@@ -12,27 +13,33 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller // 💡 HTML 뷰 및 리다이렉트를 위해 @Controller 사용
-@RequestMapping("/mobile/user")
+@Controller
 @RequiredArgsConstructor
 public class MobileWithdrawalController {
 
     private final WithdrawalService withdrawalService;
 
-    @PostMapping("/withdraw")
+    // 💡 HTML의 th:action="@{/mobile/withdraw}" 주소와 일치시킵니다.
+    @PostMapping("/mobile/withdraw")
     public String withdraw(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @ModelAttribute WithdrawalRequestDTO request, // 💡 JSON이 아닌 HTML Form 데이터를 받으므로 @ModelAttribute 사용
+            @ModelAttribute WithdrawalRequestDTO request,
             HttpServletResponse response) {
 
-        // 1. 서비스 레이어 호출 (비밀번호 검증, 상태 DELETED 변경, 리프레시 토큰 제거)
-        withdrawalService.withdraw(userPrincipal.getEmail(), request.getPassword());
+        try {
+            // 1. 서비스 레이어 호출 (비밀번호 검증 및 탈퇴 처리)
+            withdrawalService.withdraw(userPrincipal.getEmail(), request.getPassword());
 
-        // 2. 유저 브라우저에 남아있는 인증 쿠키(Access, Refresh, 세션) 즉시 소멸 처리
-        clearAuthCookies(response);
+            // 2. 인증 쿠키 소멸 처리
+            clearAuthCookies(response);
 
-        // 3. 탈퇴 처리가 완료되면 로그인 페이지로 리다이렉트 (파라미터로 탈퇴 완료 메시지 전달 가능)
-        return "redirect:/mobile/login?withdrawn=true";
+            // 3. 성공 시 로그인 페이지로 이동
+            return "redirect:/mobile/login?withdrawn=true";
+
+        } catch (BusinessException e) {
+            // 💡 실패 시 세션을 전혀 쓰지 않고, 알려주신 마이페이지 주소 뒤에 파라미터를 붙여 리다이렉트합니다.
+            return "redirect:/mobile/mypage?error=invalid_password";
+        }
     }
 
     /**
@@ -43,7 +50,7 @@ public class MobileWithdrawalController {
         for (String cookieName : cookiesToClear) {
             Cookie cookie = new Cookie(cookieName, null);
             cookie.setPath("/");
-            cookie.setMaxAge(0); // 수명을 0으로 설정하여 브라우저가 즉시 삭제하도록 유도
+            cookie.setMaxAge(0);
             response.addCookie(cookie);
         }
     }
