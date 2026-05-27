@@ -54,8 +54,8 @@ public class MyPageService {
     }
 
     // 최근 거래 내역 조회
-    public Page<TransactionListResponse> getTransactions(Long id, TransactionRole role, Pageable pageable) {
-        return transactionRepository.findMyTransactions(id, role.name() ,pageable)
+    public Page<TransactionListResponse> getTransactions(Long id, TransactionRole role, TransactionType type, Pageable pageable) {
+        return transactionRepository.findMyTransactions(id, role.name(), type, pageable)
                 .map(transaction -> TransactionListResponse.from(transaction, id));
     }
 

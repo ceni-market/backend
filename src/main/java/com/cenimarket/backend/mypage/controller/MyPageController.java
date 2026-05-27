@@ -11,6 +11,7 @@ import com.cenimarket.backend.mypage.dto.response.MyPageInfoResponse;
 import com.cenimarket.backend.mypage.dto.response.TransactionListResponse;
 import com.cenimarket.backend.mypage.service.MyPageService;
 import com.cenimarket.backend.transaction.domain.TransactionRole;
+import com.cenimarket.backend.transaction.domain.TransactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -66,12 +67,13 @@ public class MyPageController {
     @GetMapping("/api/mypage/transactions")
     public ResponseEntity<ApiResponse<PageResponse<TransactionListResponse>>> getTransactions(
             @RequestParam(defaultValue = "ALL") TransactionRole role,
+            @RequestParam(required = false) TransactionType type,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable,
             @AuthenticationPrincipal UserPrincipal user
     ) {
         return ResponseEntity.ok(ApiResponse.ok(
-                PageResponse.from(myPageService.getTransactions(user.getId(), role, pageable))
+                PageResponse.from(myPageService.getTransactions(user.getId(), role, type, pageable))
         ));
     }
 
