@@ -18,7 +18,7 @@ import java.util.List;
 public class ProfileService {
 
     private final UserRepository userRepository;
-    private final ImageUploadService imageUploadService; // 실제 구현 시 S3
+    private final ImageUploadService imageUploadService;
 
     @Transactional
     public String updateProfileImage(String email, MultipartFile file) {

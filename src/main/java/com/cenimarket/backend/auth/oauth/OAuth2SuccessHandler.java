@@ -27,7 +27,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        System.out.println("여긴되나");
+
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         User user = userRepository.findByEmail(userPrincipal.getEmail())
@@ -39,12 +39,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 1. JWT 토큰 생성 (기존 토큰 생성 로직 활용)
         String accessToken = jwtTokenProvider.createAccessToken(userPrincipal.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken(userPrincipal.getEmail());
+        long expirationInMs = jwtTokenProvider.getAccessTokenExpiration();
+        long accessTokenExpiresIn = expirationInMs / 1000;
 
         // 2. 프론트엔드 리다이렉트 주소 설정
         // 수동 가입 시 입력했던 이름, 메일 등의 정보를 쿼리 파라미터로 보낼 수도 있습니다.
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
+        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)
+                .queryParam("accessTokenExpiresIn", accessTokenExpiresIn)
                 .build().toUriString();
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
