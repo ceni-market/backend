@@ -12,48 +12,77 @@
 <body>
 <main class="mobile-page">
     <section class="mobile-screen market-screen" aria-labelledby="main-title">
-        <header class="market-header">
-            <img class="market-logo-symbol"
-                 th:src="@{/images/logo.webp}"
-                 src="/images/main/itcen-logo-symbol.png"
-                 alt="">
-            <h1 id="main-title">세니마켓</h1>
-        </header>
+        <div class="market-sticky-area">
+            <header class="market-header">
+                <img class="market-logo-symbol"
+                     th:src="@{/images/logo.webp}"
+                     src="/images/main/itcen-logo-symbol.png"
+                     alt="">
+                <h1 id="main-title">세니마켓</h1>
+            </header>
 
-        <form class="market-search" action="#" method="get" role="search">
-            <i class="bi bi-search" aria-hidden="true"></i>
-            <label class="visually-hidden" for="keyword">검색어</label>
-            <input id="keyword" name="keyword" type="search" placeholder="검색어를 입력해주세요">
-        </form>
-
-        <nav class="market-tabs" aria-label="상품 보기">
-            <a class="market-tab"
-               th:href="@{/mobile/main}"
-               th:classappend="${tab == null or tab == 'all'} ? ' is-active'"
-               th:attr="aria-current=${tab == null or tab == 'all' ? 'page' : null}">전체</a>
-            <a class="market-tab"
-               th:href="@{/mobile/main(tab='likes')}"
-               th:classappend="${tab == 'likes'} ? ' is-active'"
-               th:attr="aria-current=${tab == 'likes' ? 'page' : null}">관심</a>
-        </nav>
-
-        <div class="market-list-header">
-            <!-- 컨트롤러에서 전달한 전체 상품 개수를 출력한다. -->
-            <span th:text="${tab == 'likes' ? '관심 ' + totalCount + '건' : '전체 ' + totalCount + '건'}">전체 128건</span>
-            <form class="trade-type-form" th:if="${tab == null or tab == 'all'}" th:action="@{/mobile/main}" method="get">
+            <form class="market-search" th:action="@{/mobile/main}" method="get" role="search">
+                <button class="market-search-button" type="submit" aria-label="검색">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                </button>
+                <label class="visually-hidden" for="keyword">검색어</label>
+                <input type="hidden"
+                       name="tab"
+                       th:if="${tab == 'likes'}"
+                       value="likes">
                 <input type="hidden"
                        name="categoryId"
                        th:if="${categoryId != null}"
                        th:value="${categoryId}">
-                <label class="visually-hidden" for="tradeType">거래 유형</label>
-                <select id="tradeType" name="type" aria-label="거래 유형" onchange="this.form.submit()">
-                    <option value="" th:selected="${type == null}">전체</option>
-                    <option value="SALE" th:selected="${type != null and type.name() == 'SALE'}">판매</option>
-                    <option value="GIVEAWAY" th:selected="${type != null and type.name() == 'GIVEAWAY'}">나눔</option>
-                </select>
+                <input type="hidden"
+                       name="type"
+                       th:if="${type != null}"
+                       th:value="${type}">
+                <input id="keyword"
+                       name="keyword"
+                       type="search"
+                       placeholder="검색어를 입력해주세요"
+                       th:value="${keyword}">
             </form>
+
+            <nav class="market-tabs" aria-label="상품 보기">
+                <a class="market-tab"
+                   th:href="@{/mobile/main(categoryId=${categoryId})}"
+                   th:classappend="${tab == null or tab == 'all'} ? ' is-active'"
+                   th:attr="aria-current=${tab == null or tab == 'all' ? 'page' : null}">전체</a>
+                <a class="market-tab"
+                   th:href="@{/mobile/main(tab='likes', categoryId=${categoryId}, type=${type}, keyword=${keyword})}"
+                   th:classappend="${tab == 'likes'} ? ' is-active'"
+                   th:attr="aria-current=${tab == 'likes' ? 'page' : null}">관심</a>
+            </nav>
+
+            <div class="market-list-header">
+                <!-- 컨트롤러에서 전달한 전체 상품 개수를 출력한다. -->
+                <span th:text="${listCountText}">전체 0건</span>
+                <form class="trade-type-form" th:action="@{/mobile/main}" method="get">
+                    <input type="hidden"
+                           name="tab"
+                           th:if="${tab == 'likes'}"
+                           value="likes">
+                    <input type="hidden"
+                           name="categoryId"
+                           th:if="${categoryId != null}"
+                           th:value="${categoryId}">
+                    <input type="hidden"
+                           name="keyword"
+                           th:if="${keyword != null and !#strings.isEmpty(keyword)}"
+                           th:value="${keyword}">
+                    <label class="visually-hidden" for="tradeType">거래 유형</label>
+                    <select id="tradeType" name="type" aria-label="거래 유형" onchange="this.form.submit()">
+                        <option value="" th:selected="${type == null}">판매/나눔</option>
+                        <option value="SALE" th:selected="${type != null and type.name() == 'SALE'}">판매</option>
+                        <option value="GIVEAWAY" th:selected="${type != null and type.name() == 'GIVEAWAY'}">나눔</option>
+                    </select>
+                </form>
+            </div>
         </div>
 
+        <!-- 실제 데이터가 없을 때 화면 형태를 확인하기 위한 더미 목록이다. -->
         <section class="listing-list" aria-label="상품 목록" th:if="${listings == null}">
             <div class="listing-card"
                  th:each="item : ${#numbers.sequence(1, 6)}">
@@ -94,52 +123,69 @@
         </section>
 
         <!-- 컨트롤러에서 전달한 listings를 반복하며 실제 상품 목록을 출력한다. -->
-        <section class="listing-list" aria-label="상품 목록" th:if="${listings != null}">
-            <div class="listing-card"
-                 th:each="listing : ${listings}">
-                <a class="listing-image-link"
-                   th:href="@{/mobile/listings/detail(id=${listing.id})}"
-                   aria-label="상품 상세 보기">
-                    <img class="listing-image"
-                         th:src="${listing.image != null ? listing.image.imageUrl : '/images/main/product-macbook.png'}"
-                         src="/images/main/product-macbook.png"
-                         th:alt="${listing.title}"
-                         alt="상품 이미지">
-                </a>
-                <div class="listing-info">
-                    <div class="listing-row">
-                        <a class="listing-title-link"
-                           th:href="@{/mobile/listings/detail(id=${listing.id})}">
-                            <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
-                        </a>
-                    </div>
-                    <div class="listing-row">
-                        <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
-                        <button type="button"
-                                class="listing-like"
-                                th:classappend="${listing.likedByMe} ? ' is-liked'"
-                                th:aria-pressed="${listing.likedByMe}"
-                                th:data-listing-id="${listing.id}">
-                            <i class="bi"
-                               th:classappend="${listing.likedByMe} ? ' bi-heart-fill' : ' bi-heart'"
-                               aria-hidden="true"></i>
-                            <span th:text="${listing.likeCount}">3</span>
-                        </button>
-                    </div>
-                    <div class="listing-row">
-                        <span class="listing-price-time">
-                            <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
-                            <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
-                        </span>
-                        <span class="listing-view-count">
-                            <i class="bi bi-eye" aria-hidden="true"></i>
-                            <span th:text="${listing.viewCount}">0</span>
-                        </span>
+        <section class="listing-list" id="listingList" aria-label="상품 목록" th:if="${listings != null}">
+            <div th:fragment="listingItems">
+                <div class="listing-empty"
+                     th:if="${#lists.isEmpty(listings)}">
+                    조건에 맞는 상품이 없습니다.
+                </div>
+                <div class="listing-card"
+                     th:each="listing : ${listings}">
+                    <a class="listing-image-link"
+                       th:href="@{/mobile/listings/detail(id=${listing.id})}"
+                       aria-label="상품 상세 보기">
+                        <img class="listing-image"
+                             th:src="${listing.image != null ? listing.image.imageUrl : '/images/main/product-macbook.png'}"
+                             src="/images/main/product-macbook.png"
+                             th:alt="${listing.title}"
+                             alt="상품 이미지">
+                    </a>
+                    <div class="listing-info">
+                        <div class="listing-row">
+                            <a class="listing-title-link"
+                               th:href="@{/mobile/listings/detail(id=${listing.id})}">
+                                <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
+                            </a>
+                        </div>
+                        <div class="listing-row">
+                            <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
+                            <button type="button"
+                                    class="listing-like"
+                                    th:classappend="${listing.likedByMe} ? ' is-liked'"
+                                    th:aria-pressed="${listing.likedByMe}"
+                                    th:data-listing-id="${listing.id}">
+                                <i class="bi"
+                                   th:classappend="${listing.likedByMe} ? ' bi-heart-fill' : ' bi-heart'"
+                                   aria-hidden="true"></i>
+                                <span th:text="${listing.likeCount}">3</span>
+                            </button>
+                        </div>
+                        <div class="listing-row">
+                            <span class="listing-price-time">
+                                <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
+                                <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
+                            </span>
+                            <span class="listing-view-count">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                <span th:text="${listing.viewCount}">0</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- 무한스크롤이 다음 페이지를 불러올 위치를 감지 -->
+            <div class="infinite-scroll-status"
+                 id="infiniteScrollTarget"
+                 th:if="${listingPage != null}"
+                 th:data-next-page="${listingPage.number + 1}"
+                 th:data-has-next="${listingPage.hasNext()}">
+                <span class="infinite-scroll-loading">
+                    <span class="infinite-scroll-spinner" aria-hidden="true"></span>
+                    불러오는 중...
+                </span>
+                <span class="infinite-scroll-end">마지막 상품입니다.</span>
+            </div>
         </section>
-
         <a class="listing-write-button"
            th:href="@{/mobile/listings/write}"
            href="/mobile/listings/write"

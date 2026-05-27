@@ -1,7 +1,17 @@
 @charset "UTF-8";
 
 .market-screen {
+    overflow: visible;
     padding: 31px 30px 96px;
+}
+
+.market-sticky-area {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    margin: -31px -30px 0;
+    padding: 31px 30px 5px;
+    background: #fff;
 }
 
 .market-header {
@@ -39,13 +49,24 @@
     background: #fff;
 }
 
-.market-search i {
+.market-search-button {
     position: absolute;
     left: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--text-placeholder);
+    cursor: pointer;
+}
+
+.market-search-button i {
     font-size: 20px;
     line-height: 1;
-    pointer-events: none;
 }
 
 .market-search input {
@@ -116,9 +137,9 @@
     width: 161px;
     height: 24px;
     padding: 0 20px 0 8px;
-    border: 0;
+    border: 1px solid var(--border-input);
     border-radius: 4px;
-    background: transparent;
+    background: #fff;
     color: var(--text-placeholder);
     font-size: 12px;
     font-weight: 500;
@@ -129,6 +150,58 @@
 
 .listing-list {
     margin-top: 5px;
+    min-height: calc(100dvh - 300px);
+}
+
+.listing-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100dvh - 360px);
+    padding: 40px 0 80px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: center;
+}
+
+.infinite-scroll-status {
+    min-height: 52px;
+    padding: 16px 0 18px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    text-align: center;
+}
+
+.infinite-scroll-loading,
+.infinite-scroll-end {
+    display: none;
+}
+
+.infinite-scroll-status.is-loading .infinite-scroll-loading,
+.infinite-scroll-status.is-end .infinite-scroll-end {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infinite-scroll-spinner {
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+    border: 2px solid var(--divider-brand);
+    border-top-color: var(--brand-primary);
+    border-radius: 50%;
+    animation: infinite-scroll-spin 0.7s linear infinite;
+}
+
+@keyframes infinite-scroll-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .listing-card {

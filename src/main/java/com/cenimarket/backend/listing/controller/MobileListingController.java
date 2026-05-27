@@ -1,6 +1,7 @@
 package com.cenimarket.backend.listing.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
+import com.cenimarket.backend.category.dto.CategoryItemResponse;
 import com.cenimarket.backend.category.service.CategoryService;
 import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.request.ListingCreateRequest;
@@ -44,8 +45,12 @@ public class MobileListingController {
             Long categoryId,
             @RequestParam(required = false)
             ListingType type,
+            @RequestParam(required = false)
+            String keyword,
             @RequestParam(defaultValue = "all")
             String tab,
+            @RequestParam(defaultValue = "false")
+            boolean fragment,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -55,24 +60,48 @@ public class MobileListingController {
         Long userId = userPrincipal.getId();
 
         if ("likes".equals(tab)) {
-            listings = listingQueryService.findLikedByUser(pageable, userId);
-        } else if (categoryId == null && type == null) {
-            listings = listingQueryService.findAll(pageable, userId);
-        } else if (categoryId != null && type == null) {
-            listings = listingQueryService.findAllByCategory(categoryId, pageable, userId);
-        } else if (categoryId == null) {
-            listings = listingQueryService.findAllByType(type, pageable, userId);
+            listings = listingQueryService.findLikedByCondition(
+                    keyword,
+                    categoryId,
+                    type,
+                    pageable,
+                    userId
+            );
         } else {
-            listings = listingQueryService.findAllByCategoryAndType(categoryId, type, pageable, userId);
+            listings = listingQueryService.findAllByCondition(
+                    keyword,
+                    categoryId,
+                    type,
+                    pageable,
+                    userId
+            );
         }
 
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("type", type);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("tab", tab);
         model.addAttribute("listings", listings.getContent());
-        model.addAttribute("totalCount", listings.getTotalElements());
+        model.addAttribute("listingPage", listings);
+        model.addAttribute("listCountText", createListCountText(tab, categoryId, listings.getTotalElements()));
+
+        if (fragment) {
+            return "main/index :: listingItems";
+        }
 
         return "main/index";
+    }
+
+    private String createListCountText(String tab, Long categoryId, long totalCount) {
+        String title = categoryId == null
+                ? "전체"
+                : categoryService.getCategories().stream()
+                .filter(category -> category.id().equals(categoryId))
+                .map(CategoryItemResponse::name)
+                .findFirst()
+                .orElse("전체");
+
+        return title + " " + totalCount + "건";
     }
 
     @GetMapping("/mobile/listings/write")
