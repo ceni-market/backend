@@ -20,28 +20,35 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     // 내 최근 거래 내역 조회
     @Query(
             value = """
-        select t
-        from Transaction t
-        join fetch t.listing l
-        join fetch l.category
-        where
+    select t
+    from Transaction t
+    join fetch t.listing l
+    join fetch l.category
+    where
+        (
             (:role = 'ALL' and (t.seller.id = :userId or t.buyer.id = :userId))
             or (:role = 'SELLER' and t.seller.id = :userId)
             or (:role = 'BUYER' and t.buyer.id = :userId)
-        order by t.id desc
-    """,
+        )
+        and (:type is null or t.type = :type)
+    order by t.id desc
+""",
             countQuery = """
-        select count(t)
-        from Transaction t
-        where
-            (:role = 'ALL' and (t.seller.id = :userId or t.buyer.id = :userId))
-            or (:role = 'SELLER' and t.seller.id = :userId)
-            or (:role = 'BUYER' and t.buyer.id = :userId)
-    """
+                        select count(t)
+                        from Transaction t
+                        where
+                            (
+                                (:role = 'ALL' and (t.seller.id = :userId or t.buyer.id = :userId))
+                                or (:role = 'SELLER' and t.seller.id = :userId)
+                                or (:role = 'BUYER' and t.buyer.id = :userId)
+                            )
+                            and (:type is null or t.type = :type)
+                    """
     )
     Page<Transaction> findMyTransactions(
             @Param("userId") Long userId,
             @Param("role") String role,
+            @Param("type") TransactionType type,
             Pageable pageable
     );
 }
