@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 import static java.awt.SystemColor.text;
 
 @Getter
@@ -19,10 +21,22 @@ public class ChatMessageDto { //메시지 전송용 수신 발신 공용 DTO. �
     @NotNull
     private MessageType contentType;
 
+    private LocalDateTime createdAt;
+
     @Builder
-    public ChatMessageDto(String message, String senderEmail, MessageType contentType){
+    public ChatMessageDto(String message, String senderEmail, MessageType contentType, LocalDateTime createdAt){
         this.message = message;
         this.senderEmail = senderEmail;
         this.contentType = contentType;
+        this.createdAt = createdAt;
+    }
+
+    public static ChatMessageDto from (String message, String senderEmail, MessageType contentType, LocalDateTime createdAt ) {
+        return ChatMessageDto.builder()
+                .message(message)
+                .senderEmail(senderEmail)
+                .contentType(contentType)
+                .createdAt(createdAt)
+                .build();
     }
 }

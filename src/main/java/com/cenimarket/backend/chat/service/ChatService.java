@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -181,11 +182,7 @@ public class ChatService {
         List<ChatMessage> messages = chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(chatRoomId);
         List<ChatMessageDto> messageDtos = new ArrayList<>();
         for(ChatMessage message : messages){
-            ChatMessageDto messageDto = ChatMessageDto.builder()
-                    .message(message.getContent())
-                    .senderEmail(message.getSender().getEmail())
-                    .contentType(message.getMessageType())
-                    .build();
+            ChatMessageDto messageDto = ChatMessageDto.from(message.getContent(), message.getSender().getEmail(), message.getMessageType(), message.getCreatedAt());
             messageDtos.add(messageDto);
         }
         return messageDtos;
