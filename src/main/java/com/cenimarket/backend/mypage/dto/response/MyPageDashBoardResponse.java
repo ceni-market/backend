@@ -8,8 +8,8 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class MyPageDashBoardResponse {
-    private long soldListingCount;
+    private long myListingCount;
     private long likedListingCount;
-    private long donatedListingCount;
-    private long receivedDonationCount;
+    private long tradeHistoryCount;
+    private long donationHistoryCount;
 }

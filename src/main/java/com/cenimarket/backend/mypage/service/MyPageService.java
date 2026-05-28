@@ -25,22 +25,21 @@ public class MyPageService {
     private final TransactionRepository transactionRepository;
 
     // 판매한 상품, 관심 상품, 나눔한 글, 나눔받은 글 - 순서대로
-    // 등록한 글 , 관심 상품, 거래 내역,
+    // 등록한 글 , 관심 상품, 거래 내역, 나눔 내역
     public MyPageDashBoardResponse getDashBoard(Long userId) {
-        long soldListingCount =
-                listingQueryRepository.countBySellerIdAndStatus(userId, ListingStatus.SOLD);
+        long myListingCount =
+                listingQueryRepository.countBySellerIdAndStatus(userId, ListingStatus.ACTIVE);
         long likedListingCount =
                 listingLikeRepository.countByUserId(userId);
-        long donatedListingCount =
-                listingQueryRepository.countBySellerIdAndStatus(userId, ListingStatus.GIVEN);
-        long receivedDonationCount =
-                transactionRepository.countByBuyerIdAndType(userId, TransactionType.GIVEAWAY);
-
+        long tradeHistoryCount =
+                transactionRepository.countByBuyerIdOrSellerIdAndType(userId, userId,TransactionType.SALE);
+        long donationHistoryCount =
+                transactionRepository.countByBuyerIdOrSellerIdAndType(userId, userId,TransactionType.GIVEAWAY);
         return MyPageDashBoardResponse.builder()
-                .soldListingCount(soldListingCount)
+                .myListingCount(myListingCount)
                 .likedListingCount(likedListingCount)
-                .donatedListingCount(donatedListingCount)
-                .receivedDonationCount(receivedDonationCount)
+                .tradeHistoryCount(tradeHistoryCount)
+                .donationHistoryCount(donationHistoryCount)
                 .build();
     }
 
