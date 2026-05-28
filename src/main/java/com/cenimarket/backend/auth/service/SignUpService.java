@@ -42,8 +42,8 @@ public class SignUpService {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
         }
 
-        // 2. 비밀번호 조건 및 일치 여부 검증
-        validatePassword(request.getPassword(), request.getPasswordConfirm());
+        /*// 2. 비밀번호 조건 및 일치 여부 검증
+        validatePassword(request.getPassword(), request.getPasswordConfirm());*/
 
         // 3. 비밀번호 암호화 및 엔티티 생성
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -61,7 +61,7 @@ public class SignUpService {
         return SignUpResponseDTO.from(savedUser);
     }
 
-    /*비밀번호 유효성 검사 로직*/
+    /*비밀번호 유효성 검사 로직*//*
     private void validatePassword(String password, String passwordConfirm) {
         // 클라이언트에서 1차 확인이 되었는지 체크 (DTO 변수 활용)
         if (password == null || !password.equals(passwordConfirm)) {
@@ -73,5 +73,5 @@ public class SignUpService {
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
         }
 
-    }
+    }*/
 }
