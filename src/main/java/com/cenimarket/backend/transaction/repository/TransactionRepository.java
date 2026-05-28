@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     boolean existsByChatRoomId(Long chatRoomId);
     boolean existsByListingId(Long listingId);
-    long countByBuyerIdAndType(Long buyerId, TransactionType type);
 
     // 내 최근 거래 내역 조회
     @Query(
@@ -51,4 +50,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("type") TransactionType type,
             Pageable pageable
     );
+
+    long countByBuyerIdOrSellerIdAndType(Long buyerId, Long sellerId, TransactionType type);
 }
