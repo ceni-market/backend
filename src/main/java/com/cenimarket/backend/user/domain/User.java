@@ -42,13 +42,18 @@ public class User extends SoftDeleteEntity { // BaseEntity 상속
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt; // 마지막 로그인일시
 
-    public static User createNewUser(String name, String email, String encodedPassword) {
-        return User.builder()
+    public static User createNewUser(String name, String email, String encodedPassword, LocalDateTime verifiedAt) {
+        User user = User.builder()
                 .name(name)
                 .email(email)
                 .passwordHash(encodedPassword)
                 .status(UserStatus.ACTIVE) // 기본값 명시적 설정
                 .build();
+
+        // 2. 🎯 선호하시는 방식대로 인스턴스 메서드를 호출하여 인증 시간을 명시적으로 주입합니다.
+        user.setEmailVerifiedAt(verifiedAt);
+
+        return user;
     }
 
     public void updatePassword(String encodedPassword) {

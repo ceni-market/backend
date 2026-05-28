@@ -16,6 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
@@ -42,16 +45,78 @@ public class EmailVerificationController {
      * 회원가입 메일 링크 검증
      * GET /api/auth/signup/verify?email=...&token=...
      */
-    @GetMapping("/signup/verify")
-    public ResponseEntity<EmailVerificationConfirmResponseDTO> verifySignupLink(
+    @GetMapping(value = "/signup/verify", produces = "text/html;charset=UTF-8")
+    public ResponseEntity<String> verifySignupLink(
             @RequestParam String email,
             @RequestParam String token) {
 
         boolean isSuccess = emailVerificationService.confirmVerification(email, token);
 
-        return isSuccess
-                ? ResponseEntity.ok(EmailVerificationConfirmResponseDTO.success(email))
-                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(EmailVerificationConfirmResponseDTO.fail(email));
+        if (isSuccess) {
+            // 🎯 인증 성공 시 브라우저에 보여줄 예쁜 안내 및 3초 후 자동 닫기 스크립트
+            String successHtml = """
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>이메일 인증 성공</title>
+                    <style>
+                        body { font-family: 'Apple SD Gothic Neo', sans-serif; text-align: center; padding-top: 100px; background-color: #f8f9fa; color: #333; }
+                        .card { background: white; max-width: 450px; margin: 0 auto; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+                        h1 { color: #0d6efd; font-size: 24px; margin-bottom: 10px; }
+                        p { font-size: 15px; color: #666; line-height: 1.6; }
+                        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(13,110,253,0.2); border-top-color: #0d6efd; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 15px; }
+                        @keyframes spin { to { transform: rotate(360deg); } }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <h1>✨ 이메일 인증 완료!</h1>
+                        <p>인증이 성공적으로 완료되었습니다.<br>이 창은 <strong>3초 후</strong>에 자동으로 닫힙니다.</p>
+                        <div class="spinner"></div>
+                    </div>
+                    
+                    <script>
+                        // 3초(3000ms) 후에 이 창을 자동으로 닫음
+                        setTimeout(function() {
+                            window.close();
+                        }, 3000);
+                    </script>
+                </body>
+                </html>
+                """;
+            return ResponseEntity.ok(successHtml);
+
+        } else {
+            // 인증 실패 시 안내 HTML
+            String failHtml = """
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head><meta charset="UTF-8"><title>인증 실패</title></head>
+                <body style="text-align:center; padding-top:100px; font-family:sans-serif;">
+                    <h1 style="color:#dc3545;">❌ 인증 실패</h1>
+                    <p>만료되었거나 유효하지 않은 인증 링크입니다. 다시 가입을 진행해주세요.</p>
+                </body>
+                </html>
+                """;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failHtml);
+        }
+    }
+
+    /**
+     * 🎯 [신규 추가] 프론트엔드 폴링(Polling) 수신용 인증 상태 확인 API
+     * GET /api/auth/signup/status?email=...
+     */
+    @GetMapping("/signup/status")
+    public ResponseEntity<?> checkSignupStatus(@RequestParam String email) {
+        // 서비스 레이어의 검증 확인 로직 호출 (메서드가 없다면 하단의 가이드 참고)
+        boolean isVerified = emailVerificationService.isEmailVerified(email);
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("email", email);
+        responseBody.put("isVerified", isVerified);
+
+        return ResponseEntity.ok(responseBody);
     }
 
     // ==========================================
