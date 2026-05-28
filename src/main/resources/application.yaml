@@ -68,6 +68,7 @@ spring:
 
 server:
   port: 8088
+  forward-headers-strategy: framework
 
 logging:
   level:
@@ -100,5 +101,6 @@ cloud:
       secret-key: ${AWS_SECRET_KEY}
     s3:
       bucket: ${AWS_S3_BUCKET}
+
 
 

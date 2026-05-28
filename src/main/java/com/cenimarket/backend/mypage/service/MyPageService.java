@@ -25,6 +25,7 @@ public class MyPageService {
     private final TransactionRepository transactionRepository;
 
     // 판매한 상품, 관심 상품, 나눔한 글, 나눔받은 글 - 순서대로
+    // 등록한 글 , 관심 상품, 거래 내역,
     public MyPageDashBoardResponse getDashBoard(Long userId) {
         long soldListingCount =
                 listingQueryRepository.countBySellerIdAndStatus(userId, ListingStatus.SOLD);
