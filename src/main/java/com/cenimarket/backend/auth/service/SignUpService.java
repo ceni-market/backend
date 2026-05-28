@@ -52,7 +52,8 @@ public class SignUpService {
         User user = User.createNewUser(
                 request.getName(),
                 request.getEmail(),
-                encodedPassword
+                encodedPassword,
+                verification.getVerifiedAt()
         );
 
         User savedUser = userRepository.save(user);

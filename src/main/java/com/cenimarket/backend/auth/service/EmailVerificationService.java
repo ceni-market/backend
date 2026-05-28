@@ -97,4 +97,15 @@ public class EmailVerificationService {
                     }
                 });
     }
+
+    /**
+     * 🎯 프론트엔드 폴링 수신용 - 특정 이메일의 최신 인증 성공 여부 조회
+     */
+    @Transactional(readOnly = true)
+    public boolean isEmailVerified(String email) {
+        // 주입된 레포지토리 변수명(emailVerificationR)을 사용하여 가장 최근 생성된 인증 정보를 가져옵니다.
+        return emailVerificationR.findTopByEmailOrderByCreatedAtDesc(email)
+                .map(verification -> verification.getVerifiedAt() != null) // verifiedAt 필드가 채워져 있다면 true
+                .orElse(false); // 인증 정보가 아예 없다면 false
+    }
 }

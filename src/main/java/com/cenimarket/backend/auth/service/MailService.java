@@ -16,7 +16,8 @@ public class MailService {
 
     public void sendVerificationMail(String toEmail, String token, VerificationPurpose purpose) {
 
-        String baseUrl = "http://localhost:8088";
+        //String baseUrl = "http://localhost:8088";
+        String baseUrl = "https://api.cenimarket.com";
 
         // 1. 용도에 따른 문구 및 링크 설정
         String title;
