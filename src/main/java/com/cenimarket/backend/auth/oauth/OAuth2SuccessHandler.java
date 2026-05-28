@@ -44,7 +44,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 2. 프론트엔드 리다이렉트 주소 설정
         // 수동 가입 시 입력했던 이름, 메일 등의 정보를 쿼리 파라미터로 보낼 수도 있습니다.
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
+        //String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
+        String targetUrl = UriComponentsBuilder.fromUriString("https://www.ceni-market.site/oauth2/redirect")
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)
                 .queryParam("accessTokenExpiresIn", accessTokenExpiresIn)
