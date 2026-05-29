@@ -1,3 +1,4 @@
+/*
 package com.cenimarket.backend.user.dto.response;
 
 import lombok.AllArgsConstructor;
@@ -14,3 +15,4 @@ public class ProfileUpdateResponseDTO {
         return new ProfileUpdateResponseDTO(email, url, "프로필 이미지가 성공적으로 변경되었습니다.");
     }
 }
+*/
