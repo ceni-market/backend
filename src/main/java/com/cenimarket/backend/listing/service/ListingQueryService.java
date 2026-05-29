@@ -2,6 +2,7 @@ package com.cenimarket.backend.listing.service;
 
 import com.cenimarket.backend.like.repository.ListingLikeRepository;
 import com.cenimarket.backend.listing.domain.Listing;
+import com.cenimarket.backend.listing.domain.ListingStatus;
 import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
@@ -20,8 +21,14 @@ public class ListingQueryService {
     private final ListingLikeRepository listingLikeRepository;
 
     //게시글 전체 조회
-    public Page<ListingsListResponse> findAll(Pageable pageable, Long userId) {
-        return listingQueryRepository.findAll(pageable)
+    public Page<ListingsListResponse> findAll(
+            Pageable pageable,
+            Long userId,
+            ListingType type,
+            String category,
+            ListingStatus status
+    ) {
+        return listingQueryRepository.findAllByFilters(type, category, status, pageable)
                 .map(listing -> toListResponse(listing, userId));
     }
 

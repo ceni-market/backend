@@ -58,4 +58,21 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
             @Param("status") ListingStatus status,
             Pageable pageable
     );
+
+    // 전체 리스트 - 카테고리 타입 상태 필터링
+    @Query("""
+    select l
+    from Listing l
+    join fetch l.category c
+    where (:type is null or l.type = :type)
+      and (:category is null or c.name = :category)
+      and (:status is null or l.status = :status)
+    order by l.id desc
+""")
+    Page<Listing> findAllByFilters(
+            @Param("type") ListingType type,
+            @Param("category") String category,
+            @Param("status") ListingStatus status,
+            Pageable pageable
+    );
 }
