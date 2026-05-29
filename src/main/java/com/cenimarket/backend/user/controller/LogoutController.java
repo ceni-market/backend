@@ -1,7 +1,6 @@
 package com.cenimarket.backend.user.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
-import com.cenimarket.backend.user.dto.response.ProfileUpdateResponseDTO;
 import com.cenimarket.backend.user.service.LogoutService;
 import com.cenimarket.backend.user.service.ProfileService;
 
