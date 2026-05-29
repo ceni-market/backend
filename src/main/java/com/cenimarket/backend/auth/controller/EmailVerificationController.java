@@ -137,16 +137,69 @@ public class EmailVerificationController {
      * 비밀번호 재설정 메일 링크 검증
      * GET /api/auth/password-reset/verify?email=...&token=...
      */
-    @GetMapping("/password-reset/verify")
-    public ResponseEntity<EmailVerificationConfirmResponseDTO> verifyPasswordResetLink(
+    @GetMapping(value = "/password-reset/verify", produces = "text/html;charset=UTF-8")
+    public ResponseEntity<String> verifyPasswordResetLink(
             @RequestParam String email,
             @RequestParam String token) {
 
-        // 용도를 PASSWORD_RESET으로 명시하여 검증
         boolean isSuccess = passwordResetService.confirmVerification(email, token, VerificationPurpose.PASSWORDRESET);
 
-        return isSuccess
-                ? ResponseEntity.ok(EmailVerificationConfirmResponseDTO.success(email))
-                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(EmailVerificationConfirmResponseDTO.fail(email));
+        if (isSuccess) {
+            String successHtml = """
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>비밀번호 인증 성공</title>
+                    <style>
+                        body { font-family: 'Apple SD Gothic Neo', sans-serif; text-align: center; padding-top: 100px; background-color: #f8f9fa; color: #333; }
+                        .card { background: white; max-width: 450px; margin: 0 auto; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+                        h1 { color: #28a745; font-size: 24px; margin-bottom: 10px; }
+                        p { font-size: 15px; color: #666; line-height: 1.6; }
+                        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(40,167,69,0.2); border-top-color: #28a745; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 15px; }
+                        @keyframes spin { to { transform: rotate(360deg); } }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <h1>🔓 이메일 인증 완료!</h1>
+                        <p>비밀번호 재설정을 위한 인증이 완료되었습니다.<br>기존 브라우저 탭으로 돌아가 비밀번호 변경을 완료해 주세요.</p>
+                        <div class="spinner"></div>
+                    </div>
+                    <script>
+                        setTimeout(function() { window.close(); }, 3000);
+                    </script>
+                </body>
+                </html>
+                """;
+            return ResponseEntity.ok(successHtml);
+        } else {
+            String failHtml = """
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head><meta charset="UTF-8"><title>인증 실패</title></head>
+                <body style="text-align:center; padding-top:100px; font-family:sans-serif;">
+                    <h1 style="color:#dc3545;">❌ 인증 실패</h1>
+                    <p>만료되었거나 유효하지 않은 비밀번호 재설정 링크입니다. 다시 요청해 주세요.</p>
+                </body>
+                </html>
+                """;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failHtml);
+        }
+    }
+
+    /**
+     * 비밀번호 재설정 프론트엔드 폴링(Polling) 수신용 인증 상태 확인 API
+     * GET /api/auth/password-reset/status?email=...
+     */
+    @GetMapping("/password-reset/status")
+    public ResponseEntity<?> checkPasswordResetStatus(@RequestParam String email) {
+
+        boolean isVerified = passwordResetService.isPasswordResetVerified(email); // 가입용 메서드와 엔티티가 목적별로 나뉘어 필터링된다면 정합합니다.
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("email", email);
+        responseBody.put("isVerified", isVerified);
+        return ResponseEntity.ok(responseBody);
     }
 }

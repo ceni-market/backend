@@ -6,6 +6,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Service;
 public class MailService {
 
     private final JavaMailSender mailSender;
-
+    @Async
     public void sendVerificationMail(String toEmail, String token, VerificationPurpose purpose) {
 
-        //String baseUrl = "http://localhost:8088";
-        String baseUrl = "https://api.ceni-market.site";
+        String baseUrl = "http://localhost:8088";
+        //String baseUrl = "https://api.ceni-market.site";
 
         // 1. 용도에 따른 문구 및 링크 설정
         String title;

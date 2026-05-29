@@ -6,6 +6,7 @@ import com.cenimarket.backend.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.net.http.HttpHeaders;
 import java.util.Optional;
 
 @Repository
@@ -26,5 +27,7 @@ public interface EmailVerificationRepository extends JpaRepository<EmailVerifica
     void deleteByEmailAndPurpose(String email, VerificationPurpose purpose);
 
     Optional<EmailVerification> findTopByEmailAndTokenAndPurposeOrderByCreatedAtDesc(String email, String token, VerificationPurpose purpose);
+
+    Optional<EmailVerification> findTopByEmailAndPurposeOrderByCreatedAtDesc(String email, VerificationPurpose verificationPurpose);
 }
 
