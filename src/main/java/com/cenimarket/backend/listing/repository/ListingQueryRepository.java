@@ -65,13 +65,13 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
     from Listing l
     join fetch l.category c
     where (:type is null or l.type = :type)
-      and (:category is null or c.name = :category)
+      and (:categoryId is null or c.id = :categoryId)
       and (:status is null or l.status = :status)
     order by l.id desc
 """)
     Page<Listing> findAllByFilters(
             @Param("type") ListingType type,
-            @Param("category") String category,
+            @Param("categoryId") Long categoryId,
             @Param("status") ListingStatus status,
             Pageable pageable
     );
