@@ -17,8 +17,10 @@ public class MailService {
     @Async
     public void sendVerificationMail(String toEmail, String token, VerificationPurpose purpose) {
 
-        String baseUrl = "http://localhost:8088";
-        //String baseUrl = "https://api.ceni-market.site";
+        //String baseUrl = "http://localhost:8088";
+
+        //배포환경
+        String baseUrl = "https://api.ceni-market.site";
 
         // 1. 용도에 따른 문구 및 링크 설정
         String title;
