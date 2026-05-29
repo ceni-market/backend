@@ -1,7 +1,6 @@
 package com.cenimarket.backend.mypage.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
-import com.cenimarket.backend.user.dto.response.ProfileUpdateResponseDTO;
 import com.cenimarket.backend.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
-import com.cenimarket.backend.user.dto.response.ProfileUpdateResponseDTO;
 import com.cenimarket.backend.user.service.ProfileService;
 
 import lombok.RequiredArgsConstructor;

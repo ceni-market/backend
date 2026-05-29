@@ -31,7 +31,7 @@ public class ProfileService {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR);
         }
 
-        //기존 서비스를 고치지 않고, 단일 파일을 리스트(List.of)로 감싸서 호출
+        // 단일 파일을 리스트(List.of)로 감싸서 호출
         ImageUploadResponse response = imageUploadService.uploadImages(List.of(file));
         // 2. 파일 저장 (예: S3에 업로드 후 URL 반환받음)
         String imageUrl = response.getImageUrls().get(0);

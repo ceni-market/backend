@@ -1,7 +1,7 @@
 package com.cenimarket.backend.user.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
-import com.cenimarket.backend.user.dto.response.ProfileUpdateResponseDTO;
+import com.cenimarket.backend.user.dto.response.ImageUploadResponseDTO;
 import com.cenimarket.backend.user.service.ProfileService;
 
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 
 
 @RestController
@@ -24,7 +25,7 @@ public class ProfileController {
 
 
     @PostMapping("/imageUpdate")
-    public ResponseEntity<ProfileUpdateResponseDTO> updateProfileImage(
+    public ResponseEntity<ImageUploadResponseDTO> updateProfileImage(
             @AuthenticationPrincipal UserPrincipal userPrincipal, // 현재 로그인한 유저 정보
             @RequestParam("file") MultipartFile file) {
 
@@ -33,6 +34,6 @@ public class ProfileController {
 
         String newImageUrl = profileService.updateProfileImage(email, file);
 
-        return ResponseEntity.ok(ProfileUpdateResponseDTO.success(email, newImageUrl));
+        return ResponseEntity.ok(new ImageUploadResponseDTO(List.of(newImageUrl)));
     }
 }
