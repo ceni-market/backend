@@ -29,6 +29,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
@@ -65,7 +66,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .orElseGet(() -> {
                         System.out.println("신규 유저 가입 시도: " + finalEmail);
                         // 비밀번호는 소셜 로그인용 랜덤값 혹은 고정값
-                        return userRepository.save(User.createSocialUser(finalEmail, finalName, "SOCIAL_AUTH"));
+                        String dummyPassword = passwordEncoder.encode("SOCIAL_USER_" + UUID.randomUUID());
+                        return userRepository.save(User.createSocialUser(finalEmail, finalName, dummyPassword));
                     });
 
             System.out.println("--- OAuth2 로드 완료 (성공) ---");

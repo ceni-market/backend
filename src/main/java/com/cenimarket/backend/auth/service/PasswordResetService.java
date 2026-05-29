@@ -118,4 +118,11 @@ public class PasswordResetService {
                     }
                 });
     }
+
+    public boolean isPasswordResetVerified(String email) {
+        // 1. 해당 이메일과 목적에 맞는 가장 최근의 인증 정보를 찾습니다.
+        return emailVerificationR.findTopByEmailAndPurposeOrderByCreatedAtDesc(email, VerificationPurpose.PASSWORDRESET)
+                .map(verification -> verification.getVerifiedAt() != null) // 2. verifiedAt이 null이 아니면 인증 완료된 것
+                .orElse(false); // 3. 데이터가 없으면 false
+    }
 }
