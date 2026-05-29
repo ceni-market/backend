@@ -7,6 +7,7 @@ import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.dto.response.PageResponse;
 import com.cenimarket.backend.listing.service.ListingQueryService;
+import com.cenimarket.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,9 +41,11 @@ public class ListingQueryController {
     // 게시글 상세 조회
     @GetMapping("/api/listings/{id}")
     public ResponseEntity<ApiResponse<ListingDetailResponse>> getListingDetail(
-            @PathVariable("id") Long id ) {
+            @PathVariable("id") Long id ,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         return ResponseEntity.ok(ApiResponse.ok(
-                listingQueryService.findDetail(id)
+                listingQueryService.findDetail(id, userPrincipal.getId())
         ));
     }
 
