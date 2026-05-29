@@ -200,6 +200,12 @@ public class EmailVerificationController {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("email", email);
         responseBody.put("isVerified", isVerified);
+
+        if (isVerified) {
+            String token = passwordResetService.getTokenByEmail(email);
+            responseBody.put("token", token);
+        }
+
         return ResponseEntity.ok(responseBody);
     }
 }

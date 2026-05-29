@@ -125,4 +125,11 @@ public class PasswordResetService {
                 .map(verification -> verification.getVerifiedAt() != null) // 2. verifiedAt이 null이 아니면 인증 완료된 것
                 .orElse(false); // 3. 데이터가 없으면 false
     }
+
+    @Transactional(readOnly = true)
+    public String getTokenByEmail(String email) {
+        return emailVerificationR.findTopByEmailOrderByCreatedAtDesc(email)
+                .map(EmailVerification::getToken) // 엔티티에서 토큰값 추출
+                .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_ERROR));
+    }
 }
