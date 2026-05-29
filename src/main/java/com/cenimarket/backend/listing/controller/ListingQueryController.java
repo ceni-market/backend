@@ -2,12 +2,12 @@ package com.cenimarket.backend.listing.controller;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.global.response.ApiResponse;
+import com.cenimarket.backend.listing.domain.ListingStatus;
 import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.dto.response.PageResponse;
 import com.cenimarket.backend.listing.service.ListingQueryService;
-import com.cenimarket.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,11 +30,13 @@ public class ListingQueryController {
             (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
     Pageable pageable,
              @RequestParam(required = false) ListingType type,
+             @RequestParam(required = false) String category,
+             @RequestParam(defaultValue = "ACTIVE") ListingStatus status,
              @AuthenticationPrincipal UserPrincipal userPrincipal) {
         Long userId = userPrincipal.getId();
 
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
-                listingQueryService.findAll(pageable, userId)
+                listingQueryService.findAll(pageable, userId, type, category, status)
         )));
     }
 
