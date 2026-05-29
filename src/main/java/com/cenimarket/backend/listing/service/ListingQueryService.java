@@ -25,10 +25,10 @@ public class ListingQueryService {
             Pageable pageable,
             Long userId,
             ListingType type,
-            String category,
+            Long categoryId,
             ListingStatus status
     ) {
-        return listingQueryRepository.findAllByFilters(type, category, status, pageable)
+        return listingQueryRepository.findAllByFilters(type, categoryId, status, pageable)
                 .map(listing -> toListResponse(listing, userId));
     }
 

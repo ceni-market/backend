@@ -30,13 +30,13 @@ public class ListingQueryController {
             (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
     Pageable pageable,
              @RequestParam(required = false) ListingType type,
-             @RequestParam(required = false) String category,
+             @RequestParam(required = false) Long categoryId,
              @RequestParam(defaultValue = "ACTIVE") ListingStatus status,
              @AuthenticationPrincipal UserPrincipal userPrincipal) {
         Long userId = userPrincipal.getId();
 
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
-                listingQueryService.findAll(pageable, userId, type, category, status)
+                listingQueryService.findAll(pageable, userId, type, categoryId, status)
         )));
     }
 
