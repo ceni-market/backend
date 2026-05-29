@@ -82,46 +82,6 @@
             </div>
         </div>
 
-        <!-- 실제 데이터가 없을 때 화면 형태를 확인하기 위한 더미 목록이다. -->
-        <section class="listing-list" aria-label="상품 목록" th:if="${listings == null}">
-            <div class="listing-card"
-                 th:each="item : ${#numbers.sequence(1, 6)}">
-                <a class="listing-image-link"
-                   th:href="@{/mobile/listings/detail}"
-                   href="/mobile/listings/detail"
-                   aria-label="상품 상세 보기">
-                    <img class="listing-image"
-                         th:src="@{/images/main/product-macbook.png}"
-                         src="/images/main/product-macbook.png"
-                         alt="맥북 에어 M1 13인치">
-                </a>
-                <div class="listing-info">
-                    <div class="listing-row">
-                        <a class="listing-title-link" href="/mobile/listings/detail">
-                            <strong class="listing-title">맥북 에어 M1 13인치</strong>
-                        </a>
-                    </div>
-                    <div class="listing-row">
-                        <span class="listing-category">ITㆍ디지털</span>
-                        <button type="button" class="listing-like">
-                            <i class="bi bi-heart" aria-hidden="true"></i>
-                            <span>3</span>
-                        </button>
-                    </div>
-                    <div class="listing-row">
-                        <span class="listing-price-time">
-                            <span class="listing-price">900,000원</span>
-                            <span class="listing-time">1시간 전</span>
-                        </span>
-                        <span class="listing-view-count">
-                            <i class="bi bi-eye" aria-hidden="true"></i>
-                            <span>12</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- 컨트롤러에서 전달한 listings를 반복하며 실제 상품 목록을 출력한다. -->
         <section class="listing-list" id="listingList" aria-label="상품 목록" th:if="${listings != null}">
             <div th:fragment="listingItems">
@@ -135,7 +95,7 @@
                        th:href="@{/mobile/listings/detail(id=${listing.id})}"
                        aria-label="상품 상세 보기">
                         <img class="listing-image"
-                             th:src="${listing.image != null ? listing.image.imageUrl : '/images/main/product-macbook.png'}"
+                             th:src="${listing.image != null ? listing.image.imageUrl : '/images/main/product-default-img.png'}"
                              src="/images/main/product-macbook.png"
                              th:alt="${listing.title}"
                              alt="상품 이미지">
@@ -144,11 +104,11 @@
                         <div class="listing-row">
                             <a class="listing-title-link"
                                th:href="@{/mobile/listings/detail(id=${listing.id})}">
-                                <strong class="listing-title" th:text="${listing.title}">맥북 에어 M1 13인치</strong>
+                                <strong class="listing-title" th:text="${listing.title}">상품 이름 정보가 없습니다</strong>
                             </a>
                         </div>
                         <div class="listing-row">
-                            <span class="listing-category" th:text="${listing.category.name}">ITㆍ디지털</span>
+                            <span class="listing-category" th:text="${listing.category.name}">카테고리 정보가 없습니다.</span>
                             <button type="button"
                                     class="listing-like"
                                     th:classappend="${listing.likedByMe} ? ' is-liked'"
@@ -162,8 +122,8 @@
                         </div>
                         <div class="listing-row">
                             <span class="listing-price-time">
-                                <span class="listing-price" th:text="${listing.price + '원'}">900,000원</span>
-                                <span class="listing-time" th:text="${#temporals.format(listing.updatedAt, 'yyyy-MM-dd')}">1시간 전</span>
+                                <span class="listing-price" th:text="${listing.price + '원'}">금액 정보가 없습니다.</span>
+                                <span class="listing-time" th:text="${#temporals.format(listing.createdAt, 'yyyy-MM-dd')}">날짜 정보가 없습니다.</span>
                             </span>
                             <span class="listing-view-count">
                                 <i class="bi bi-eye" aria-hidden="true"></i>

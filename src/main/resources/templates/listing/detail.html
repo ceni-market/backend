@@ -22,8 +22,8 @@
         <!-- 상품 이미지가 없으면 기본 이미지를 보여준다. -->
         <section class="detail-image-section" aria-label="상품 이미지">
             <img class="detail-main-image"
-                 th:src="${!#lists.isEmpty(listing.images) ? listing.images[0].imageUrl : '/images/listing/detail-macbook-main.png'}"
-                 src="/images/listing/detail-macbook-main.png"
+                 th:src="${!#lists.isEmpty(listing.images) ? listing.images[0].imageUrl : '/images/listing/product-default-img.png'}"
+                 src="/images/listing/product-default-img.png"
                  th:alt="${listing.title}"
                  alt="상품 이미지">
             <div class="detail-thumbnails"
@@ -33,7 +33,7 @@
                      th:each="image, imageStat : ${listing.images}"
                      th:classappend="${imageStat.index == 0} ? ' is-active'"
                      th:src="${image.imageUrl}"
-                     src="/images/listing/detail-macbook-thumb.png"
+                     src="/images/listing/product-default-img.png"
                      th:alt="${listing.title}"
                      alt="상품 썸네일">
             </div>
@@ -51,7 +51,7 @@
                 </div>
                 <div>
                     <dt>등록일</dt>
-                    <dd th:text="${#temporals.format(listing.updatedAt, 'yyyy.MM.dd')}">등록일</dd>
+                    <dd th:text="${#temporals.format(listing.createdAt, 'yyyy.MM.dd')}">등록일</dd>
                 </div>
                 <div>
                     <dt>조회수</dt>
@@ -72,11 +72,11 @@
         <div class="detail-action-bar">
             <a class="detail-list-button" th:href="@{/mobile/main}" href="/mobile/main">목록으로</a>
             <a class="detail-chat-button"
-               th:if="${!isOwner}"
+               th:if="${!listing.owner}"
                th:href="@{/mobile/chat/detail}"
                href="/mobile/chat/detail">1:1 채팅하기</a>
             <a class="detail-chat-button"
-               th:if="${isOwner}"
+               th:if="${listing.owner}"
                th:href="@{/mobile/listings/edit(id=${listing.id})}"
                href="/mobile/listings/edit">수정하기</a>
         </div>

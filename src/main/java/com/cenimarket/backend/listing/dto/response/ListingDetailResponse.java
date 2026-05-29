@@ -22,12 +22,18 @@ public class ListingDetailResponse {
     private final CategoryResponse category;
     private final Integer likeCount;
     private final Integer viewCount;
+    private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final ListingStatus status;
     private final ListingType type;
     private final SellerResponse seller;
+    private final boolean isOwner;
 
     public static ListingDetailResponse from(Listing listing) {
+        return from(listing, false);
+    }
+
+    public static ListingDetailResponse from(Listing listing, boolean isOwner) {
         return ListingDetailResponse.builder()
                 .id(listing.getId())
                 .title(listing.getTitle())
@@ -41,10 +47,12 @@ public class ListingDetailResponse {
                 .category(CategoryResponse.from(listing.getCategory()))
                 .likeCount(listing.getLikeCount())
                 .viewCount(listing.getViewCount())
+                .createdAt(listing.getCreatedAt())
                 .updatedAt(listing.getUpdatedAt())
                 .status(listing.getStatus())
                 .type(listing.getType())
                 .seller(SellerResponse.from(listing.getSeller()))
+                .isOwner(isOwner)
                 .build();
     }
 }

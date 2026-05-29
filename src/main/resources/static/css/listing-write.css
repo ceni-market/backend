@@ -144,8 +144,12 @@
 }
 
 .write-field select {
-    color: var(--text-placeholder);
+    color: var(--text-default);
     appearance: auto;
+}
+
+.write-field select:invalid {
+    color: var(--text-placeholder);
 }
 
 .write-field input::placeholder,

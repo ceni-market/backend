@@ -43,7 +43,7 @@
             <div class="write-field">
                 <label for="category">카테고리</label>
                 <select id="category" name="categoryId" aria-label="카테고리" required>
-                    <option value="">카테고리를 선택해주세요</option>
+                    <option value="" disabled selected>카테고리를 선택해주세요</option>
                     <option th:each="category : ${categories}"
                            th:value="${category.id}"
                            th:text="${category.name}">

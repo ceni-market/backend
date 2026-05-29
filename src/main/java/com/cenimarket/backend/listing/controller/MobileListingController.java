@@ -168,10 +168,8 @@ public class MobileListingController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             Model model
     ) {
-        ListingDetailResponse listing = listingQueryService.findDetail(id);
-        boolean isOwner = listing.getSeller().getId().equals(userPrincipal.getId());
+        ListingDetailResponse listing = listingQueryService.findDetail(id, userPrincipal.getId());
         model.addAttribute("listing", listing);
-        model.addAttribute("isOwner", isOwner);
         return "listing/detail";
     }
 }

@@ -69,10 +69,11 @@ public class ListingQueryService {
     }
 
     // 상세 화면 조회 시 조회수도 함께 증가시킨다.
-    public ListingDetailResponse findDetail(Long id) {
+    public ListingDetailResponse findDetail(Long id, Long userId) {
         Listing listing = listingQueryRepository.findListingById(id);
         listing.increaseViewCount();
-        return ListingDetailResponse.from(listing);
+        boolean isOwner = listing.getSeller().getId().equals(userId);
+        return ListingDetailResponse.from(listing, isOwner);
     }
 
     // 수정 화면에 기존 값을 채울 때는 조회수를 증가시키지 않는다.
