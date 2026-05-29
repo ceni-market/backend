@@ -125,14 +125,7 @@ public class ChatService {
             LocalDateTime readAt = member.getLastReadAt();
             System.out.println(readAt);
             int unreadCount = chatMessageRepository.countUnreadMessage(readAt, contactUser);
-            chatRoomList.add(ChatRoomListResponse
-                    .from(chatRoomData.getId(),
-                            contactUser,
-                            chatRoomData.getListing(),
-                            chatRoomData.getLastMessage(),
-                            chatRoomData.getLastMessageAt(),
-                            TimeConvertUtil.convertTime(chatRoomData.getLastMessageAt()),
-                            unreadCount));
+            chatRoomList.add(ChatRoomListResponse.getMyChatRoomData(chatRoomData, contactUser, unreadCount));
         }
         return chatRoomList;
     }
@@ -143,8 +136,8 @@ public class ChatService {
         User targetUser = userRepository.findById(chatRoom.getTargetUser(user.getId()).getId()).orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "게시글이 존재하지 않습니다."));
         Listing listing = listingRepository.findById(chatRoom.getListing().getId()).orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "게시글이 존재하지 않습니다."));
         return ChatRoomListResponse.builder()
-                .contactUser(targetUser)
-                .listing(listing)
+                .contactUserInfo(new ChatRoomListResponse.UserInfo(targetUser))
+                .listingInfo(new ChatRoomListResponse.ListingInfo(listing))
                 .build();
     }
 
