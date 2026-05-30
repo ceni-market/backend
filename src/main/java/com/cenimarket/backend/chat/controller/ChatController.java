@@ -74,7 +74,7 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/{chatRoomId}")
+    @GetMapping("/chatroom/{chatRoomId}")
     public String goToChatRoom(@PathVariable Long chatRoomId) {
         return "chatroom";
     }
