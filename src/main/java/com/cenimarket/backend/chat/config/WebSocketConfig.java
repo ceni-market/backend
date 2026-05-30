@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/connect")
-                .setAllowedOrigins("http://localhost:8088")
+                .setAllowedOrigins("http://localhost:5173")
                 .addInterceptors(stompHandShakeInterceptor)
                 .withSockJS()
                 .setSessionCookieNeeded(true);
@@ -33,7 +33,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // /publish로 시작하는 url패턴으로 메시지가 발행되면 @Controller객체의 @MessageMapping 메서드로 라우팅 된다.
         registry.setApplicationDestinationPrefixes("/publish");
         // /topic/{채팅방ID} 형태의 주소로 메시지를 구독(받아볼 수 있음)할 수 있음을 설정.
-        registry.enableSimpleBroker("/topic");
+        registry.enableSimpleBroker("/queue/chat", "/queue/notification");
     }
 //  jwt토큰 검증을 위한 핸들러 설정
     @Override

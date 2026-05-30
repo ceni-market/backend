@@ -40,13 +40,6 @@ public class StompHandShakeInterceptor implements HandshakeInterceptor {
                 for(Cookie cookie : cookies) {
                     if("accessToken".equals(cookie.getName())) {
                         String tokenValue = cookie.getValue();
-                        System.out.println("여기는 핸드셰이크 인터셉터" + tokenValue);
-                        System.out.println("여기는 핸드셰이크 인터셉터" + tokenValue);
-                        System.out.println("여기는 핸드셰이크 인터셉터" + tokenValue);
-                        System.out.println("여기는 핸드셰이크 인터셉터" + tokenValue);
-                        System.out.println("여기는 핸드셰이크 인터셉터" + tokenValue);
-                        System.out.println("여기는 핸드셰이크 인터셉터" + tokenValue);
-                        System.out.println("여기는 핸드셰이크 인터셉터" + tokenValue);
                         attributes.put("USER_TOKEN", tokenValue);
                         break;
                     }
