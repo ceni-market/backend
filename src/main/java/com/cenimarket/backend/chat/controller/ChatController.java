@@ -30,7 +30,6 @@ public class ChatController {
     @GetMapping("/mychat")
     @ResponseBody
     public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
-        System.out.println("요청발생!!");
         return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRooms(principal)));
     }
 
@@ -82,7 +81,6 @@ public class ChatController {
     @GetMapping("/history/{chatRoomId}")
     @ResponseBody
     public ResponseEntity<ApiResponse<List<ChatMessageDto>>> getChatHistory(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user){
-        System.out.println("채팅기록 요청!!");
         return ResponseEntity.ok(ApiResponse.ok(chatService.getChatHistory(user, chatRoomId)));
     }
 

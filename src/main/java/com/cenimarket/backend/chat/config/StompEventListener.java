@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
+import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -32,7 +33,22 @@ public class StompEventListener {
 
         Long roomId = Long.valueOf(destination.substring(destination.lastIndexOf("/") + 1));
 
+        System.out.println("구독!!");
+
         accessor.getSessionAttributes().put("roomId", roomId);
+    }
+
+    @EventListener
+    public void unSubscribeHandler(SessionUnsubscribeEvent event){
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+
+        // 구독 해제 시, 채팅 멤버의 마지막 조회 시간을 수정하는 컨트롤러 메서드를 호출.
+        String userEmail = (String) accessor.getSessionAttributes().get("userEmail");
+        Long roomId = (Long) accessor.getSessionAttributes().get("roomId");
+        //        Long roomId = (Long)sessionMap.get(sessionId);
+        chatService.setLastReadAt(userEmail, roomId);
+
+        System.out.println("구독 해제!!");
     }
 
     @EventListener
@@ -55,11 +71,5 @@ public class StompEventListener {
         sessions.remove(sessionId);
         System.out.println("disconnect session ID : " + sessionId);
         System.out.println("total sessions : " + sessions.size());
-
-        // 채팅이 끊어지면, 채팅 멤버의 마지막 조회 시간을 수정하는 컨트롤러 메서드를 호출.
-        String userEmail = (String) accessor.getSessionAttributes().get("userEmail");
-        Long roomId = (Long) accessor.getSessionAttributes().get("roomId");
-//        Long roomId = (Long)sessionMap.get(sessionId);
-        chatService.setLastReadAt(userEmail, roomId);
     }
 }
