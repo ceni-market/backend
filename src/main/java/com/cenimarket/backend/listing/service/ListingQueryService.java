@@ -104,4 +104,16 @@ public class ListingQueryService {
         return ListingsListResponse.from(listing, likedByMe);
     }
 
+    //게시글 검색
+    public Page<ListingsListResponse> findSearch(
+            Pageable pageable,
+            String keyword,
+            ListingType type,
+            Long categoryId,
+            ListingStatus status
+    ) {
+        return listingQueryRepository.findAllBySearch(keyword, type, categoryId, status, pageable)
+                .map(listing -> toListResponse(listing, null));
+    }
+
 }
