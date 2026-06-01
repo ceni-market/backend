@@ -1,5 +1,6 @@
 package com.cenimarket.backend.chat.controller;
 
+import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.service.ChatService;
 import com.cenimarket.backend.notification.dto.request.NotificationRequest;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -21,6 +23,7 @@ public class WebSocketController {
     @MessageMapping("/chat/{roomId}")
     public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto messageSendRequest) {
         chatService.saveMessage(roomId, messageSendRequest);
+        chatService.updateReadAt(roomId, messageSendRequest.getSenderEmail());
         //@SendTo 어노테이션으로도 할 수 있으나, 어노테이션을 이용하면 코드의 유연성이 떨어지기 때문에 따로 구현.
         messageSendingOperations.convertAndSend("/queue/chat/" + roomId, messageSendRequest);
     }

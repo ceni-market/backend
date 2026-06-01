@@ -195,10 +195,9 @@ public class ChatService {
         }
     }
 
-    public void setLastReadAt(String userEmail, Long roomId) {
-        Long userId = userRepository.findByEmail(userEmail).get().getId();
+    public void updateReadAt(Long roomId, String senderEmail) {
+        Long userId = userRepository.findByEmail(senderEmail).orElseThrow(()-> new BusinessException(ErrorCode.INVALID_INPUT_VALUE)).getId();
         ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, roomId).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "해당 채팅방에 참여 중이지 않습니다.") );
         member.updateLastReadAt(LocalDateTime.now());
     }
-
 }
