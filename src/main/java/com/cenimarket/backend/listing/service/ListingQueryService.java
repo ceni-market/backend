@@ -14,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +34,12 @@ public class ListingQueryService {
             Long categoryId,
             ListingStatus status
     ) {
-        return listingQueryRepository.findAllByFilters(type, categoryId, status, pageable)
-                .map(listing -> toListResponse(listing, userId));
+        Page<Listing> listingPage = listingQueryRepository.findAllByFilters(type, categoryId, status, pageable);
+        Set<Long> likedListingIds = getLikedListingIds(userId, listingPage.getContent());
+
+        return listingPage.map(listing ->
+                ListingsListResponse.from(listing, likedListingIds.contains(listing.getId()))
+        );
     }
 
     // 관심 관계(ListingLike)를 기준으로 내가 관심 등록한 게시글에 검색어, 카테고리, 거래 유형 조건을 적용한다.
@@ -70,13 +76,17 @@ public class ListingQueryService {
                 ? null
                 : keyword.trim();
 
-        return listingQueryRepository.findAllByCondition(
+        Page<Listing> listingPage = listingQueryRepository.findAllByCondition(
                         normalizedKeyword,
                         categoryId,
                         type,
                         pageable
-                )
-                .map(listing -> toListResponse(listing, userId));
+                );
+        Set<Long> likedListingIds = getLikedListingIds(userId, listingPage.getContent());
+
+        return listingPage.map(listing ->
+                ListingsListResponse.from(listing, likedListingIds.contains(listing.getId()))
+        );
     }
 
     // 상세 화면 조회 시 조회수도 함께 증가시킨다.
@@ -100,12 +110,16 @@ public class ListingQueryService {
         return ListingDetailResponse.from(listing);
     }
 
-    // 게시글 엔티티를 목록 응답 DTO로 변환하면서, 내가 관심 등록했는지도 확인한다.
-    private ListingsListResponse toListResponse(Listing listing, Long userId) {
-        boolean likedByMe = userId != null
-                && listingLikeRepository.existsByUser_IdAndListing_Id(userId, listing.getId());
+    private Set<Long> getLikedListingIds(Long userId, List<Listing> listings) {
+        if (userId == null || listings.isEmpty()) {
+            return Set.of();
+        }
 
-        return ListingsListResponse.from(listing, likedByMe);
+        List<Long> listingIds = listings.stream()
+                .map(Listing::getId)
+                .toList();
+
+        return new HashSet<>(listingLikeRepository.findLikedListingIds(userId, listingIds));
     }
 
     //게시글 검색
@@ -118,7 +132,7 @@ public class ListingQueryService {
     ) {
         List<String> keywords = searchKeywordDictionary.expand(keyword);
         return listingQueryRepository.findAllBySearch(keywords, type, categoryId, status, pageable)
-                .map(listing -> toListResponse(listing, null));
+                .map(listing -> ListingsListResponse.from(listing, false));
     }
 
 }
