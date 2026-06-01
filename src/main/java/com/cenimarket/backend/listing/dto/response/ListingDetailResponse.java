@@ -28,12 +28,17 @@ public class ListingDetailResponse {
     private final ListingType type;
     private final SellerResponse seller;
     private final boolean isOwner;
+    private final boolean likedByMe;
 
     public static ListingDetailResponse from(Listing listing) {
-        return from(listing, false);
+        return from(listing, false, false);
     }
 
     public static ListingDetailResponse from(Listing listing, boolean isOwner) {
+        return from(listing, isOwner, false);
+    }
+
+    public static ListingDetailResponse from(Listing listing, boolean isOwner, boolean likedByMe) {
         return ListingDetailResponse.builder()
                 .id(listing.getId())
                 .title(listing.getTitle())
@@ -53,6 +58,7 @@ public class ListingDetailResponse {
                 .type(listing.getType())
                 .seller(SellerResponse.from(listing.getSeller()))
                 .isOwner(isOwner)
+                .likedByMe(likedByMe)
                 .build();
     }
 }

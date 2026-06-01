@@ -80,13 +80,19 @@ public class ListingQueryService {
         Listing listing = listingQueryRepository.findListingById(id);
         listing.increaseViewCount();
         boolean isOwner = listing.getSeller().getId().equals(userId);
-        return ListingDetailResponse.from(listing, isOwner);
+        boolean likedByMe = listingLikeRepository.existsByUser_IdAndListing_Id(userId, listing.getId());
+        return ListingDetailResponse.from(listing, isOwner, likedByMe);
     }
 
     // 수정 화면에 기존 값을 채울 때는 조회수를 증가시키지 않는다.
     @Transactional(readOnly = true)
-    public ListingDetailResponse findDetailForEdit(Long id) {
+    public ListingDetailResponse findDetailForEdit(Long id, Long userId) {
         Listing listing = listingQueryRepository.findListingById(id);
+
+        if (!listing.getSeller().getId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.");
+        }
+
         return ListingDetailResponse.from(listing);
     }
 
