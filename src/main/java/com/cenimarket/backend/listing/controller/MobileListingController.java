@@ -133,12 +133,7 @@ public class MobileListingController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             Model model
     ) {
-        ListingDetailResponse listing = listingQueryService.findDetailForEdit(id);
-
-        if (!listing.getSeller().getId().equals(userPrincipal.getId())) {
-            return "redirect:/mobile/listings/detail?id=" + id;
-        }
-
+        ListingDetailResponse listing = listingQueryService.findDetailForEdit(id, userPrincipal.getId());
         model.addAttribute("listing", listing);
         model.addAttribute("categories", categoryService.getCategories());
 

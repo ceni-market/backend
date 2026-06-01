@@ -51,4 +51,14 @@ public class ListingQueryController {
         ));
     }
 
+    @GetMapping("/api/listings/{id}/edit")
+    public ResponseEntity<ApiResponse<ListingDetailResponse>> getListingForEdit(
+            @PathVariable("id") Long id ,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                listingQueryService.findDetailForEdit(id, userPrincipal.getId())
+        ));
+    }
+
 }
