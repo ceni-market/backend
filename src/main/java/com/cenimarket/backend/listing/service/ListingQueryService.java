@@ -79,8 +79,8 @@ public class ListingQueryService {
     public ListingDetailResponse findDetail(Long id, Long userId) {
         Listing listing = listingQueryRepository.findListingById(id);
         listing.increaseViewCount();
-        boolean isOwner = listing.getSeller().getId().equals(userId);
-        boolean likedByMe = listingLikeRepository.existsByUser_IdAndListing_Id(userId, listing.getId());
+        boolean isOwner = userId != null && listing.getSeller().getId().equals(userId);
+        boolean likedByMe = userId != null && listingLikeRepository.existsByUser_IdAndListing_Id(userId, listing.getId());
         return ListingDetailResponse.from(listing, isOwner, likedByMe);
     }
 
@@ -98,7 +98,8 @@ public class ListingQueryService {
 
     // 게시글 엔티티를 목록 응답 DTO로 변환하면서, 내가 관심 등록했는지도 확인한다.
     private ListingsListResponse toListResponse(Listing listing, Long userId) {
-        boolean likedByMe = listingLikeRepository.existsByUser_IdAndListing_Id(userId, listing.getId());
+        boolean likedByMe = userId != null
+                && listingLikeRepository.existsByUser_IdAndListing_Id(userId, listing.getId());
 
         return ListingsListResponse.from(listing, likedByMe);
     }

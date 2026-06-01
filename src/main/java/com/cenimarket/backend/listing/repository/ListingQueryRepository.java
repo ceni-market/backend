@@ -67,7 +67,6 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
     where (:type is null or l.type = :type)
       and (:categoryId is null or c.id = :categoryId)
       and (:status is null or l.status = :status)
-    order by l.id desc
 """)
     Page<Listing> findAllByFilters(
             @Param("type") ListingType type,
