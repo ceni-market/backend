@@ -44,70 +44,58 @@ public class ChatService {
     private final UserRepository userRepository;
     private final ListingRepository listingRepository;
 
-
-    public void saveMessage(Long roomId, ChatMessageDto messageSendRequest){  //채팅 저장
-        //채팅방 객체 조회 (있는 경우만)
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
-        //보낸사람 객체 조회
-        User sender = userRepository.findByEmail(messageSendRequest.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
-        //메시지 타입 조회
-        MessageType type = messageSendRequest.getContentType();
-        //메시지 저장
-        //메시지 엔티티 조립
-        ChatMessage message = ChatMessage.builder()
-                .chatRoom(chatRoom)
-                .user(sender)
-                .messageType(type)
-                .content(messageSendRequest.getMessage())
-                .build();
+    //메시지를 DB에 저장하고, 채팅방의 마지막 메시지 데이터를 업데이트하는 메서드
+    public void saveMessage(Long roomId, ChatMessageDto requestMessage){
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "잘못된 요청입니다. 요청한 채팅방은 없습니다."));
+        User sender = userRepository.findByEmail(requestMessage.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "잘못된 요청입니다. 판매자 정보가 정확하지 않습니다."));
+        MessageType type = requestMessage.getContentType();
+        //메시지로 조립
+        ChatMessage message = ChatMessage.from(chatRoom, sender, requestMessage);
         //메시지 저장
         ChatMessage savedMessage = chatMessageRepository.save(message);
-        //DTO로 필요한 데이터만 추출 (마지막 메시지 업데이트 용)
-        LastChatMessageResponse messageDto = LastChatMessageResponse.of(savedMessage.getId(), savedMessage.getCreatedAt());
         //채팅방의 마지막 메시지 업데이트
         //채팅방의 마지막 활성화 시간 업데이트
-        chatRoom.updateLastMessage(savedMessage, messageDto.getCreatedAt());
+        chatRoom.updateLastMessage(savedMessage);
     }
 
+    //채팅방 생성 메서드
     public void createChatRoom(ChatRoomCreateRequest request) {
-        //유저 조회
-        System.out.println("채팅방 생성을 위한 유저 조회 시작");
-        User buyer = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
-        System.out.println("완료");
-        System.out.println("채팅방 생성을 위한 유저 조회 시작");
-        User seller = userRepository.findById(request.getSellerId()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
-        System.out.println("완료");
-        System.out.println("채팅방 생성을 위한 게시글 조회 시작");
-        Listing listing = listingRepository.findById(request.getListingId()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR));
-        System.out.println("완료");
+        User buyer = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "잘못된 요청입니다. 구매자 정보가 정확하지 않습니다."));
+        User seller = userRepository.findById(request.getSellerId()).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "잘못된 요청입니다. 판매자 정보가 정확하지 않습니다."));
+        Listing listing = listingRepository.findById(request.getListingId()).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "잘못된 요청입니다. 거래글 정보가 정확하지 않습니다."));
         //채팅방 생성(저장)
-        System.out.println("채팅방 저장 중");
-        ChatRoom chatRoom = ChatRoom.builder()
-                .listing(listing)
-                .seller(seller)
-                .buyer(buyer)
-                .build();
-        chatRoomRepository.save(chatRoom);
-        System.out.println("완료");
-        //ChatRoomMember 생성
-        //buyer를 ChatRoomMember로 추가
-        System.out.println("buyer 저장 중");
-        ChatRoomMember member1 = ChatRoomMember.builder()
-                .user(buyer)
-                .chatRoom(chatRoom)
-                .lastReadAt(LocalDateTime.now())
-                .build();
-        chatRoomMemberRepository.save(member1);
-        System.out.println("완료");
-        //seller를 ChatRoomMember로 추가
-        System.out.println("seller 저장 중");
-        ChatRoomMember member2 = ChatRoomMember.builder()
-                .user(seller)
-                .chatRoom(chatRoom)
-                .lastReadAt(LocalDateTime.now())
-                .build();
-        chatRoomMemberRepository.save(member2);
-        System.out.println("완료");
+        ChatRoom newChatRoom = ChatRoom.from(buyer, seller, listing);
+        chatRoomRepository.save(newChatRoom);
+        //채팅 멤버 생성 메서드 호출
+        createChatRoomMembers(newChatRoom, buyer, seller);
+    }
+
+    //채팅 멤버 생성 메서드
+    public void createChatRoomMembers(ChatRoom chatRoom, User buyer, User seller) {
+        //해당 채팅방에 대한 기존 멤버 엔티티가 없다면, buyer를 ChatRoomMember로 추가
+        if(chatRoomMemberRepository.findByUserIdAndChatRoomId(buyer.getId(), chatRoom.getId()).isEmpty()){
+            chatRoomMemberRepository.save(ChatRoomMember.from(buyer, chatRoom));
+        }
+        //해당 채팅방에 대한 기존 멤버 엔티티가 없다면,seller를 ChatRoomMember로 추가
+        if(chatRoomMemberRepository.findByUserIdAndChatRoomId(seller.getId(), chatRoom.getId()).isEmpty()) {
+            chatRoomMemberRepository.save(ChatRoomMember.from(buyer, chatRoom));
+        }
+
+    }
+
+    // 게시글에서 채팅 요청 시 기존 채팅방이 있는지 조회하는 메서드.
+    public ChatRoomCreateResponse getExistChatRoom(ChatRoomCreateRequest request) { //채팅을 요청한 게시글이 바뀌면 ListingId가 바뀌도록 해야함.
+        Long sellerId = request.getSellerId();                                      //지금은 Response DTO만 값이 바뀌고 있음. 이거 엔티티로 바꾸려면 계속 조회 해야되는데
+        Long buyerId = request.getBuyerId();                                        //채팅방에 들어갈 때마다 조회하는거 너무 비효율적이라 어떡할지 모르겠음.
+        Long listingId = request.getListingId();
+        //판매자, 구매자 간 기존 채팅방 여부 조회
+        ChatRoom chatRoom = chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId)
+                .orElseGet(() -> chatRoomRepository.findBySellerIdAndBuyerId(buyerId, sellerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR)));
+        //기존 채팅방이 있는 상태에서 다른 물건의 게시글에서 채팅을 요청했을 때 채팅방이 참조하는 게시글 데이터 업데이트
+        if(chatRoom.getListing().getId() != listingId) {
+            chatRoom.updateListing(listingRepository.findById(listingId).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "게시글 데이터가 정확하지 않습니다.")));
+        }
+        return ChatRoomCreateResponse.from(chatRoom, listingId);
     }
 
     //채팅방 목록 생성에 필요한 데이터 불러오는 메서드
@@ -138,28 +126,6 @@ public class ChatService {
                 .contactUserInfo(new ChatRoomListResponse.UserInfo(targetUser))
                 .listingInfo(new ChatRoomListResponse.ListingInfo(listing))
                 .build();
-    }
-
-    // 게시글에서 채팅 요청 시 기존 채팅방이 있는지 조회하는 메서드.
-    public ChatRoomCreateResponse getExistChatRoom(ChatRoomCreateRequest request) { //채팅을 요청한 게시글이 바뀌면 ListingId가 바뀌도록 해야함.
-        Long sellerId = request.getSellerId();                                      //지금은 Response DTO만 값이 바뀌고 있음. 이거 엔티티로 바꾸려면 계속 조회 해야되는데
-        Long buyerId = request.getBuyerId();                                        //채팅방에 들어갈 때마다 조회하는거 너무 비효율적이라 어떡할지 모르겠음.
-        Long listingId = request.getListingId();
-        ChatRoom chatRoom = chatRoomRepository.findBySellerIdAndBuyerId(sellerId, buyerId)
-                .orElseGet(() -> chatRoomRepository.findBySellerIdAndBuyerId(buyerId, sellerId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR)));
-        System.out.println("Service - chatRoom 조회 완료");
-        if(chatRoom.getListing().getId() != listingId){
-            ChatRoom currentChatRoom =chatRoomRepository.findById(chatRoom.getId()).orElseThrow();
-            currentChatRoom.updateListing(listingRepository.findById(listingId).orElseThrow());//여기 두 개 채워야됌.
-        }
-        ChatRoomCreateResponse response = ChatRoomCreateResponse.builder()
-                .chatRoomId(chatRoom.getId())
-                .listingId(listingId)
-                .sellerId(chatRoom.getSeller().getId())
-                .buyerId(chatRoom.getBuyer().getId())
-                .build();
-        System.out.println("Service - response 조립 완료.");
-        return response;
     }
 
     //채팅방의 기존 채팅 내역을 반환하는 메서드

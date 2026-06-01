@@ -1,5 +1,6 @@
 package com.cenimarket.backend.chat.dto.response;
 
+import com.cenimarket.backend.chat.domain.ChatRoom;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -22,5 +23,14 @@ public class ChatRoomCreateResponse { //채팅방 생성, 조회(있는지 없�
         this.listingId = listingId;
         this.sellerId = sellerId;
         this.buyerId = buyerId;
+    }
+
+    public static ChatRoomCreateResponse from(ChatRoom chatRoom, Long listingId) {
+        return ChatRoomCreateResponse.builder()
+                .chatRoomId(chatRoom.getId())
+                .listingId(listingId)
+                .sellerId(chatRoom.getSeller().getId())
+                .buyerId(chatRoom.getBuyer().getId())
+                .build();
     }
 }
