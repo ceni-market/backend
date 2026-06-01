@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
+import java.util.List;
+
+public interface ListingQueryRepository extends JpaRepository<Listing, Long>, ListingQueryRepositoryCustom {
     Listing findListingById(Long id);
     long countBySellerIdAndStatus(Long sellerId, ListingStatus status);
     Page<Listing> findAllBySellerId(Long sellerId, Pageable pageable);
@@ -69,30 +71,6 @@ public interface ListingQueryRepository extends JpaRepository<Listing, Long> {
       and (:status is null or l.status = :status)
 """)
     Page<Listing> findAllByFilters(
-            @Param("type") ListingType type,
-            @Param("categoryId") Long categoryId,
-            @Param("status") ListingStatus status,
-            Pageable pageable
-    );
-
-    // 검색 리스트 - 검색어, 카테고리, 타입, 상태 필터링
-    @Query("""
-    select l
-    from Listing l
-    join fetch l.category c
-    where (:type is null or l.type = :type)
-      and (:categoryId is null or c.id = :categoryId)
-      and (:status is null or l.status = :status)
-      and (
-            :keyword is null
-            or :keyword = ''
-            or lower(l.title) like lower(concat('%', :keyword, '%'))
-            or lower(l.description) like lower(concat('%', :keyword, '%'))
-          )
-    order by l.id desc
-""")
-    Page<Listing> findAllBySearch(
-            @Param("keyword") String keyword,
             @Param("type") ListingType type,
             @Param("categoryId") Long categoryId,
             @Param("status") ListingStatus status,

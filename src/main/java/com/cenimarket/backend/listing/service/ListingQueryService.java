@@ -7,11 +7,14 @@ import com.cenimarket.backend.listing.domain.ListingType;
 import com.cenimarket.backend.listing.dto.response.ListingDetailResponse;
 import com.cenimarket.backend.listing.dto.response.ListingsListResponse;
 import com.cenimarket.backend.listing.repository.ListingQueryRepository;
+import com.cenimarket.backend.listing.search.SearchKeywordDictionary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ListingQueryService {
     private final ListingQueryRepository listingQueryRepository;
     private final ListingLikeRepository listingLikeRepository;
+    private final SearchKeywordDictionary searchKeywordDictionary;
 
     //게시글 전체 조회
     public Page<ListingsListResponse> findAll(
@@ -112,7 +116,8 @@ public class ListingQueryService {
             Long categoryId,
             ListingStatus status
     ) {
-        return listingQueryRepository.findAllBySearch(keyword, type, categoryId, status, pageable)
+        List<String> keywords = searchKeywordDictionary.expand(keyword);
+        return listingQueryRepository.findAllBySearch(keywords, type, categoryId, status, pageable)
                 .map(listing -> toListResponse(listing, null));
     }
 
