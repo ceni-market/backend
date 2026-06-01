@@ -1,9 +1,12 @@
 package com.cenimarket.backend.chat.config;
 
+import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -43,10 +46,12 @@ public class StompEventListener {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
 
         // 구독 해제 시, 채팅 멤버의 마지막 조회 시간을 수정하는 컨트롤러 메서드를 호출.
-        String userEmail = (String) accessor.getSessionAttributes().get("userEmail");
-        Long roomId = (Long) accessor.getSessionAttributes().get("roomId");
+//        String userEmail = (String) accessor.getSessionAttributes().get("userEmail");
+//        Object user = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println(user);
+//        Long roomId = (Long) accessor.getSessionAttributes().get("roomId");
         //        Long roomId = (Long)sessionMap.get(sessionId);
-        chatService.setLastReadAt(userEmail, roomId);
+//        chatService.updateReadAt(roomId, user);
 
         System.out.println("구독 해제!!");
     }

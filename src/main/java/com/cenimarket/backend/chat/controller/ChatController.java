@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/chat")
 @RequiredArgsConstructor
 public class ChatController {
@@ -28,13 +28,11 @@ public class ChatController {
     private final UserRepository userRepository;
 
     @GetMapping("/mychat")
-    @ResponseBody
     public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
         return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRooms(principal)));
     }
 
     @PostMapping("/create")
-    @ResponseBody
     public ResponseEntity<ChatRoomCreateResponse> createChatRoom(@RequestBody Map<String, Object> data) {//맵에 listingId, sellerId 들어오는 중. Service로 넘기면서 바꿀 예정.
         System.out.println("구매자 이메일 추출 시작");
         String buyerEmail = (String)data.get("buyerEmail");
@@ -79,9 +77,14 @@ public class ChatController {
     }
 
     @GetMapping("/history/{chatRoomId}")
-    @ResponseBody
     public ResponseEntity<ApiResponse<List<ChatMessageDto>>> getChatHistory(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user){
         return ResponseEntity.ok(ApiResponse.ok(chatService.getChatHistory(user, chatRoomId)));
+    }
+
+    @GetMapping("/{chatRoomId}/readAt")
+    public void updateReadAt(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user) {
+        chatService.updateReadAt(chatRoomId, user.getEmail());
+//        return ResponseEntity.ok(ApiResponse.ok(""));
     }
 
     @DeleteMapping("/{chatRoomId}/delete")
