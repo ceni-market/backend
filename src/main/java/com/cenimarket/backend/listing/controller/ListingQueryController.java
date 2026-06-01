@@ -33,7 +33,7 @@ public class ListingQueryController {
              @RequestParam(required = false) Long categoryId,
              @RequestParam(defaultValue = "ACTIVE") ListingStatus status,
              @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        Long userId = userPrincipal.getId();
+        Long userId = userPrincipal != null ? userPrincipal.getId() : null;
 
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
                 listingQueryService.findAll(pageable, userId, type, categoryId, status)
@@ -46,8 +46,9 @@ public class ListingQueryController {
             @PathVariable("id") Long id ,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
+        Long userId = userPrincipal != null ? userPrincipal.getId() : null;
         return ResponseEntity.ok(ApiResponse.ok(
-                listingQueryService.findDetail(id, userPrincipal.getId())
+                listingQueryService.findDetail(id, userId)
         ));
     }
 
@@ -56,6 +57,9 @@ public class ListingQueryController {
             @PathVariable("id") Long id ,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
+        if (userPrincipal == null) {
+            throw new IllegalArgumentException("로그인이 필요한 요청입니다.");
+        }
         return ResponseEntity.ok(ApiResponse.ok(
                 listingQueryService.findDetailForEdit(id, userPrincipal.getId())
         ));
