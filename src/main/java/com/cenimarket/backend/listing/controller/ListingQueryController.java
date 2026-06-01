@@ -65,4 +65,20 @@ public class ListingQueryController {
         ));
     }
 
+    // 리스트 검색
+    @GetMapping("/api/search")
+    public ResponseEntity<ApiResponse<PageResponse<ListingsListResponse>>> getSearch
+    (@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+     Pageable pageable,
+     @RequestParam(required = false) ListingType type,
+     @RequestParam(required = false) Long categoryId,
+     @RequestParam(defaultValue = "ACTIVE") ListingStatus status,
+     @RequestParam(required = false) String keyword) {
+
+        return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(
+                listingQueryService.findSearch(pageable, keyword, type, categoryId, status)
+        )));
+    }
+
+
 }
