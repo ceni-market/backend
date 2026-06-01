@@ -56,8 +56,8 @@ public class MobileJwtFilter extends OncePerRequestFilter {
                     Cookie newAccessCookie = new Cookie("accessToken", newAccessToken);
                     newAccessCookie.setHttpOnly(true); // 자바스크립트 가로채기 방지 (보안)
                     newAccessCookie.setPath("/"); // // 전체 경로에서 쿠키 접근 가능하도록 설정
-                    newAccessCookie.setMaxAge(60 * 60 * 24); // 24시간, 개발 과정에서만 편의 위해 사용
-                    //newAccessCookie.setMaxAge(60 * 60 ); 1시간 추후 사용 예정
+                    //newAccessCookie.setMaxAge(60 * 60 * 24); // 24시간, 개발 과정에서만 편의 위해 사용
+                    newAccessCookie.setMaxAge(60 * 60 ); //1시간 추후 사용 예정
                     response.addCookie(newAccessCookie); // 응답 객체에 쿠키 적재
 
                     // 새로 발급받은 토큰으로 시큐리티 주머니에 신분증을 채워 넣어 정상 처리
