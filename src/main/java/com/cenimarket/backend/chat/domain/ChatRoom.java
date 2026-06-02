@@ -45,13 +45,20 @@ public class ChatRoom extends SoftDeleteEntity {
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     @Builder
-    public ChatRoom(Long id, LocalDateTime lastMessageAt, User seller, User buyer, Listing listing, ChatMessage lastMessage) {
-        this.id = id;
+    public ChatRoom(LocalDateTime lastMessageAt, User seller, User buyer, Listing listing, ChatMessage lastMessage) {
         this.lastMessageAt = lastMessageAt;
         this.seller = seller;
         this.buyer = buyer;
         this.listing = listing;
         this.lastMessage = lastMessage;
+    }
+
+    public static ChatRoom from(User buyer, User seller, Listing listing){
+        return ChatRoom.builder()
+                .buyer(buyer)
+                .seller(seller)
+                .listing(listing)
+                .build();
     }
 
     public User getTargetUser(Long userId) {
@@ -62,9 +69,9 @@ public class ChatRoom extends SoftDeleteEntity {
         }
     }
 
-    public void updateLastMessage(ChatMessage message, LocalDateTime lastMessageAt) {
+    public void updateLastMessage(ChatMessage message) {
         this.lastMessage = message;
-        this.lastMessageAt = lastMessageAt;
+        this.lastMessageAt = message.getCreatedAt();
     }
 
     public void updateListing(Listing listing){

@@ -1,5 +1,6 @@
 package com.cenimarket.backend.chat.domain;
 
+import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.global.domain.SoftDeleteEntity;
 import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
@@ -38,6 +39,15 @@ public class ChatMessage extends SoftDeleteEntity {
         this.content = content;
         this.sender = user;
         this.chatRoom = chatRoom;
+    }
+
+    public static ChatMessage from(ChatRoom chatRoom, User sender, ChatMessageDto requestMessage) {
+        return ChatMessage.builder()
+                .chatRoom(chatRoom)
+                .user(sender)
+                .messageType(requestMessage.getContentType())
+                .content(requestMessage.getMessage())
+                .build();
     }
 }
 

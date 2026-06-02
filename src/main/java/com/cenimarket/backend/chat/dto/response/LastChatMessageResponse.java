@@ -1,5 +1,6 @@
 package com.cenimarket.backend.chat.dto.response;
 
+import com.cenimarket.backend.chat.domain.ChatMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,6 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @ToString
 public class LastChatMessageResponse {
     private Long id;
@@ -20,10 +20,10 @@ public class LastChatMessageResponse {
         this.createdAt = createdAt;
     }
 
-    public static LastChatMessageResponse of(Long id, LocalDateTime createdAt){
+    public static LastChatMessageResponse of(ChatMessage savedMessage){
         return LastChatMessageResponse.builder()
-                .id(id)
-                .createdAt(createdAt)
+                .id(savedMessage.getId())
+                .createdAt(savedMessage.getCreatedAt())
                 .build();
     }
 }

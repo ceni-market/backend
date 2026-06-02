@@ -34,12 +34,19 @@ public class ChatRoomMember extends BaseEntity {
     private ChatMessage lastReadMessage;
 
     @Builder
-    public ChatRoomMember(Long id, LocalDateTime lastReadAt, User user, ChatRoom chatRoom, ChatMessage chatMessage) {
-        this.id = id;
+    public ChatRoomMember(LocalDateTime lastReadAt, User user, ChatRoom chatRoom, ChatMessage chatMessage) {
         this.lastReadAt = lastReadAt;
         this.user = user;
         this.chatRoom = chatRoom;
         this.lastReadMessage = chatMessage;
+    }
+
+    public static ChatRoomMember from(User user, ChatRoom chatRoom){
+        return ChatRoomMember.builder()
+                .user(user)
+                .chatRoom(chatRoom)
+                .lastReadAt(LocalDateTime.now())
+                .build();
     }
 
     public void updateLastReadAt(LocalDateTime lastReadAt){
