@@ -48,7 +48,7 @@ public class ChatRoomListResponse { //채팅방 목록 조회
                 .listingInfo(new ListingInfo(chatRoomData.getListing()))
                 .lastMessageInfo(new ChatMessageInfo(chatRoomData.getLastMessage()))
                 .lastMessageAt(chatRoomData.getLastMessageAt())
-                .lastMessageAtConvert(TimeConvertUtil.convertTime(chatRoomData.getLastMessageAt()))
+                .lastMessageAtConvert(chatRoomData.getLastMessageAt() != null ? TimeConvertUtil.convertTime(chatRoomData.getLastMessageAt()) : null)
                 .unReadMessageCount(unreadCount)
                 .build();
     }
@@ -93,6 +93,7 @@ public class ChatRoomListResponse { //채팅방 목록 조회
         private String content;
 
         public ChatMessageInfo(ChatMessage message) {
+            if(message == null) return;
             this.id = message.getId();
             this.messageType = message.getMessageType();
             this.content = message.getContent();

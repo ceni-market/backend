@@ -9,35 +9,27 @@ import lombok.*;
 @Getter
 @Table(name = "notifications")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification extends BaseEntity {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "notification_type")
+public abstract class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private boolean isRead = false;
+
+    @Column(nullable = false)
+    private NotificationType notiType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private NotificationType type;
-
-    @Column(nullable = false)
-    private Long targetId;
-
-    @Column(nullable = false)
-    private String content;
-
-    @Column(nullable = false)
-    private boolean isRead = false;
-
-    @Builder
-    private Notification(User receiver, NotificationType type, Long targetId, String content) {
+    protected Notification(User receiver, NotificationType notiType) {
         this.receiver = receiver;
-        this.type = type;
-        this.targetId = targetId;
-        this.content = content;
+        this.notiType = notiType;
     }
 
     public void read() {

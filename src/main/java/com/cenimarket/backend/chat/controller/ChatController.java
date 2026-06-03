@@ -8,13 +8,10 @@ import com.cenimarket.backend.chat.service.ChatService;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.global.response.ApiResponse;
-import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,7 +62,7 @@ public class ChatController {
     }
 
     @DeleteMapping("/{chatRoomId}/delete")
-    public ResponseEntity<?> leaveChatRoom(@AuthenticationPrincipal UserPrincipal userprincipal, @PathVariable Long chatRoomId){ //채팅방 나가기
+    public ResponseEntity<ApiResponse<String>> leaveChatRoom(@AuthenticationPrincipal UserPrincipal userprincipal, @PathVariable Long chatRoomId){ //채팅방 나가기
         chatService.leaveChatRoom(userprincipal.getId(), chatRoomId);
         return ResponseEntity.ok(ApiResponse.ok("채팅방 나가기 성공"));
     }
