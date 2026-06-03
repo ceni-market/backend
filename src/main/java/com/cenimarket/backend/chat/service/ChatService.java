@@ -48,9 +48,8 @@ public class ChatService {
     public void saveMessage(Long roomId, ChatMessageDto requestMessage){
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "잘못된 요청입니다. 요청한 채팅방은 없습니다."));
         User sender = userRepository.findByEmail(requestMessage.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "잘못된 요청입니다. 판매자 정보가 정확하지 않습니다."));
-        MessageType type = requestMessage.getContentType();
         //메시지로 조립
-        ChatMessage message = ChatMessage.from(chatRoom, sender, requestMessage);
+        ChatMessage message = ChatMessage.from(chatRoom, sender, requestMessage.getMessageType(), requestMessage.getMessage());
         //메시지 저장
         ChatMessage savedMessage = chatMessageRepository.save(message);
         //채팅방의 마지막 메시지 업데이트
@@ -78,7 +77,7 @@ public class ChatService {
         }
         //해당 채팅방에 대한 기존 멤버 엔티티가 없다면,seller를 ChatRoomMember로 추가
         if(chatRoomMemberRepository.findByUserIdAndChatRoomId(seller.getId(), chatRoom.getId()).isEmpty()) {
-            chatRoomMemberRepository.save(ChatRoomMember.from(buyer, chatRoom));
+            chatRoomMemberRepository.save(ChatRoomMember.from(seller, chatRoom));
         }
 
     }
@@ -150,7 +149,7 @@ public class ChatService {
         Long chatRoomMemberCount = chatRoomMemberRepository.countByChatRoomId(chatRoomId);
         ChatRoomMember member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, chatRoomId)
                 .orElseThrow(() -> new BusinessException(BUSINESS_ERROR, "이 채팅방에 참여하고 있지 않습니다."));
-        if(chatRoomMemberCount == 2){
+        if(chatRoomMemberCount >= 2){
             chatRoomMemberRepository.delete(member);
         } else {
             ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)

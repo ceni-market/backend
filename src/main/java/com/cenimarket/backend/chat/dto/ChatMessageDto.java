@@ -18,23 +18,23 @@ public class ChatMessageDto { //메시지 전송용 수신 발신 공용 DTO. �
     @NotNull
     private String senderEmail;
     @NotNull
-    private MessageType contentType;
+    private MessageType messageType;
 
     private LocalDateTime createdAt;
 
     @Builder
-    public ChatMessageDto(String message, String senderEmail, MessageType contentType, LocalDateTime createdAt){
+    public ChatMessageDto(String message, String senderEmail, MessageType messageType, LocalDateTime createdAt){
         this.message = message;
         this.senderEmail = senderEmail;
-        this.contentType = contentType;
+        this.messageType = messageType;
         this.createdAt = createdAt;
     }
 
-    public static ChatMessageDto from (String message, String senderEmail, MessageType contentType, LocalDateTime createdAt ) {
+    public static ChatMessageDto from (String message, String senderEmail, MessageType messageType, LocalDateTime createdAt ) {
         return ChatMessageDto.builder()
                 .message(message)
                 .senderEmail(senderEmail)
-                .contentType(contentType)
+                .messageType(messageType)
                 .createdAt(createdAt)
                 .build();
     }

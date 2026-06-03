@@ -41,12 +41,12 @@ public class ChatMessage extends SoftDeleteEntity {
         this.chatRoom = chatRoom;
     }
 
-    public static ChatMessage from(ChatRoom chatRoom, User sender, ChatMessageDto requestMessage) {
+    public static ChatMessage from(ChatRoom chatRoom, User sender, MessageType messageType, String content) {
         return ChatMessage.builder()
                 .chatRoom(chatRoom)
                 .user(sender)
-                .messageType(requestMessage.getContentType())
-                .content(requestMessage.getMessage())
+                .messageType(messageType)
+                .content(content)
                 .build();
     }
 }

@@ -6,6 +6,8 @@ import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class ChatRoom extends SoftDeleteEntity {
     @JoinColumn(name = "listing_id", nullable = false)
     private Listing listing;
 
-    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "last_message_id")
     private ChatMessage lastMessage;
 
