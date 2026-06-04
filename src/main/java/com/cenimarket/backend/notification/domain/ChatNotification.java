@@ -2,11 +2,9 @@ package com.cenimarket.backend.notification.domain;
 
 import com.cenimarket.backend.chat.domain.ChatRoom;
 import com.cenimarket.backend.chat.domain.MessageType;
-import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.tomcat.util.buf.MessageBytes;
 
 @Entity
 @Getter
