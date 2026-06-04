@@ -27,7 +27,7 @@ public class WebSocketService {
     private final NotificationRepository notificationRepository;
     private final SimpMessageSendingOperations messageSendingOperations;
 
-    public void createChatNoti(Long roomId, ChatMessageDto messageSendRequest, UserPrincipal userPrincipal) {
+    public void createChatNoti(Long roomId, ChatMessageDto messageSendRequest) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "채팅방이 없습니다."));
         User sender = userRepository.findByEmail(messageSendRequest.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "유저가 없습니다."));
 
