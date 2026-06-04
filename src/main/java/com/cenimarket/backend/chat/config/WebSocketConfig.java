@@ -21,7 +21,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/connect")
-                .setAllowedOrigins("http://localhost:5173")
+                .setAllowedOrigins("http://localhost:5173",
+                        "https://www.ceni-market.site",
+                        "https://ceni-market.site")
                 .addInterceptors(stompHandShakeInterceptor)
                 .withSockJS()
                 .setSessionCookieNeeded(true);

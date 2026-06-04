@@ -66,7 +66,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain reactApiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/api/**", "/chat/**")
+                .securityMatcher("/api/**", "/chat/**", "/connect/**")
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 // ⭐ 핵심: 소셜 로그인을 분리했기 때문에 완벽한 STATELESS(무상태) 방어막 구축 가능!
@@ -78,6 +78,7 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/connect/**").permitAll()
                         .requestMatchers("/api/auth/**", "/api/auth/login").permitAll() // 로그인, 리프레시 전면 개방
                         .requestMatchers(HttpMethod.GET, "/api/listings/**", "/chat/chatroom/**").permitAll()
                         .requestMatchers("/api/uploads/images/**", "/api/test/**").permitAll()
