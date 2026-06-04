@@ -33,7 +33,7 @@ public class WebSocketController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
         UserPrincipal userPrincipal = (UserPrincipal) token.getPrincipal();
 
-        webSocketService.createChatNoti(roomId, messageSendRequest, userPrincipal);
+        webSocketService.createChatNoti(roomId, messageSendRequest);
 
         //@SendTo 어노테이션으로도 할 수 있으나, 어노테이션을 이용하면 코드의 유연성이 떨어지기 때문에 따로 구현.
         messageSendingOperations.convertAndSend("/queue/chat/" + roomId, messageSendRequest);
