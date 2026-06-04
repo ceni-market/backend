@@ -34,11 +34,11 @@ public class StompEventListener {
 
         String destination = accessor.getDestination();
 
-        Long roomId = Long.valueOf(destination.substring(destination.lastIndexOf("/") + 1));
+//        Long roomId = Long.valueOf(destination.substring(destination.lastIndexOf("/") + 1));
 
         System.out.println("구독!!" + destination);
 
-        accessor.getSessionAttributes().put("roomId", roomId);
+//        accessor.getSessionAttributes().put("roomId", roomId);
     }
 
     @EventListener
@@ -52,7 +52,7 @@ public class StompEventListener {
 //        Object user = SecurityContextHolder.getContext().getAuthentication();
 //        System.out.println(user);
 //        Long roomId = (Long) accessor.getSessionAttributes().get("roomId");
-        //        Long roomId = (Long)sessionMap.get(sessionId);
+//                Long roomId = (Long)sessionMap.get(sessionId);
 //        chatService.updateReadAt(roomId, user);
 
         System.out.println("구독 해제!!" + destination);

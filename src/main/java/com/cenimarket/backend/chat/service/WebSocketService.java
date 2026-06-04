@@ -1,5 +1,6 @@
 package com.cenimarket.backend.chat.service;
 
+import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.domain.ChatRoom;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;
@@ -26,8 +27,7 @@ public class WebSocketService {
     private final NotificationRepository notificationRepository;
     private final SimpMessageSendingOperations messageSendingOperations;
 
-    public void createChatNoti(Long roomId, ChatMessageDto messageSendRequest) {
-        //채팅방, 보낸유저, 받는유저, 채팅 내용, 채팅 타입,
+    public void createChatNoti(Long roomId, ChatMessageDto messageSendRequest, UserPrincipal userPrincipal) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "채팅방이 없습니다."));
         User sender = userRepository.findByEmail(messageSendRequest.getSenderEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "유저가 없습니다."));
 
@@ -35,7 +35,12 @@ public class WebSocketService {
         notificationRepository.save(newChatNoti);
         ChatNotificationResponse res = ChatNotificationResponse.from(newChatNoti);
 
-        Long receiverId = chatRoom.getTargetUser(sender.getId()).getId();
-        messageSendingOperations.convertAndSend("/queue/notification/" + receiverId, res);
+        String receiverEmail = chatRoom.getTargetUser(sender.getId()).getEmail();
+        //프론트에서 주소에 미리 알고있던 userId를 넣어서 요청하는 경우
+        //messageSendingOperations.convertAndSend("/queue/notification/" + receiverId, res);
+
+        //userId를 서버에서 라우팅해주는 경우
+        messageSendingOperations.convertAndSendToUser(receiverEmail, "/queue/notification", res);
+
     }
 }

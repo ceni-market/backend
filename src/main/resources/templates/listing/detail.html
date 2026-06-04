@@ -71,10 +71,11 @@
 
         <div class="detail-action-bar">
             <a class="detail-list-button" th:href="@{/mobile/main}" href="/mobile/main">목록으로</a>
-            <a class="detail-chat-button"
-               th:if="${!listing.owner}"
-               th:href="@{/mobile/chat/detail}"
-               href="/mobile/chat/detail">1:1 채팅하기</a>
+            <form th:if="${!listing.owner}" th:action="@{/mobile/chat}" method="post" style="display:contents">
+                <input type="hidden" name="listingId" th:value="${listing.id}">
+                <input type="hidden" name="sellerId" th:value="${listing.seller.id}">
+                <button type="submit" class="detail-chat-button">1:1 채팅하기</button>
+            </form>
             <a class="detail-chat-button"
                th:if="${listing.owner}"
                th:href="@{/mobile/listings/edit(id=${listing.id})}"
