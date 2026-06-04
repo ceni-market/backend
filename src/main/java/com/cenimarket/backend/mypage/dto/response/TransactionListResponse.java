@@ -41,7 +41,11 @@ public class TransactionListResponse {
                 .title(listing.getTitle())
                 .price(transaction.getPrice())
                 .categoryName(listing.getCategory().getName())
-                .image(ListingImageResponse.from(listing.getImages().getFirst()))
+                .image(
+                        listing.getImages() == null || listing.getImages().isEmpty()
+                                ? null
+                                : ListingImageResponse.from(listing.getImages().getFirst())
+                )
                 .viewCount(listing.getViewCount())
                 .likeCount(listing.getLikeCount())
                 .transactionStatus(transaction.getStatus())
