@@ -34,6 +34,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/publish");
         // /topic/{채팅방ID} 형태의 주소로 메시지를 구독(받아볼 수 있음)할 수 있음을 설정.
         registry.enableSimpleBroker("/queue/chat", "/queue/notification");
+        //userId를 모르는 경우에 알림 구독 주소 설정
+        registry.setUserDestinationPrefix("/user");
     }
 //  jwt토큰 검증을 위한 핸들러 설정
     @Override

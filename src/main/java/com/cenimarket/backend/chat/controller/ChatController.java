@@ -29,7 +29,7 @@ public class ChatController {
         return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRooms(principal)));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ApiResponse<ChatRoomCreateResponse>> createChatRoom(@RequestBody ChatRoomCreateRequest request) {//맵에 listingId, sellerId 들어오는 중. Service로 넘기면서 바꿀 예정.
         //두 사람의 id가 같은 경우 오류 리턴
         if(request.getBuyerId() == request.getSellerId()){
@@ -61,7 +61,7 @@ public class ChatController {
 //        return ResponseEntity.ok(ApiResponse.ok(""));
     }
 
-    @DeleteMapping("/{chatRoomId}/delete")
+    @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<ApiResponse<String>> leaveChatRoom(@AuthenticationPrincipal UserPrincipal userprincipal, @PathVariable Long chatRoomId){ //채팅방 나가기
         chatService.leaveChatRoom(userprincipal.getId(), chatRoomId);
         return ResponseEntity.ok(ApiResponse.ok("채팅방 나가기 성공"));
