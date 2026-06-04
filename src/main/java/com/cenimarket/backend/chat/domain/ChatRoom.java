@@ -2,6 +2,7 @@ package com.cenimarket.backend.chat.domain;
 
 import com.cenimarket.backend.global.domain.SoftDeleteEntity;
 import com.cenimarket.backend.listing.domain.Listing;
+import com.cenimarket.backend.notification.domain.ChatNotification;
 import com.cenimarket.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,6 +47,9 @@ public class ChatRoom extends SoftDeleteEntity {
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
+    private List<ChatNotification> notifications;
 
     @Builder
     public ChatRoom(LocalDateTime lastMessageAt, User seller, User buyer, Listing listing, ChatMessage lastMessage) {
