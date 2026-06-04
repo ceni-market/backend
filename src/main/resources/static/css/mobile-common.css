@@ -17,8 +17,7 @@
 
 html,
 body {
-    height: 100%;
-    overflow: hidden;
+    min-height: 100%;
 }
 
 body {
@@ -26,15 +25,6 @@ body {
     font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: #eef5ff;
     color: var(--text-default);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-input,
-textarea {
-    -webkit-user-select: auto;
-    user-select: auto;
 }
 
 a {
@@ -60,7 +50,7 @@ textarea {
 .mobile-screen {
     position: relative;
     width: min(100vw, 430px);
-    min-height: 100dvh;
+    min-height: 932px;
     overflow: hidden;
     background: #fff;
 }
@@ -123,7 +113,7 @@ textarea {
 
 @media (max-width: 429px) {
     .mobile-screen {
-        min-height: 100dvh;
+        min-height: max(100vh, 932px);
     }
 }
 

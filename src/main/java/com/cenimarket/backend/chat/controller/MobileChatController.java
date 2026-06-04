@@ -60,9 +60,9 @@ public class MobileChatController {
     }
 
     @DeleteMapping("/{chatRoomId}")
-    public String leaveChatRoom(@AuthenticationPrincipal UserPrincipal userprincipal, @PathVariable Long chatRoomId){ //채팅방 나가기
+    @ResponseBody
+    public void leaveChatRoom(@AuthenticationPrincipal UserPrincipal userprincipal, @PathVariable Long chatRoomId){ //채팅방 나가기
         chatService.leaveChatRoom(userprincipal.getId(), chatRoomId);
-        return "redirect:/mobile/chat/";
     }
 
     @GetMapping("/{chatRoomId}/readAt")
