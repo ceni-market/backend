@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    List<ChatMessage> findByChatRoomIdOrderByCreatedAtAsc(Long chatRoom);
+    List<ChatMessage> findByChatRoomIdAndCreatedAtAfterOrderByCreatedAtAsc(Long chatRoom, LocalDateTime joinedAt);
 
     @Query("select count(*) from ChatMessage cm where cm.createdAt > :lastReadAt and cm.sender = :user")
     int countUnreadMessage(LocalDateTime lastReadAt, User user);

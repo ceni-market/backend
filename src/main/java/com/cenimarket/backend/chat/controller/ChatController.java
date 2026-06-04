@@ -8,21 +8,18 @@ import com.cenimarket.backend.chat.service.ChatService;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.global.response.ApiResponse;
-import com.cenimarket.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chat")
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
-    private final UserRepository userRepository;
 
     @GetMapping("/mychat")
     public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
@@ -30,14 +27,19 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ChatRoomCreateResponse>> createChatRoom(@RequestBody ChatRoomCreateRequest request) {//맵에 listingId, sellerId 들어오는 중. Service로 넘기면서 바꿀 예정.
+    public ResponseEntity<ApiResponse<ChatRoomCreateResponse>> createChatRoom(@RequestBody ChatRoomCreateRequest request) {
         //두 사람의 id가 같은 경우 오류 리턴
         if(request.getBuyerId() == request.getSellerId()){
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "내 판매글 입니다. 채팅방을 생성할 수 없습니다.");
         }
         //기존에 존재하는 채팅방이 있는지 검사
         try{
-            return ResponseEntity.ok(ApiResponse.ok(chatService.getExistChatRoom(request)));
+            ChatRoomCreateResponse chatRoom = chatService.getExistChatRoom(request);
+            boolean isMyChatRoomMember = chatService.isMyChatRoomMember(chatRoom.getChatRoomId(), request.getBuyerId());
+            if(!isMyChatRoomMember){
+                chatService.reJoinChatRoom(chatRoom.getChatRoomId(), request);
+            }
+            return ResponseEntity.ok(ApiResponse.ok(chatRoom));
         } catch (BusinessException e){
             chatService.createChatRoom(request);
             return ResponseEntity.ok(ApiResponse.ok(chatService.getExistChatRoom(request)));

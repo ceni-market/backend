@@ -51,6 +51,10 @@ public class MobileChatController {
         ChatRoomCreateRequest request = ChatRoomCreateRequest.from(listingId, sellerId, user.getId());
         try {
             ChatRoomCreateResponse res = chatService.getExistChatRoom(request);
+            boolean isMyChatRoomMember = chatService.isMyChatRoomMember(res.getChatRoomId(), request.getBuyerId());
+            if(!isMyChatRoomMember){
+                chatService.reJoinChatRoom(res.getChatRoomId(), request);
+            }
             return "redirect:/mobile/chat/" + res.getChatRoomId();
         } catch (BusinessException e) {
             chatService.createChatRoom(request);
@@ -66,6 +70,7 @@ public class MobileChatController {
     }
 
     @GetMapping("/{chatRoomId}/readAt")
+    @ResponseBody
     public void updateReadAt(@PathVariable Long chatRoomId, @AuthenticationPrincipal UserPrincipal user) {
         chatService.updateReadAt(chatRoomId, user.getEmail());
     }
