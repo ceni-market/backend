@@ -191,6 +191,7 @@
     height: 70px;
     flex-shrink: 0;
     padding: 15px 25px 0;
+    background: #fff;
 }
 
 .chat-messages-scroll {
@@ -266,6 +267,7 @@
 .chat-bubble {
     display: inline-flex;
     align-items: center;
+    max-width: 70%;
     min-height: 40px;
     margin: 0;
     padding: 7px 13px;
@@ -274,7 +276,6 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 25px;
-    white-space: nowrap;
 }
 
 .chat-bubble-partner {
@@ -387,8 +388,8 @@
     }
     .chat-detail-header,
     .chat-messages-scroll {
-        padding-right: 30px;
-        padding-left: 30px;
+        padding-right: 15px;
+        padding-left: 15px;
     }
 }
 
@@ -399,8 +400,8 @@
     }
     .chat-detail-header,
     .chat-messages-scroll {
-        padding-right: 20px;
-        padding-left: 20px;
+        padding-right: 15px;
+        padding-left: 15px;
     }
 
     .chat-room-card {

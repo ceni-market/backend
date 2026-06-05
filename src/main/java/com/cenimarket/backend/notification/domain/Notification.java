@@ -21,13 +21,14 @@ public abstract class Notification extends BaseEntity {
     private boolean isRead = false;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private NotificationType notiType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
-    protected Notification(User receiver, NotificationType notiType) {
+    public Notification(User receiver, NotificationType notiType) {
         this.receiver = receiver;
         this.notiType = notiType;
     }

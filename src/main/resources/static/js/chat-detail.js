@@ -86,6 +86,7 @@
             JSON.stringify({ message: text, senderEmail: currentUserEmail, messageType: 'TEXT' })
         );
         input.value = '';
+        input.focus;
     }
 
     async function sendImage(file) {

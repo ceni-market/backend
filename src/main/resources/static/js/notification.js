@@ -10,6 +10,7 @@
     function showNotification(data) {
         if (Notification.permission !== 'granted') return;
         if (location.pathname === '/mobile/chat/' + data.chatRoomId) return;
+        console.log('알림 생성:', data.chatRoomId, location.pathname);
         const body = data.messageType === 'IMAGE' ? '이미지' : data.messagePreview;
         const notif = new Notification('세니마켓', {
             body,
@@ -21,7 +22,7 @@
             location.href = '/mobile/chat/' + data.chatRoomId;
             notif.close();
         };
-        setTimeout(() => notif.close(), 2000);
+        setTimeout(() => notif.close(), 5000);
     }
 
     function connect() {
@@ -32,7 +33,9 @@
         window.stompClient.connect({}, () => {
             window.stompClient.subscribe('/user/queue/notification', (frame) => {
                 const data = JSON.parse(frame.body);
-                console.log(data.messagePreview);
+                console.log(data.chatRoomId);
+                console.log(Notification.permission);
+                console.log(location.pathname);
                 showNotification(data);
             });
             window.onStompConnect?.();
