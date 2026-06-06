@@ -1,6 +1,5 @@
 package com.cenimarket.backend.chat.service;
 
-import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.domain.ChatRoom;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
 import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
