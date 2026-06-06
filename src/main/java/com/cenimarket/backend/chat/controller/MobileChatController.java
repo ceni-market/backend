@@ -45,15 +45,19 @@ public class MobileChatController {
     @PostMapping
     public String createChatRoom(@AuthenticationPrincipal UserPrincipal user, @RequestParam Long listingId, @RequestParam Long sellerId) {
         //두 사람의 id가 같은 경우 오류 리턴
-        if(user.getId() == sellerId){
+        if(user.getId().equals(sellerId)){
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "내 판매글 입니다. 채팅방을 생성할 수 없습니다.");
         }
         ChatRoomCreateRequest request = ChatRoomCreateRequest.from(listingId, sellerId, user.getId());
         try {
             ChatRoomCreateResponse res = chatService.getExistChatRoom(request);
-            boolean isMyChatRoomMember = chatService.isMyChatRoomMember(res.getChatRoomId(), request.getBuyerId());
-            if(!isMyChatRoomMember){
-                chatService.reJoinChatRoom(res.getChatRoomId(), request);
+            boolean isMeInChatRoom = chatService.isInChatRoom(res.getChatRoomId(), request.getBuyerId());
+            boolean isPartnerInChatRoom = chatService.isInChatRoom(res.getChatRoomId(), request.getSellerId());
+            if(!isMeInChatRoom){
+                chatService.reJoinChatRoom(res.getChatRoomId(), request.getBuyerId());
+            }
+            if(!isPartnerInChatRoom){
+                chatService.reJoinChatRoom(res.getChatRoomId(), request.getSellerId());
             }
             return "redirect:/mobile/chat/" + res.getChatRoomId();
         } catch (BusinessException e) {

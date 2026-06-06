@@ -99,15 +99,15 @@ public class ChatService {
     }
 
     //새로운 채팅 요청한 클라이언트의 채팅 멤버가 있는지 조회
-    public boolean isMyChatRoomMember(Long chatRoomId, Long userId) {
+    public boolean isInChatRoom(Long chatRoomId, Long userId) {
         Optional<ChatRoomMember> member = chatRoomMemberRepository.findByUserIdAndChatRoomId(userId, chatRoomId);
         return member.isPresent();
     }
 
     //채팅방 다시 들어갈 때 ChatRoomMember를 만들어주는 메서드
-    public void reJoinChatRoom(@NotNull Long chatRoomId, ChatRoomCreateRequest request) {
+    public void reJoinChatRoom(@NotNull Long chatRoomId, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "채팅방이 없습니다."));
-        User user = userRepository.findById(request.getBuyerId()).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "유저를 조회할 수 없습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "유저를 조회할 수 없습니다."));
 
         chatRoomMemberRepository.save(ChatRoomMember.from(user, chatRoom));
     }

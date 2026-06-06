@@ -38,4 +38,13 @@ public class ChatMessageDto { //메시지 전송용 수신 발신 공용 DTO. �
                 .createdAt(createdAt)
                 .build();
     }
+
+    public static ChatMessageDto insertCreatedAt(ChatMessageDto message) {
+        return ChatMessageDto.builder()
+                .message(message.message)
+                .senderEmail(message.senderEmail)
+                .messageType(message.messageType)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }
