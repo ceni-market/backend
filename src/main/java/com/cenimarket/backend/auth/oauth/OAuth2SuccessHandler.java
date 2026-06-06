@@ -1,10 +1,12 @@
 package com.cenimarket.backend.auth.oauth;
 
 import com.cenimarket.backend.auth.domain.UserPrincipal;
+import com.cenimarket.backend.auth.service.RefreshTokenService;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
 import com.cenimarket.backend.global.security.JwtTokenProvider;
 import com.cenimarket.backend.user.domain.User;
+import com.cenimarket.backend.user.domain.UserStatus;
 import com.cenimarket.backend.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +25,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JwtTokenProvider jwtTokenProvider; // JWT 발급 클래스
     private final UserRepository userRepository;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,7 +33,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        User user = userRepository.findByEmail(userPrincipal.getEmail())
+//        User user = userRepository.findByEmail(userPrincipal.getEmail())
+//                .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_ERROR));
+        User user = userRepository.findByEmailAndStatus(userPrincipal.getEmail(), UserStatus.ACTIVE)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_ERROR));
 
         user.setLastLoginAt(LocalDateTime.now()); // 시간을 현재로 세팅
@@ -41,6 +46,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refreshToken = jwtTokenProvider.createRefreshToken(userPrincipal.getEmail());
         long expirationInMs = jwtTokenProvider.getAccessTokenExpiration();
         long accessTokenExpiresIn = expirationInMs / 1000;
+
+        //JWT 토큰 저장
+        refreshTokenService.saveOrUpdate(user, refreshToken);
 
         // 2. 프론트엔드 리다이렉트 주소 설정
         // 수동 가입 시 입력했던 이름, 메일 등의 정보를 쿼리 파라미터로 보낼 수도 있습니다.
