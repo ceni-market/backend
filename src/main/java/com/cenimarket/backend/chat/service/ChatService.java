@@ -15,6 +15,7 @@ import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
+import com.cenimarket.backend.global.response.ApiResponse;
 import com.cenimarket.backend.global.util.TimeConvertUtil;
 import com.cenimarket.backend.listing.domain.Listing;
 import com.cenimarket.backend.listing.repository.ListingRepository;
@@ -22,6 +23,7 @@ import com.cenimarket.backend.user.domain.User;
 import com.cenimarket.backend.user.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +58,29 @@ public class ChatService {
         //채팅방의 마지막 메시지 업데이트
         //채팅방의 마지막 활성화 시간 업데이트
         chatRoom.updateLastMessage(savedMessage);
+    }
+
+    //채팅방 있는지 확인하고 없으면 생성 있으면 찾아주는 메서드
+    public ChatRoomCreateResponse getOrCreateChatRoom(ChatRoomCreateRequest request) {
+        try{
+            ChatRoomCreateResponse chatRoom = getExistChatRoom(request);
+            //기존에 쓰던 채팅방이 이미 있다면 나와 상대가 모두 이미 채팅방에 들어와 있는지 검사
+            boolean isMeInChatRoom = isInChatRoom(chatRoom.getChatRoomId(), request.getBuyerId());
+            boolean isPartnerInChatRoom = isInChatRoom(chatRoom.getChatRoomId(), request.getSellerId());
+            //내가 채팅방 나간 상태면 chatRoomMember 새로 생성
+            if(!isMeInChatRoom){
+                reJoinChatRoom(chatRoom.getChatRoomId(), request.getBuyerId());
+            }
+            //상대가 채팅방 나간 상태면 chatRoomMember 새로 생성
+            if(!isPartnerInChatRoom){
+                reJoinChatRoom(chatRoom.getChatRoomId(), request.getSellerId());
+            }
+            return chatRoom;
+        } catch (BusinessException e) {
+            //기존 채팅방이 없다면 채팅방 생성
+            createChatRoom(request);
+            return getExistChatRoom(request);
+        }
     }
 
     //채팅방 생성 메서드

@@ -32,6 +32,13 @@ public class MobileChatController {
         return "chat/index";
     }
 
+    //내 채팅방 목록 조회 메서드
+    @GetMapping("/mychat")
+    @ResponseBody
+    public ResponseEntity<?> getMyChatRoom(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(ApiResponse.ok(chatService.getMyChatRooms(principal)));
+    }
+
     @GetMapping("/{chatRoomId}")
     public String chatDetailPage(@AuthenticationPrincipal UserPrincipal user, @PathVariable Long chatRoomId, Model model) {
         ChatRoomListResponse myChatRoom = chatService.getChatRoomDetails(user, chatRoomId);
@@ -44,27 +51,12 @@ public class MobileChatController {
 
     @PostMapping
     public String createChatRoom(@AuthenticationPrincipal UserPrincipal user, @RequestParam Long listingId, @RequestParam Long sellerId) {
-        //두 사람의 id가 같은 경우 오류 리턴
-        if(user.getId().equals(sellerId)){
+        if (user.getId().equals(sellerId)) {
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "내 판매글 입니다. 채팅방을 생성할 수 없습니다.");
         }
         ChatRoomCreateRequest request = ChatRoomCreateRequest.from(listingId, sellerId, user.getId());
-        try {
-            ChatRoomCreateResponse res = chatService.getExistChatRoom(request);
-            boolean isMeInChatRoom = chatService.isInChatRoom(res.getChatRoomId(), request.getBuyerId());
-            boolean isPartnerInChatRoom = chatService.isInChatRoom(res.getChatRoomId(), request.getSellerId());
-            if(!isMeInChatRoom){
-                chatService.reJoinChatRoom(res.getChatRoomId(), request.getBuyerId());
-            }
-            if(!isPartnerInChatRoom){
-                chatService.reJoinChatRoom(res.getChatRoomId(), request.getSellerId());
-            }
-            return "redirect:/mobile/chat/" + res.getChatRoomId();
-        } catch (BusinessException e) {
-            chatService.createChatRoom(request);
-            ChatRoomCreateResponse res = chatService.getExistChatRoom(request);
-            return "redirect:/mobile/chat/" + res.getChatRoomId();
-        }
+        ChatRoomCreateResponse res = chatService.getOrCreateChatRoom(request);
+        return "redirect:/mobile/chat/" + res.getChatRoomId();
     }
 
     @DeleteMapping("/{chatRoomId}")
