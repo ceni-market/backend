@@ -25,29 +25,14 @@ public class WebSocketController {
     @DestinationVariable은 @MessageMapping과 함께 사용된다.
     @MessageMapping으로 전달되는 데이터의 목적지 주소를 가져온다. */
     @MessageMapping("/chat/{roomId}")
-    public void sendMessage(
-            @DestinationVariable Long roomId,
-            ChatMessageDto messageSendRequest
-    ) {
-//        log.info("[CHAT WS] received roomId={}, sender={}, principalType={}",
-//                roomId,
-//                messageSendRequest.getSenderEmail(),
-//                principal == null ? null : principal.getClass().getName());
-
+    public void sendMessage(@DestinationVariable Long roomId, ChatMessageDto messageSendRequest) {
         chatService.saveMessage(roomId, messageSendRequest);
-//        log.info("[CHAT WS] message saved roomId={}", roomId);
 
         chatService.updateReadAt(roomId, messageSendRequest.getSenderEmail());
-//        log.info("[CHAT WS] readAt updated roomId={}", roomId);
 
         webSocketService.createChatNoti(roomId, messageSendRequest);
-//        log.info("[CHAT WS] notification created roomId={}", roomId);
 
         ChatMessageDto message = ChatMessageDto.insertCreatedAt(messageSendRequest);
-        messageSendingOperations.convertAndSend(
-                "/queue/chat/" + roomId,
-                message
-        );
-//        log.info("[CHAT WS] message broadcast roomId={}", roomId);
+        messageSendingOperations.convertAndSend("/queue/chat/" + roomId, message);
     }
 }

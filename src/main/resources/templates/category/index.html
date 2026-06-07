@@ -33,8 +33,6 @@
         <nav th:replace="~{fragments/mobile :: bottomNav('category')}"></nav>
     </section>
 </main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="/js/notification.js"></script>
+<th:block th:replace="~{fragments/mobile :: notification}"></th:block>
 </body>
 </html>

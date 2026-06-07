@@ -169,11 +169,18 @@
 }
 
 .chat-detail-screen {
-    display: flex;
-    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100vw, 430px);
     height: 100dvh;
     min-height: unset;
     padding: 0;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;

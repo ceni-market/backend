@@ -30,30 +30,10 @@ public class ChatController {
     //1대1 채팅 요청 메서드
     @PostMapping
     public ResponseEntity<ApiResponse<ChatRoomCreateResponse>> createChatRoom(@RequestBody ChatRoomCreateRequest request) {
-        //두 사람의 id가 같은 경우 오류 리턴
-        if(request.getBuyerId().equals(request.getSellerId())){
+        if (request.getBuyerId().equals(request.getSellerId())) {
             throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "내 판매글 입니다. 채팅방을 생성할 수 없습니다.");
         }
-        //기존에 존재하는 채팅방이 있는지 검사
-        try{
-            ChatRoomCreateResponse chatRoom = chatService.getExistChatRoom(request);
-            //기존에 쓰던 채팅방이 이미 있다면 나와 상대가 모두 이미 채팅방에 들어와 있는지 검사
-            boolean isMeInChatRoom = chatService.isInChatRoom(chatRoom.getChatRoomId(), request.getBuyerId());
-            boolean isPartnerInChatRoom = chatService.isInChatRoom(chatRoom.getChatRoomId(), request.getSellerId());
-            //내가 채팅방 나간 상태면 chatRoomMember 새로 생성
-            if(!isMeInChatRoom){
-                chatService.reJoinChatRoom(chatRoom.getChatRoomId(), request.getBuyerId());
-            }
-            //상대가 채팅방 나간 상태면 chatRoomMember 새로 생성
-            if(!isPartnerInChatRoom){
-                chatService.reJoinChatRoom(chatRoom.getChatRoomId(), request.getSellerId());
-            }
-            return ResponseEntity.ok(ApiResponse.ok(chatRoom));
-        } catch (BusinessException e){
-            //기존 채팅방이 없다면 채팅방 생성
-            chatService.createChatRoom(request);
-            return ResponseEntity.ok(ApiResponse.ok(chatService.getExistChatRoom(request)));
-        }
+        return ResponseEntity.ok(ApiResponse.ok(chatService.getOrCreateChatRoom(request)));
     }
 
     @GetMapping("/chatroom/{chatRoomId}")

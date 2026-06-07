@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <meta name="current-user-email" th:content="${userEmail}">
     <title>[[|${myChatRoom.listingInfo.title}  ${myChatRoom.contactUserInfo.name}|]]</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -67,8 +67,6 @@
     </section>
 </main>
 <script src="/js/chat-detail.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="/js/notification.js"></script>
+<th:block th:replace="~{fragments/mobile :: notification}"></th:block>
 </body>
 </html>
