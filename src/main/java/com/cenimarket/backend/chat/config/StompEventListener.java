@@ -47,14 +47,6 @@ public class StompEventListener {
 
         String destination = accessor.getDestination();
 
-        // 구독 해제 시, 채팅 멤버의 마지막 조회 시간을 수정하는 컨트롤러 메서드를 호출.
-//        String userEmail = (String) accessor.getSessionAttributes().get("userEmail");
-//        Object user = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println(user);
-//        Long roomId = (Long) accessor.getSessionAttributes().get("roomId");
-//                Long roomId = (Long)sessionMap.get(sessionId);
-//        chatService.updateReadAt(roomId, user);
-
         System.out.println("구독 해제!!" + destination);
     }
 

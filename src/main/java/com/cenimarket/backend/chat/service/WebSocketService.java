@@ -3,6 +3,7 @@ package com.cenimarket.backend.chat.service;
 import com.cenimarket.backend.auth.domain.UserPrincipal;
 import com.cenimarket.backend.chat.domain.ChatRoom;
 import com.cenimarket.backend.chat.dto.ChatMessageDto;
+import com.cenimarket.backend.chat.repository.ChatRoomMemberRepository;
 import com.cenimarket.backend.chat.repository.ChatRoomRepository;
 import com.cenimarket.backend.global.error.BusinessException;
 import com.cenimarket.backend.global.error.ErrorCode;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class WebSocketService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final SimpMessageSendingOperations messageSendingOperations;
@@ -35,12 +37,13 @@ public class WebSocketService {
         notificationRepository.save(newChatNoti);
         ChatNotificationResponse res = ChatNotificationResponse.from(newChatNoti);
 
-        String receiverEmail = chatRoom.getTargetUser(sender.getId()).getEmail();
-        //프론트에서 주소에 미리 알고있던 userId를 넣어서 요청하는 경우
-        //messageSendingOperations.convertAndSend("/queue/notification/" + receiverId, res);
+        User receiver = chatRoom.getTargetUser(sender.getId());
+        if(chatRoomMemberRepository.findByUserIdAndChatRoomId(receiver.getId(), roomId).isPresent()){
+            //프론트에서 주소에 미리 알고있던 userId를 넣어서 요청하는 경우
+            //messageSendingOperations.convertAndSend("/queue/notification/" + receiverId, res);
 
-        //userId를 서버에서 라우팅해주는 경우
-        messageSendingOperations.convertAndSendToUser(receiverEmail, "/queue/notification", res);
-
+            //userId를 서버에서 라우팅해주는 경우
+            messageSendingOperations.convertAndSendToUser(receiver.getEmail(), "/queue/notification", res);
+        }
     }
 }
